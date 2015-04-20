@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package de.ppi.selenium.browser;
 
@@ -36,6 +36,7 @@ import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jboss.arquillian.phantom.resolver.ResolvingPhantomJSDriverService;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.Proxy;
@@ -46,6 +47,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
@@ -54,12 +56,12 @@ import org.openqa.selenium.safari.SafariDriver;
 
 /**
  * SessionPool functionality used by SessionManager instances.
- * Based on https://github.com/FINRAOS/JTAF-ExtWebDriver 
- * 
+ * Based on https://github.com/FINRAOS/JTAF-ExtWebDriver
+ *
  */
 
 public class DefaultWebDriverFactory implements WebDriverFactory {
-    
+
     /**
      * Key which holds the reference to an property-file which could be read from {@link ClientProperties}.
      */
@@ -74,7 +76,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
     public void cleanup(Map<String, String> options) throws Exception {
 
         ClientProperties properties = new ClientProperties(options.get(CLIENT_PROPERTIES_KEY));
-
+        //TODO bei pantomjs ist das durch aus sinnvoll mit dem Kill. Der FF schliesst sich meine ich von alleine...
         if (!executedTaskKill) {
             synchronized (lock) {
                 if (properties.isKillTasksAtStartup()) {
@@ -160,6 +162,32 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                             log.warn("Taskkill failed to kill any rogue firefox tasks because the OS"
                                     + "provided is either incorrect or not supported");
                         }
+                    }  else if (properties.getBrowser().equalsIgnoreCase("phantomjs")) {
+                    	if (properties.getOS() == null
+                                || properties.getOS().equalsIgnoreCase("windows")) {
+                            try {
+                                Runtime.getRuntime().exec("taskkill /F /IM phantomjs.exe /T");
+
+                            } catch (IOException e) {
+                                log.warn("Taskkill failed to kill any rogue phantomjs browsers");
+                            }
+                        } else if (properties.getOS().equalsIgnoreCase("linux")) {
+                            try {
+                                Runtime.getRuntime().exec("killall -9 phantomjs");
+                            } catch (IOException e) {
+                                log.warn("Taskkill failed to kill any rogue phantomjs browsers");
+                            }
+                        } else if (properties.getOS().equalsIgnoreCase("mac")) {
+                            try {
+                                Runtime.getRuntime().exec("killall -KILL phantomjs");
+                            } catch (IOException e) {
+                                log.warn("Taskkill failed to kill any rogue phantomjs browsers");
+                            }
+                        } else {
+                            log.warn("Taskkill failed to kill any rogue phantomjs tasks because the OS"
+                                    + "provided is either incorrect or not supported");
+                        }
+
                     }
                 }
                 executedTaskKill = true;
@@ -209,6 +237,8 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 capabilities = DesiredCapabilities.ipad();
             } else if (browser.equalsIgnoreCase("iphone")) {
                 capabilities = DesiredCapabilities.iphone();
+            } else if (browser.equalsIgnoreCase("phantomjs")) {
+                capabilities = DesiredCapabilities.phantomjs();
             } else {
                 log.fatal("Unsupported browser: " + browser
                         + " Please refer to documentation for supported browsers.");
@@ -406,6 +436,9 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
             } else if (browser.equalsIgnoreCase("htmlunit")) {
                 wd = new HtmlUnitDriver(desiredCapabilities);
                 ((HtmlUnitDriver) wd).setJavascriptEnabled(true);
+            } else if (browser.equalsIgnoreCase("phantomjs")) {
+                wd = new PhantomJSDriver(ResolvingPhantomJSDriverService
+                        .createDefaultService(), desiredCapabilities);
             } else {
                 throw new Exception("Unsupported browser type: " + browser
                         + ". Supported browser types: IE, Firefox, Chrome, Safari, HtmlUnit.");
@@ -437,7 +470,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
     }
 
     /**
-     * 
+     *
      * @param ffp
      *            for use in setting the firefox profile for the tests to use
      *            when running firefox
@@ -457,7 +490,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
     }
 
     /**
-     * 
+     *
      * @param ffp
      *            the firefox profile you are using
      * @param propertiesFile
@@ -500,7 +533,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
     }
 
     /**
-     * 
+     *
      * @param ffp
      *            the firefox profile specified
      * @param extensions
@@ -515,7 +548,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
     }
 
     /**
-     * 
+     *
      * @param filePath
      *            the binary path location of the firefox app (where it's
      *            installed)
@@ -548,7 +581,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
     /**
      * This method cleans out folders where the WebDriver temp information is
      * stored.
-     * 
+     *
      * @param properties
      *            client properties specified
      */
@@ -581,7 +614,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
     /**
      * This method can be called to remove specific folders or set how long you
      * want to keep the temp information.
-     * 
+     *
      * @param folder
      *            which temp folder you want to remove
      * @param folderTemplates

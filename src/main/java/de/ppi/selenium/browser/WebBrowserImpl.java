@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.ppi.selenium.browser;
 
@@ -18,8 +18,29 @@ import org.openqa.selenium.WebElement;
 public class WebBrowserImpl implements WebBrowser {
 
     private final WebDriver webdriver;
-    
+
     private final String sessionId;
+
+    private final String baseUrl;
+
+
+    /**
+     * Creates a new browser-session.
+     * @param webdriver the native webdriver
+     * @param sessionId the id of the session to get the webbrowser.
+     * @param baseUrl the basis url, where all other are relative to.
+     */
+    public WebBrowserImpl(WebDriver webdriver, String sessionId, String baseUrl) {
+        super();
+        this.sessionId = sessionId;
+        this.webdriver = webdriver;
+        if (baseUrl.endsWith("/")) {
+        	this.baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+        } else {
+        	this.baseUrl = baseUrl;
+        }
+    }
+
 
     /**
      * @return the sessionId
@@ -28,12 +49,25 @@ public class WebBrowserImpl implements WebBrowser {
         return sessionId;
     }
 
-    /**
+    public String getBaseUrl() {
+		return baseUrl;
+	}
+
+	/**
      * @param url
      * @see org.openqa.selenium.WebDriver#get(java.lang.String)
      */
     public void get(String url) {
         webdriver.get(url);
+    }
+
+    /**
+     * Call the relative url.
+     *
+     * @param relativeUrl the relative url.
+     */
+    public void getRelativeUrl(String relativeUrl) {
+    	webdriver.get(getBaseUrl() + relativeUrl);
     }
 
     /**
@@ -79,7 +113,7 @@ public class WebBrowserImpl implements WebBrowser {
     }
 
     /**
-     * 
+     *
      * @see org.openqa.selenium.WebDriver#close()
      */
     public void close() {
@@ -87,7 +121,7 @@ public class WebBrowserImpl implements WebBrowser {
     }
 
     /**
-     * 
+     *
      * @see org.openqa.selenium.WebDriver#quit()
      */
     public void quit() {
@@ -134,19 +168,11 @@ public class WebBrowserImpl implements WebBrowser {
         return webdriver.manage();
     }
 
-    /**
-     * @param webdriver
-     */
-    public WebBrowserImpl(WebDriver webdriver, String sessionId) {
-        super();
-        this.sessionId = sessionId;
-        this.webdriver = webdriver;
-    }
 
     @Override
     public WebDriver getWrappedDriver() {
         return webdriver;
     }
-    
+
 
 }
