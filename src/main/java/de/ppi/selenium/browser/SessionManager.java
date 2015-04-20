@@ -164,6 +164,14 @@ public class SessionManager {
     }
 
     /**
+     * Convenience method to get teh current session.
+     * @return the current session.
+     */
+    public static WebBrowser getSession() {
+    	return getInstance().getCurrentSession();
+    }
+
+    /**
      * Get an existing WebBrowser session with the given ID.
      *
      * @param sessionId
