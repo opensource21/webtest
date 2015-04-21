@@ -25,7 +25,7 @@ public class ProtocolRule extends TestWatcher {
 
 	private final File baseDir;
 
-	private static final String protocolStart = new SimpleDateFormat("yyyy-MM-dd_hh_mm_ss").format(new Date());
+	private static final String protocolStart = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss").format(new Date());
 
 	/**
 	 * Creates a new instance.
@@ -82,7 +82,9 @@ public class ProtocolRule extends TestWatcher {
 
 	@Override
 	protected void starting(Description description) {
-		Protocol.setCurrentProtocol(new Protocol(getTestProtocolDir(description)));
+		final File testProtocolDir = getTestProtocolDir(description);
+		testProtocolDir.mkdirs();
+		Protocol.setCurrentProtocol(new Protocol(testProtocolDir));
 	}
 
 	@Override
@@ -94,7 +96,9 @@ public class ProtocolRule extends TestWatcher {
 	}
 
 	private File getTestProtocolDir(Description description) {
-		return new File(baseDir, description.getDisplayName());
+		File protDir = new File(baseDir, description.getClassName().replaceAll("\\W+", "_"));
+		protDir = new File(protDir, description.getMethodName().replaceAll("\\W+", "_"));
+		return protDir;
 	}
 
 }

@@ -20,7 +20,7 @@ public class Protocol extends InheritableThreadLocal<Protocol> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Protocol.class);
 
-	private static final String protocolStart = new SimpleDateFormat("yyyy-MM-dd_hh_mm_ss").format(new Date());
+	private static final String protocolStart = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss").format(new Date());
 
 	private static final Protocol INSTANCE = new Protocol();
 
@@ -82,8 +82,10 @@ public class Protocol extends InheritableThreadLocal<Protocol> {
     */
    public void saveScreenshot(String description, WebDriver webDriver) {
 	   final StringBuilder screenshotFileName = new StringBuilder(protocolDir.getAbsolutePath());
-	   screenshotFileName.append(File.pathSeparatorChar).append(description.replaceAll(REGEXP_FILENAME_TO_REPLACE, "_")).append('-');
-	   screenshotFileName.append(new SimpleDateFormat("yyyy-MM-dd_hh_mm_ss_SSS").format(new Date()));
+	   screenshotFileName.append(File.separatorChar);
+	   screenshotFileName.append(new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss_SSS'-'").format(new Date()));
+	   screenshotFileName.append(description.replaceAll(REGEXP_FILENAME_TO_REPLACE, "_")).append('-');
+
 	   ScreenshotUtils.saveScreenshot(screenshotFileName.toString(), webDriver);
    }
 
