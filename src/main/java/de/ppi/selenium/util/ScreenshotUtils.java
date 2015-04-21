@@ -37,8 +37,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.ppi.selenium.browser.SessionManager;
-
 /***
  * Utilities to take and compare screenshots of elements
  *
@@ -52,15 +50,15 @@ public class ScreenshotUtils {
     /**
      * Save a screenshot.
      *
-     * @param screenshotFileName name of the file.
+     * @param screenshotFileName name of the file, without ending.
      */
-    public void saveScreenshot(String screenshotFileName, WebDriver driver) {
+    public static void saveScreenshot(String screenshotFileName, WebDriver driver) {
         try {
             if (driver instanceof TakesScreenshot) {
                 File screenshot =
                         ((TakesScreenshot) driver)
                                 .getScreenshotAs(OutputType.FILE);
-                FileUtils.copyFile(screenshot, new File(screenshotFileName));
+                FileUtils.copyFile(screenshot, new File(screenshotFileName + ".png"));
             } else if (driver instanceof HtmlUnitDriver) {
                 FileUtils.write(new File(screenshotFileName + ".html"),
                         driver.getPageSource());
@@ -84,7 +82,7 @@ public class ScreenshotUtils {
      * @throws WidgetTimeoutException
      * @throws Exception
      */
-    public static void takeScreenshotOfElement(WebElement element, File toSaveAs)
+    public static void takeScreenshotOfElement(WebElement element, File toSaveAs, WebDriver wd)
             throws IOException {
 
         for (int i = 0; i < 10; i++) { // Loop up to 10x to ensure a clean
@@ -96,7 +94,6 @@ public class ScreenshotUtils {
             // TODO element.scrollTo();
 
             // Take picture of the page
-            WebDriver wd = SessionManager.getInstance().getCurrentSession();
             File screenshot;
             boolean isRemote = false;
             if (!(wd instanceof RemoteWebDriver)) {
@@ -156,11 +153,11 @@ public class ScreenshotUtils {
      *            (between 0.0 and 1.0)
      * @throws IOException
      */
-    public static boolean isSimilarToScreenshot(WebElement element,
+    public static boolean isSimilarToScreenshot(WebDriver wd, WebElement element,
             File controlPicture, File toSaveAs, double threshold)
             throws IOException {
 
-        takeScreenshotOfElement(element, toSaveAs);
+        takeScreenshotOfElement(element, toSaveAs, wd);
 
         LOG.info("Screenshot was successful. Comparing against control...");
 
@@ -187,9 +184,9 @@ public class ScreenshotUtils {
      * @throws IOException
      * @throws Exception
      */
-    public static boolean isSimilarToScreenshot(WebElement element,
+    public static boolean isSimilarToScreenshot(WebDriver wd, WebElement element,
             File controlPicture, File toSaveAs) throws IOException {
-        return isSimilarToScreenshot(element, controlPicture, toSaveAs, .85);
+        return isSimilarToScreenshot(wd, element, controlPicture, toSaveAs, .85);
     }
 
     private static boolean isBlack(BufferedImage var) {

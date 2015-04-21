@@ -10,6 +10,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import de.ppi.selenium.util.Protocol;
+
 /**
  * Concrete web-browser
  * @author niels
@@ -23,6 +25,8 @@ public class WebBrowserImpl implements WebBrowser {
 
     private final String baseUrl;
 
+    //TODO this must be set outside.
+    private final boolean logEveryPage = true;
 
     /**
      * Creates a new browser-session.
@@ -59,6 +63,9 @@ public class WebBrowserImpl implements WebBrowser {
      */
     public void get(String url) {
         webdriver.get(url);
+        if (logEveryPage) {
+        	Protocol.log(getTitle(), "Opened " + url, webdriver);
+        }
     }
 
     /**
@@ -67,7 +74,7 @@ public class WebBrowserImpl implements WebBrowser {
      * @param relativeUrl the relative url.
      */
     public void getRelativeUrl(String relativeUrl) {
-    	webdriver.get(getBaseUrl() + relativeUrl);
+    	get(getBaseUrl() + relativeUrl);
     }
 
     /**
