@@ -32,6 +32,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.internal.Locatable;
+import org.openqa.selenium.internal.WrapsDriver;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
@@ -54,14 +55,18 @@ public class ScreenshotUtils {
      */
     public static void saveScreenshot(String screenshotFileName, WebDriver driver) {
         try {
-            if (driver instanceof TakesScreenshot) {
+        	WebDriver wrappedDriver = driver;
+        	while (wrappedDriver instanceof WrapsDriver) {
+        		wrappedDriver = ((WrapsDriver) wrappedDriver).getWrappedDriver();
+        	}
+            if (wrappedDriver instanceof TakesScreenshot) {
                 File screenshot =
-                        ((TakesScreenshot) driver)
+                        ((TakesScreenshot) wrappedDriver)
                                 .getScreenshotAs(OutputType.FILE);
                 FileUtils.copyFile(screenshot, new File(screenshotFileName + ".png"));
-            } else if (driver instanceof HtmlUnitDriver) {
+            } else if (wrappedDriver instanceof HtmlUnitDriver) {
                 FileUtils.write(new File(screenshotFileName + ".html"),
-                        driver.getPageSource());
+                		wrappedDriver.getPageSource());
             } else {
                 LOG.warn("The current driver doesn't make screenshots");
             }
