@@ -38,7 +38,8 @@ public class WebBrowserImpl implements WebBrowser {
 
 			@Override
 			public void run() {
-				for (WebBrowser webBrowser : ALL_INSTANCES) {
+				final List<WebBrowser> allBrowsers = new ArrayList<>(ALL_INSTANCES);
+				for (WebBrowser webBrowser : allBrowsers) {
 					try {
 						webBrowser.quit();
 					} catch (UnreachableBrowserException ube) {

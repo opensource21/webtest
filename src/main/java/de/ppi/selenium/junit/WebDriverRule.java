@@ -8,7 +8,7 @@ import de.ppi.selenium.browser.WebBrowser;
 public class WebDriverRule extends ExternalResource {
 
 	private static volatile long nrOfTests = 0;
-	//TODO: This should be configurable vai Annotations.
+	//TODO: This should be configurable via Annotations.
 	private static final long MAX_NR_OF_REUSE = 10;
 
 	@Override

@@ -7,7 +7,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.junit.AssumptionViolatedException;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.slf4j.Logger;
@@ -60,23 +59,11 @@ public class ProtocolRule extends TestWatcher {
 		this.baseDir.mkdirs();
 	}
 
-	@Override
-	protected void succeeded(Description description) {
-		// TODO Auto-generated method stub
-		super.succeeded(description);
-	}
 
 	@Override
 	protected void failed(Throwable e, Description description) {
 		Protocol.log("Failed", "The test " + description.getDisplayName() + " failed!",
 				SessionManager.getSession());
-	}
-
-	@Override
-	protected void skipped(AssumptionViolatedException e,
-			Description description) {
-		// TODO Auto-generated method stub
-		super.skipped(e, description);
 	}
 
 
