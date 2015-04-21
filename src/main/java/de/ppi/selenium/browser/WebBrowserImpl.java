@@ -3,12 +3,16 @@
  */
 package de.ppi.selenium.browser;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.UnreachableBrowserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.ppi.selenium.util.Protocol;
 
@@ -19,14 +23,39 @@ import de.ppi.selenium.util.Protocol;
  */
 public class WebBrowserImpl implements WebBrowser {
 
+	public static final Logger LOG = LoggerFactory.getLogger(WebBrowserImpl.class);
+
+	private static final List<WebBrowser> ALL_INSTANCES = new ArrayList<>();
+
     private final WebDriver webdriver;
 
     private final String sessionId;
 
     private String baseUrl;
 
-    //TODO this must be set outside.
-    private final boolean logEveryPage = true;
+    static {
+    	Runtime.getRuntime().addShutdownHook(new Thread(){
+
+			@Override
+			public void run() {
+				for (WebBrowser webBrowser : ALL_INSTANCES) {
+					try {
+						webBrowser.quit();
+					} catch (UnreachableBrowserException ube) {
+						//no problem.
+					} catch (Exception e) {
+						LOG.warn("Problem to shutdown a browser (" +
+								webBrowser.getSessionId() + ")", e);
+					}
+				}
+				super.run();
+			}
+
+    	});
+    }
+
+    private final boolean logBeforeGet = Boolean.getBoolean("webtest.logBeforeGet");
+    private final boolean logAfterGet = Boolean.getBoolean("webtest.logAfterGet");
 
     /**
      * Creates a new browser-session.
@@ -36,6 +65,7 @@ public class WebBrowserImpl implements WebBrowser {
      */
     public WebBrowserImpl(WebDriver webdriver, String sessionId, String baseUrl) {
         super();
+        ALL_INSTANCES.add(this);
         this.sessionId = sessionId;
         this.webdriver = webdriver;
         setBaseUrl(baseUrl);
@@ -67,8 +97,11 @@ public class WebBrowserImpl implements WebBrowser {
      * @see org.openqa.selenium.WebDriver#get(java.lang.String)
      */
     public void get(String url) {
+        if (logBeforeGet) {
+        	Protocol.log(getTitle(), "Goto " + url, webdriver);
+        }
         webdriver.get(url);
-        if (logEveryPage) {
+        if (logAfterGet) {
         	Protocol.log(getTitle(), "Opened " + url, webdriver);
         }
     }
@@ -138,6 +171,7 @@ public class WebBrowserImpl implements WebBrowser {
      */
     public void quit() {
         webdriver.quit();
+        ALL_INSTANCES.remove(this);
     }
 
     /**

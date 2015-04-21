@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * Copied from https://github.com/FINRAOS/JTAF-ExtWebDriver
  */
 public class ClientProperties {
-    private final Logger logger = LoggerFactory.getLogger(ClientProperties.class.getPackage().getName());
+    private final Logger logger = LoggerFactory.getLogger(ClientProperties.class);
 
     private URL client;
 

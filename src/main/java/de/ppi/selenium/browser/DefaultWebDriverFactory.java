@@ -76,7 +76,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
     public void cleanup(Map<String, String> options) throws Exception {
 
         ClientProperties properties = new ClientProperties(options.get(CLIENT_PROPERTIES_KEY));
-        //TODO bei pantomjs ist das durch aus sinnvoll mit dem Kill. Der FF schliesst sich meine ich von alleine...
+        //TODO Is this really needed?
         if (!executedTaskKill) {
             synchronized (lock) {
                 if (properties.isKillTasksAtStartup()) {
@@ -350,8 +350,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
     }
 
     @Override
-    public WebDriver createWebDriver(Map<String, String> options, DesiredCapabilities capabilities)
-            throws Exception {
+    public WebDriver createWebDriver(Map<String, String> options, DesiredCapabilities capabilities) throws IOException {
         ClientProperties properties = new ClientProperties(options.get(CLIENT_PROPERTIES_KEY));
 
         WebDriver wd = null;
@@ -363,7 +362,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                     capabilities);
             remoteWebDriver.setFileDetector(new LocalFileDetector());
             wd = remoteWebDriver;
-        }else {
+        } else {
             if (browser == null || browser.equals("")) {
                 throw new RuntimeException(
                         "Browser cannot be null. Please set 'browser' in client properties. Supported browser types: IE, Firefox, Chrome, Safari, HtmlUnit.");
@@ -440,8 +439,8 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 wd = new PhantomJSDriver(ResolvingPhantomJSDriverService
                         .createDefaultService(), desiredCapabilities);
             } else {
-                throw new Exception("Unsupported browser type: " + browser
-                        + ". Supported browser types: IE, Firefox, Chrome, Safari, HtmlUnit.");
+                throw new IllegalArgumentException("Unsupported browser type: " + browser
+                        + ". Supported browser types: IE, Firefox, Chrome, Safari, HtmlUnit, phantomjs.");
             }
 
             // move browser windows to specific position. It's useful for

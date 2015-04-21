@@ -16,6 +16,7 @@
  */
 package de.ppi.selenium.browser;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
@@ -42,7 +43,7 @@ public interface WebDriverFactory {
     public void cleanup(Map<String, String> options) throws Exception;
 
 
-    
+
     /**
     *
     * @param options
@@ -51,7 +52,7 @@ public interface WebDriverFactory {
     * @throws Exception
     */
    public DesiredCapabilities createCapabilities(Map<String, String> options) throws Exception;
-    
+
     /**
      *
      * @param options
@@ -59,9 +60,9 @@ public interface WebDriverFactory {
      * @param capabilities
      *            the capabilities you want webdriver to have
      * @return the instance of WebDriver not wrapped by our extended version
-     * @throws Exception
+     * @throws IOException can't access the browser.
      */
     public WebDriver createWebDriver(Map<String, String> options, DesiredCapabilities capabilities)
-            throws Exception;
+            throws IOException;
 
 }

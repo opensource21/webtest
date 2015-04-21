@@ -23,6 +23,8 @@ import java.util.Map.Entry;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.UnreachableBrowserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SessionManager for the testing framework. Uses a {@link ThreadLocal}
@@ -30,7 +32,10 @@ import org.openqa.selenium.remote.UnreachableBrowserException;
  * Based on https://github.com/FINRAOS/JTAF-ExtWebDriver for the properties
  * see http://finraos.github.io/JTAF-ExtWebDriver/clientproperties.html.
  */
+//TODO Exceptionhandling!
 public class SessionManager {
+
+	private final static Logger LOG = LoggerFactory.getLogger(SessionManager.class);
 
 	/**
 	 * Key for the options to define a base-url.
@@ -53,7 +58,6 @@ public class SessionManager {
     private SessionManager() {
 
     }
-
 
 
 	private static ThreadLocal<SessionManager> sessionManager = new ThreadLocal<SessionManager>() {
@@ -143,12 +147,11 @@ public class SessionManager {
                     sel = getNewSession();
                 }
                 return sel;
+            } catch (UnreachableBrowserException e) {
+                LOG.info("Couldn't reach Browser", e);
             } catch (Exception e) {
-                // if the exception is of type UnreachableBrowserException, try
-                // again
-                if (!(e instanceof UnreachableBrowserException)) {
-                    e.printStackTrace();
-                }
+            	throw new IllegalArgumentException("Problem to create instance: "
+            			+ e.getLocalizedMessage(), e);
             }
         }
         return null;
@@ -426,4 +429,11 @@ public class SessionManager {
         nextCustomSessionId++;
         return id;
     }
+
+    public void quitAllSessions() {
+    	for (WebBrowser webBrowser : getSessions().values()) {
+			webBrowser.quit();
+		}
+    }
+
 }
