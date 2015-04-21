@@ -24,19 +24,30 @@ public class Protocol extends InheritableThreadLocal<Protocol> {
 
 	private static final Protocol INSTANCE = new Protocol();
 
-	private final File protocolDir;
+	private File protocolDir;
 
 	 /** The constant for the regular expresion which is replaced in the export filename. */
     private static final String REGEXP_FILENAME_TO_REPLACE = "\\W+";
 
 
-	public Protocol() {
-		this.protocolDir = createDefaultProtocolDir();
+	private Protocol() {
 	}
 
 
+	/**
+	 * Creates a new instance.
+	 * @param baseDir - the base-directory where the protocol is written.
+	 */
+	public Protocol(File baseDir) {
+		if (baseDir.exists() && baseDir.isDirectory() && baseDir.canWrite()) {
+			this.protocolDir = baseDir;
+		} else {
+			LOG.error(baseDir.getAbsolutePath() + "is not an existing writeable directory.");
+		}
+	}
+
 	private File createDefaultProtocolDir() {
-		File baseDir = new File(System.getProperty("webtest.protocoldir", ""));
+		File baseDir = new File(System.getProperty("webtest.protocoldir", "."));
 		if (!baseDir.exists()) {
 			if (!baseDir.mkdirs()) {
 				LOG.error("Couldn't create basedDir " + baseDir.getAbsolutePath());
@@ -51,21 +62,6 @@ public class Protocol extends InheritableThreadLocal<Protocol> {
 		tempProtocolDir.mkdir();
 		return tempProtocolDir;
 	}
-
-
-	/**
-	 * Creates a new instance.
-	 * @param baseDir - the base-directory where the protocol is written.
-	 */
-	public Protocol(File baseDir) {
-		if (baseDir.exists() && baseDir.isDirectory() && baseDir.canWrite()) {
-			this.protocolDir = baseDir;
-		} else {
-			LOG.error(baseDir.getAbsolutePath() + "is not an existing writeable directory.");
-			this.protocolDir = createDefaultProtocolDir();
-		}
-	}
-
 
 
 	@Override
@@ -90,7 +86,20 @@ public class Protocol extends InheritableThreadLocal<Protocol> {
    }
 
 
-   /**
+   	public File getProtocolDir() {
+	   if (protocolDir == null) {
+		   protocolDir = createDefaultProtocolDir();
+	   }
+	   return protocolDir;
+	}
+
+
+	public synchronized void setProtocolDir(File protocolDir) {
+		this.protocolDir = protocolDir;
+	}
+
+
+/**
     * Protocolized the description.
     *
     * @param title a short description title
