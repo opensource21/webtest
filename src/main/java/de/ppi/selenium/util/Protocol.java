@@ -20,11 +20,11 @@ public class Protocol extends InheritableThreadLocal<Protocol> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Protocol.class);
 
+	private static final String protocolStart = new SimpleDateFormat("yyyy-MM-dd_hh_mm_ss").format(new Date());
+
 	private static final Protocol INSTANCE = new Protocol();
 
 	private final File protocolDir;
-
-	private static final String protocolStart = new SimpleDateFormat("yyyy-MM-dd_hh_mm_ss").format(new Date());
 
 	 /** The constant for the regular expresion which is replaced in the export filename. */
     private static final String REGEXP_FILENAME_TO_REPLACE = "\\W+";
