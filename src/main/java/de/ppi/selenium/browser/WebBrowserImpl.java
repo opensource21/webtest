@@ -23,7 +23,7 @@ public class WebBrowserImpl implements WebBrowser {
 
     private final String sessionId;
 
-    private final String baseUrl;
+    private String baseUrl;
 
     //TODO this must be set outside.
     private final boolean logEveryPage = true;
@@ -38,12 +38,9 @@ public class WebBrowserImpl implements WebBrowser {
         super();
         this.sessionId = sessionId;
         this.webdriver = webdriver;
-        if (baseUrl.endsWith("/")) {
-        	this.baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
-        } else {
-        	this.baseUrl = baseUrl;
-        }
+        setBaseUrl(baseUrl);
     }
+
 
 
     /**
@@ -55,6 +52,14 @@ public class WebBrowserImpl implements WebBrowser {
 
     public String getBaseUrl() {
 		return baseUrl;
+	}
+
+	public void setBaseUrl(String baseUrl) {
+		if (baseUrl.endsWith("/")) {
+        	this.baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+        } else {
+        	this.baseUrl = baseUrl;
+        }
 	}
 
 	/**

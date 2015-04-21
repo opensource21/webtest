@@ -96,6 +96,9 @@ public class SessionManager {
      */
 	public void setDefaultBaseUrl(String defaultBaseUrl) {
 		this.defaultBaseUrl = defaultBaseUrl;
+		for (WebBrowser webBrowser : getSessions().values()) {
+			((WebBrowserImpl) webBrowser).setBaseUrl(defaultBaseUrl);
+		}
 	}
 
     /**
