@@ -9,3 +9,5 @@ must be set via `-D<propertyName>=value`.
 - `webtest.logBeforeGet` - if `true` a screenshot is created before a new page is requested via get.
 - `webtest.logAfterGet` - if `true` a screenshot is created after a new page is requested via get.
 - `webtest.protocoldir` - defines the default-dir for webtest-logs.
+
+- `webtest.baseurl` - defines the base-url.

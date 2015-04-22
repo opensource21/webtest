@@ -48,7 +48,7 @@ public class SessionManager {
 
     private final static int MAX_RETRIES = 5;
 
-    private String defaultBaseUrl = "http://localhost:8080";
+    private String defaultBaseUrl = System.getProperty(BASE_URL_KEY);
 
     private String currentSessionId = DEFAULT_SESSION;
     private int nextCustomSessionId = 1;
@@ -98,12 +98,15 @@ public class SessionManager {
      * Possibility to set the default base-url.
      * @param defaultBaseUrl the default base-url.
      */
-	public void setDefaultBaseUrl(String defaultBaseUrl) {
-		this.defaultBaseUrl = defaultBaseUrl;
-		for (WebBrowser webBrowser : getSessions().values()) {
-			((WebBrowserImpl) webBrowser).setBaseUrl(defaultBaseUrl);
-		}
-	}
+    public void setDefaultBaseUrl(String defaultBaseUrl) {
+        if (this.defaultBaseUrl == null) {
+            for (WebBrowser webBrowser : getSessions().values()) {
+                ((WebBrowserImpl) webBrowser).setBaseUrl(defaultBaseUrl);
+            }
+        }
+        this.defaultBaseUrl = defaultBaseUrl;
+    }
+
 
     /**
      * Configure the current instance of SessionManager to use the given
