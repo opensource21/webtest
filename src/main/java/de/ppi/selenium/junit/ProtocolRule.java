@@ -28,6 +28,13 @@ public class ProtocolRule extends TestWatcher {
 
 	/**
 	 * Creates a new instance.
+	 */
+	public ProtocolRule() {
+		this(System.getProperty("webtest.protocoldir", "."));
+	}
+
+	/**
+	 * Creates a new instance.
 	 * @param baseDir - the base-directory where the protocol is written.
 	 */
 	public ProtocolRule(String baseDir) {
