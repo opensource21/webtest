@@ -39,11 +39,7 @@ public class Protocol extends InheritableThreadLocal<Protocol> {
 	 * @param baseDir - the base-directory where the protocol is written.
 	 */
 	public Protocol(File baseDir) {
-		if (baseDir.exists() && baseDir.isDirectory() && baseDir.canWrite()) {
-			this.protocolDir = baseDir;
-		} else {
-			LOG.error(baseDir.getAbsolutePath() + "is not an existing writeable directory.");
-		}
+		setProtocolDir(baseDir);
 	}
 
 	private File createDefaultProtocolDir() {
@@ -77,7 +73,7 @@ public class Protocol extends InheritableThreadLocal<Protocol> {
     * @param webDriver the webdriver.
     */
    public void saveScreenshot(String description, WebDriver webDriver) {
-	   final StringBuilder screenshotFileName = new StringBuilder(protocolDir.getAbsolutePath());
+	   final StringBuilder screenshotFileName = new StringBuilder(getProtocolDir().getAbsolutePath());
 	   screenshotFileName.append(File.separatorChar);
 	   screenshotFileName.append(new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss_SSS'-'").format(new Date()));
 	   screenshotFileName.append(description.replaceAll(REGEXP_FILENAME_TO_REPLACE, "_")).append('-');
@@ -86,7 +82,7 @@ public class Protocol extends InheritableThreadLocal<Protocol> {
    }
 
 
-   	public File getProtocolDir() {
+   	public final File getProtocolDir() {
 	   if (protocolDir == null) {
 		   protocolDir = createDefaultProtocolDir();
 	   }
@@ -94,8 +90,12 @@ public class Protocol extends InheritableThreadLocal<Protocol> {
 	}
 
 
-	public synchronized void setProtocolDir(File protocolDir) {
-		this.protocolDir = protocolDir;
+	public final synchronized void setProtocolDir(File protocolDir) {
+		if (protocolDir.exists() && protocolDir.isDirectory() && protocolDir.canWrite()) {
+			this.protocolDir = protocolDir;
+		} else {
+			LOG.error(protocolDir.getAbsolutePath() + "is not an existing writeable directory.");
+		}
 	}
 
 
