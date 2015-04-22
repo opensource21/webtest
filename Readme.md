@@ -11,3 +11,5 @@ must be set via `-D<propertyName>=value`.
 - `webtest.protocoldir` - defines the default-dir for webtest-logs.
 
 - `webtest.baseurl` - defines the base-url.
+- `phantomjs.binary.path` - defines the path to phantomjs for example
+   `C:\\RegFreeProgs\\phantomjs\\phantomjs.exe`
