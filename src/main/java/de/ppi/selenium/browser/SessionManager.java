@@ -48,7 +48,7 @@ public class SessionManager {
 
     private final static int MAX_RETRIES = 5;
 
-    private String defaultBaseUrl = "http:/localhost:8080";
+    private String defaultBaseUrl = "http://localhost:8080";
 
     private String currentSessionId = DEFAULT_SESSION;
     private int nextCustomSessionId = 1;
