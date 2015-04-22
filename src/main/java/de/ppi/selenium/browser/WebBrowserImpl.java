@@ -222,4 +222,16 @@ public class WebBrowserImpl implements WebBrowser {
     }
 
 
+
+	@Override
+	public String getCurrentRelativeUrl() {
+		final String currentUrl = getCurrentUrl();
+		if (currentUrl.startsWith(baseUrl)) {
+			return currentUrl.substring(baseUrl.length());
+		} else {
+			return currentUrl;
+		}
+	}
+
+
 }

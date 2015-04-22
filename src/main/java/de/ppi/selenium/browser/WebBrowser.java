@@ -28,5 +28,13 @@ public interface WebBrowser extends WebDriver, WrapsDriver {
      */
     void getRelativeUrl(String relativeUrl);
 
+    /**
+     * Get a string representing the current URL that the browser is looking at,
+     * without the base-url.
+     *
+     * @return The URL of the page currently loaded in the browser, without the base-url.
+     */
+    String getCurrentRelativeUrl();
+
 
 }
