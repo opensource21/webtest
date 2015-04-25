@@ -31,11 +31,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Enables storage of and access to driver and browser configuration.
- * Copied from https://github.com/FINRAOS/JTAF-ExtWebDriver
+ * Enables storage of and access to driver and browser configuration. Copied
+ * from https://github.com/FINRAOS/JTAF-ExtWebDriver
  */
 public class ClientProperties {
-    private final Logger logger = LoggerFactory.getLogger(ClientProperties.class);
+    private final Logger logger = LoggerFactory
+            .getLogger(ClientProperties.class);
 
     private URL client;
 
@@ -91,8 +92,7 @@ public class ClientProperties {
     /**
      * Constructs a {@code ClientProperties} from the given file.
      *
-     * @param filePath
-     *            the file to be loaded
+     * @param filePath the file to be loaded
      */
     public ClientProperties(String filePath) {
         URL clientPath = this.getClass().getClassLoader().getResource(filePath);
@@ -103,20 +103,26 @@ public class ClientProperties {
             // Disable delimiting values (default is comma delimited)
             this.config.load(client);
         } catch (ConfigurationException e) {
-            String message = "Client configuration could not be loaded from file: \""
-                    + filePath + "\"";
+            String message =
+                    "Client configuration could not be loaded from file: \""
+                            + filePath + "\"";
             this.logger.error(message, e);
             throw new RuntimeException(message, e);
         }
         propertiesConfigurationLayout = config.getLayout();
 
-        browser = load("browser", "htmlunit", "Browser name. See browsers supported by WebDriver.");
-        browserVersion = load("browser.version", null, "Version of the browser (if applicable).");
+        browser =
+                load("browser", "htmlunit",
+                        "Browser name. See browsers supported by WebDriver.");
+        browserVersion =
+                load("browser.version", null,
+                        "Version of the browser (if applicable).");
         proxy = load("proxy", null, null);
         proxyHttps = load("proxy.https", null, null);
 
-        String browserInitPositionXStr = load("browser.init.position.x", "0",
-                "Horizontal position for moving browser to. Useful for debugging tests.");
+        String browserInitPositionXStr =
+                load("browser.init.position.x", "0",
+                        "Horizontal position for moving browser to. Useful for debugging tests.");
         try {
             browserInitPositionX = Integer.parseInt(browserInitPositionXStr);
         } catch (Exception e) {
@@ -125,8 +131,9 @@ public class ClientProperties {
                     + "' (value of 'browser.init.position.x' property from client properties file) as integer. Please fix your test configuration.");
         }
 
-        String browserInitPositionYStr = load("browser.init.position.y", "0",
-                "Vertical position for moving browser to. Useful for debugging tests.");
+        String browserInitPositionYStr =
+                load("browser.init.position.y", "0",
+                        "Vertical position for moving browser to. Useful for debugging tests.");
         try {
             browserInitPositionY = Integer.parseInt(browserInitPositionYStr);
         } catch (Exception e) {
@@ -137,56 +144,68 @@ public class ClientProperties {
 
         os = load("os", null, null);
         osVersion = load("os.version", null, null);
-        maxPageWaitString = load("maxPageWait", "30000",
-                "Standard maximum page wait timeout throughout your automation project (in milliseconds)");
+        maxPageWaitString =
+                load("maxPageWait",
+                        "30000",
+                        "Standard maximum page wait timeout throughout your automation project (in milliseconds)");
         try {
             maxPageWait = Integer.parseInt(maxPageWaitString);
         } catch (Exception e) {
         }
 
-        appearWaitTimeString = load("appearWaitTime", "5000",
-                "Maximum time for waiting of element appear (in milliseconds)");
+        appearWaitTimeString =
+                load("appearWaitTime", "5000",
+                        "Maximum time for waiting of element appear (in milliseconds)");
         try {
             appearWaitTime = Integer.parseInt(appearWaitTimeString);
         } catch (Exception e) {
         }
 
-        maxRequestTimeoutString = load("maxRequestTimeout", "30000",
-                "Standard maximum request wait timeout throughout your automation project (in milliseconds)");
+        maxRequestTimeoutString =
+                load("maxRequestTimeout",
+                        "30000",
+                        "Standard maximum request wait timeout throughout your automation project (in milliseconds)");
         try {
             maxRequestTimeout = Integer.parseInt(maxRequestTimeoutString);
         } catch (Exception e) {
         }
 
-        maxDownloadWaitTime = Integer.parseInt(load("download.time", "30000",
-                "Maximum download wait timeout"));
-        downloadFolder = load("download.folder", null, "Default download folder");
-        binaryPath = load(
-                "binaryPath",
-                null,
-                "Path to Firefox executable (if you want to use specific version installed on your machine instead of default FF installation)");
-        webDriverIEDriver = load("webdriver.ie.driver", null, "Path to IEDriverServer.exe");
-        webDriverChromeDriver = load("webdriver.chrome.driver", null,
-                "Path to chromedriver executable");
+        maxDownloadWaitTime =
+                Integer.parseInt(load("download.time", "30000",
+                        "Maximum download wait timeout"));
+        downloadFolder =
+                load("download.folder", null, "Default download folder");
+        binaryPath =
+                load("binaryPath",
+                        null,
+                        "Path to Firefox executable (if you want to use specific version installed on your machine instead of default FF installation)");
+        webDriverIEDriver =
+                load("webdriver.ie.driver", null, "Path to IEDriverServer.exe");
+        webDriverChromeDriver =
+                load("webdriver.chrome.driver", null,
+                        "Path to chromedriver executable");
 
-        String uploadFolderStr = load("upload.folder", null,
-                "Default folder to grab files from to perform upload");
+        String uploadFolderStr =
+                load("upload.folder", null,
+                        "Default folder to grab files from to perform upload");
         if (uploadFolderStr != null && !uploadFolderStr.equals("")) {
             File temp = new File(uploadFolderStr);
             uploadFolder = temp.getAbsolutePath();
         } else {
             uploadFolder = ".";
         }
-        firefoxProfileFolder = load("firefoxProfile.folder", null,
-                "Path to custom Firefox profile (setup Firefox profile)");
-        firefoxPropertiesFile = load(
-                "firefoxProfile.file",
-                null,
-                "Properties file containing configuration you want to load to current Firefox profile (setup Firefox properties file)");
+        firefoxProfileFolder =
+                load("firefoxProfile.folder", null,
+                        "Path to custom Firefox profile (setup Firefox profile)");
+        firefoxPropertiesFile =
+                load("firefoxProfile.file",
+                        null,
+                        "Properties file containing configuration you want to load to current Firefox profile (setup Firefox properties file)");
 
         // Check before 'webdriver.doTaskKill'
-        String useGridStr = load("useGrid", "false",
-                "Setting for running tests against Selenium Grid or Sauce Labs");
+        String useGridStr =
+                load("useGrid", "false",
+                        "Setting for running tests against Selenium Grid or Sauce Labs");
         if (useGridStr != null && useGridStr.equalsIgnoreCase("true")) {
             useGrid = true;
         } else {
@@ -194,14 +213,17 @@ public class ClientProperties {
         }
 
         // Check after 'useGrid'
-        String taskCheck = load("webdriver.doTaskKill", "true",
-                "Gracefully kill all the driver server processes at the beginning of execution");
+        String taskCheck =
+                load("webdriver.doTaskKill", "true",
+                        "Gracefully kill all the driver server processes at the beginning of execution");
         if (taskCheck != null) {
-            if (taskCheck.equalsIgnoreCase("false") || taskCheck.equalsIgnoreCase("0")
+            if (taskCheck.equalsIgnoreCase("false")
+                    || taskCheck.equalsIgnoreCase("0")
                     || taskCheck.equalsIgnoreCase("no") || useGrid) {
                 doTaskKill = false;
-            } else if ((taskCheck.equalsIgnoreCase("true") || taskCheck.equalsIgnoreCase("1") || taskCheck
-                    .equalsIgnoreCase("yes"))) {
+            } else if ((taskCheck.equalsIgnoreCase("true")
+                    || taskCheck.equalsIgnoreCase("1") || taskCheck
+                        .equalsIgnoreCase("yes"))) {
                 doTaskKill = true;
             } else {
                 logger.error("Property 'doTaskKill' is not within range of accepted values. (Range of accepted values are '1'/'0', 'Yes'/'No' and 'True'/'False')");
@@ -212,32 +234,42 @@ public class ClientProperties {
             doTaskKill = true;
         }
 
-        String numberOfDaysToKeepTempFoldersStr = load(
-                "numberOfDaysToKeepTempFolders",
-                "7",
-                "Specify the period of which you want to keep temporary WebDriver folders created in temp directory");
+        String numberOfDaysToKeepTempFoldersStr =
+                load("numberOfDaysToKeepTempFolders",
+                        "7",
+                        "Specify the period of which you want to keep temporary WebDriver folders created in temp directory");
         try {
-            numberOfDaysToKeepTempFolders = Integer.parseInt(numberOfDaysToKeepTempFoldersStr);
+            numberOfDaysToKeepTempFolders =
+                    Integer.parseInt(numberOfDaysToKeepTempFoldersStr);
         } catch (Exception e) {
         }
 
-        tempFolderNameContainsList = load("tempFolderNameContainsList", null,
-                "Comma separated list of folders to clean with webDriver temp files");
+        tempFolderNameContainsList =
+                load("tempFolderNameContainsList", null,
+                        "Comma separated list of folders to clean with webDriver temp files");
 
-        for (int i = 1; config.containsKey("firefoxProfile.extension." + Integer.toString(i)); i++) {
-            String ext = config.getString("firefoxProfile.extension." + Integer.toString(i));
+        for (int i = 1; config.containsKey("firefoxProfile.extension."
+                + Integer.toString(i)); i++) {
+            String ext =
+                    config.getString("firefoxProfile.extension."
+                            + Integer.toString(i));
             firefoxExtensions.add(ext);
         }
 
-        String highlight = load("highlight", "false", "Highlighting web elements during execution");
-        if (highlight.equalsIgnoreCase("true") || highlight.equalsIgnoreCase("yes")
+        String highlight =
+                load("highlight", "false",
+                        "Highlighting web elements during execution");
+        if (highlight.equalsIgnoreCase("true")
+                || highlight.equalsIgnoreCase("yes")
                 || highlight.equalsIgnoreCase("1")) {
             isHighlight = true;
-        } else if (highlight.equalsIgnoreCase("false") || highlight.equalsIgnoreCase("no")
+        } else if (highlight.equalsIgnoreCase("false")
+                || highlight.equalsIgnoreCase("no")
                 || highlight.equalsIgnoreCase("0")) {
             isHighlight = false;
         } else {
-            logger.error("Error parsing client property 'highlight' ('" + highlight
+            logger.error("Error parsing client property 'highlight' ('"
+                    + highlight
                     + "'). It can be one of 'true / false', 'yes / no', '1 / 0'.");
         }
 
@@ -245,8 +277,9 @@ public class ClientProperties {
         loadColorMapRgb();
         maxAllowedSessions = load("maxAllowedSessions", null, null);
 
-        String debug = load("debugMode", "false",
-                "Test debug mode. If it is on, highlight will be turned on by default");
+        String debug =
+                load("debugMode", "false",
+                        "Test debug mode. If it is on, highlight will be turned on by default");
 
         // If debug is on, then turn highlight on
         if (debug != null && debug.equalsIgnoreCase("true")) {
@@ -256,21 +289,26 @@ public class ClientProperties {
             debugMode = false;
         }
 
-        String selectLastFrameStr = load("selectLastFrame", "true",
-                "Feature to select last frame automatically");
-        if (selectLastFrameStr != null && selectLastFrameStr.equalsIgnoreCase("false")) {
+        String selectLastFrameStr =
+                load("selectLastFrame", "true",
+                        "Feature to select last frame automatically");
+        if (selectLastFrameStr != null
+                && selectLastFrameStr.equalsIgnoreCase("false")) {
             selectLastFrame = false;
         } else {
             selectLastFrame = true;
         }
 
-        gridUrl = load("grid.url",
-                "http://username-string:access-key-string@ondemand.saucelabs.com:80/wd/hub",
-                "Sauce labs URL (e.g. 'http://username-string:access-key-string@ondemand.saucelabs.com:80/wd/hub')");
-        gridPlatform = load("grid.platform", "Windows 7",
-                "Selenium Grid OS Platform name (e.g. 'Windows 7')");
-        gridProperties = load("grid.properties", "record-screenshots=true",
-                "Space separated Selenium Grid properties (e.g. 'record-screenshots=true')");
+        gridUrl =
+                load("grid.url",
+                        "http://username-string:access-key-string@ondemand.saucelabs.com:80/wd/hub",
+                        "Sauce labs URL (e.g. 'http://username-string:access-key-string@ondemand.saucelabs.com:80/wd/hub')");
+        gridPlatform =
+                load("grid.platform", "Windows 7",
+                        "Selenium Grid OS Platform name (e.g. 'Windows 7')");
+        gridProperties =
+                load("grid.properties", "record-screenshots=true",
+                        "Space separated Selenium Grid properties (e.g. 'record-screenshots=true')");
     }
 
     /**
@@ -279,13 +317,10 @@ public class ClientProperties {
      * If the configuration already contains the given key, no change is made to
      * the configuration.
      *
-     * @param key
-     *            the key to be put into the configuration
-     * @param defaultValue
-     *            the value to be put into the configuration; if {@code null},
-     *            then no change is made to the configuration
-     * @param comment
-     *            a comment to be set for the key/value pair; {@code null}
+     * @param key the key to be put into the configuration
+     * @param defaultValue the value to be put into the configuration; if
+     *            {@code null}, then no change is made to the configuration
+     * @param comment a comment to be set for the key/value pair; {@code null}
      *            values permitted
      * @return the newly set value, or the current value if the configuration
      *         already contains the given key
@@ -307,60 +342,67 @@ public class ClientProperties {
                     }
                     config.save(config.getPath());
                 } catch (ConfigurationException e) {
-                    logger.error("Error saving updated property file ('" + config.getPath() + "')"
-                            + e);
+                    logger.error("Error saving updated property file ('"
+                            + config.getPath() + "')" + e);
                 }
             }
             return defaultValue;
         }
     }
 
-	/**
-	 * load the color mode and rgb values from the client properties file as
-	 * key/value pairs in the highlighColorMap
-	 *
-	 */
+    /**
+     * load the color mode and rgb values from the client properties file as
+     * key/value pairs in the highlighColorMap
+     *
+     */
     private final void loadColorMapRgb() {
         Iterator<String> colorKeys = config.getKeys("highlight");
-        if(colorKeys!=null){
-            while(colorKeys.hasNext()){
-            	String current = colorKeys.next();
-          	  String[] splits = current.split("\\.");
-          	  if(splits.length > 1){
-          		  String val = config.getString(current);
-          		  if(val.startsWith("rgb"))
-          			  highlightColorMap.put(splits[1].toUpperCase(), val);
-          		  else
-          			logger.warn("Please check property " +current+ ". The highlight color has to specify RGB values in this format: eg. highlight.find=rgb(255,255,0)");
-          	  }
-          	  else if(splits[0].equals("highlight")){
+        if (colorKeys != null) {
+            while (colorKeys.hasNext()) {
+                String current = colorKeys.next();
+                String[] splits = current.split("\\.");
+                if (splits.length > 1) {
+                    String val = config.getString(current);
+                    if (val.startsWith("rgb"))
+                        highlightColorMap.put(splits[1].toUpperCase(), val);
+                    else
+                        logger.warn("Please check property "
+                                + current
+                                + ". The highlight color has to specify RGB values in this format: eg. highlight.find=rgb(255,255,0)");
+                } else if (splits[0].equals("highlight")) {
 
-          		continue;
-          	  }
+                    continue;
+                }
             }
         }
 
+        // default load
+        logger.warn("No RGB property for highlight was provided. Colors set to default.");
+        if (!highlightColorMap.containsKey("find"))
+            highlightColorMap.put(
+                    "find".toUpperCase(),
+                    load("highlight.find", "rgb(255, 255, 0)",
+                            "color for highlight element during finding"));
+        if (!highlightColorMap.containsKey("get"))
+            highlightColorMap.put(
+                    "get".toUpperCase(),
+                    load("highlight.get", "rgb(135, 206, 250)",
+                            "color for highlight element during finding"));
+        if (!highlightColorMap.containsKey("put"))
+            highlightColorMap.put(
+                    "put".toUpperCase(),
+                    load("highlight.put", "rgb(152, 251, 152)",
+                            "color for highlight element during finding"));
 
-        	//default load
-      		logger.warn("No RGB property for highlight was provided. Colors set to default.");
-        	if(!highlightColorMap.containsKey("find"))
-            	highlightColorMap.put("find".toUpperCase(), load("highlight.find", "rgb(255, 255, 0)", "color for highlight element during finding"));
-            if(!highlightColorMap.containsKey("get"))
-            	highlightColorMap.put("get".toUpperCase(), load("highlight.get", "rgb(135, 206, 250)", "color for highlight element during finding"));
-            if(!highlightColorMap.containsKey("put"))
-            	highlightColorMap.put("put".toUpperCase(), load("highlight.put", "rgb(152, 251, 152)", "color for highlight element during finding"));
+    }
 
+    public String getHighlightColor(String colorMode) {
+        return highlightColorMap.get(colorMode.toUpperCase());
+    }
 
-
-      }
-
-      public String getHighlightColor(String colorMode){
-      	return highlightColorMap.get( colorMode.toUpperCase());
-      }
-
-      public Map<String, String> getHighlightColorMap(){
-      	return this.highlightColorMap;
-      }
+    public Map<String, String> getHighlightColorMap() {
+        return this.highlightColorMap;
+    }
 
     /**
      * Returns the name of the browser.
@@ -533,7 +575,6 @@ public class ClientProperties {
     public boolean isHighlight() {
         return isHighlight;
     }
-
 
     /**
      * Returns a {@code List} of Firefox extensions.

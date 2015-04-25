@@ -18,14 +18,16 @@ import de.ppi.selenium.util.Protocol;
 
 /**
  * Concrete web-browser
+ *
  * @author niels
  *
  */
 public class WebBrowserImpl implements WebBrowser {
 
-	public static final Logger LOG = LoggerFactory.getLogger(WebBrowserImpl.class);
+    public static final Logger LOG = LoggerFactory
+            .getLogger(WebBrowserImpl.class);
 
-	private static final List<WebBrowser> ALL_INSTANCES = new ArrayList<>();
+    private static final List<WebBrowser> ALL_INSTANCES = new ArrayList<>();
 
     private final WebDriver webdriver;
 
@@ -34,32 +36,37 @@ public class WebBrowserImpl implements WebBrowser {
     private String baseUrl;
 
     static {
-    	Runtime.getRuntime().addShutdownHook(new Thread(){
+        Runtime.getRuntime().addShutdownHook(new Thread() {
 
-			@Override
-			public void run() {
-				final List<WebBrowser> allBrowsers = new ArrayList<>(ALL_INSTANCES);
-				for (WebBrowser webBrowser : allBrowsers) {
-					try {
-						webBrowser.quit();
-					} catch (UnreachableBrowserException ube) {
-						//no problem.
-					} catch (Exception e) {
-						LOG.warn("Problem to shutdown a browser (" +
-								webBrowser.getSessionId() + ")", e);
-					}
-				}
-				super.run();
-			}
+            @Override
+            public void run() {
+                final List<WebBrowser> allBrowsers =
+                        new ArrayList<>(ALL_INSTANCES);
+                for (WebBrowser webBrowser : allBrowsers) {
+                    try {
+                        webBrowser.quit();
+                    } catch (UnreachableBrowserException ube) {
+                        // no problem.
+                    } catch (Exception e) {
+                        LOG.warn(
+                                "Problem to shutdown a browser ("
+                                        + webBrowser.getSessionId() + ")", e);
+                    }
+                }
+                super.run();
+            }
 
-    	});
+        });
     }
 
-    private final boolean logBeforeGet = Boolean.getBoolean("webtest.logBeforeGet");
-    private final boolean logAfterGet = Boolean.getBoolean("webtest.logAfterGet");
+    private final boolean logBeforeGet = Boolean
+            .getBoolean("webtest.logBeforeGet");
+    private final boolean logAfterGet = Boolean
+            .getBoolean("webtest.logAfterGet");
 
     /**
      * Creates a new browser-session.
+     *
      * @param webdriver the native webdriver
      * @param sessionId the id of the session to get the webbrowser.
      * @param baseUrl the basis url, where all other are relative to.
@@ -72,38 +79,39 @@ public class WebBrowserImpl implements WebBrowser {
         setBaseUrl(baseUrl);
     }
 
-
-
     /**
      * @return the sessionId
      */
+    @Override
     public String getSessionId() {
         return sessionId;
     }
 
+    @Override
     public String getBaseUrl() {
-		return baseUrl;
-	}
+        return baseUrl;
+    }
 
-	public void setBaseUrl(String baseUrl) {
-		if (baseUrl.endsWith("/")) {
-        	this.baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+    public void setBaseUrl(String baseUrl) {
+        if (baseUrl.endsWith("/")) {
+            this.baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
         } else {
-        	this.baseUrl = baseUrl;
+            this.baseUrl = baseUrl;
         }
-	}
+    }
 
-	/**
+    /**
      * @param url
      * @see org.openqa.selenium.WebDriver#get(java.lang.String)
      */
+    @Override
     public void get(String url) {
         if (logBeforeGet) {
-        	Protocol.log(getTitle(), "Goto " + url, webdriver);
+            Protocol.log(getTitle(), "Goto " + url, webdriver);
         }
         webdriver.get(url);
         if (logAfterGet) {
-        	Protocol.log(getTitle(), "Opened " + url, webdriver);
+            Protocol.log(getTitle(), "Opened " + url, webdriver);
         }
     }
 
@@ -112,14 +120,16 @@ public class WebBrowserImpl implements WebBrowser {
      *
      * @param relativeUrl the relative url.
      */
+    @Override
     public void getRelativeUrl(String relativeUrl) {
-    	get(getBaseUrl() + relativeUrl);
+        get(getBaseUrl() + relativeUrl);
     }
 
     /**
      * @return
      * @see org.openqa.selenium.WebDriver#getCurrentUrl()
      */
+    @Override
     public String getCurrentUrl() {
         return webdriver.getCurrentUrl();
     }
@@ -128,6 +138,7 @@ public class WebBrowserImpl implements WebBrowser {
      * @return
      * @see org.openqa.selenium.WebDriver#getTitle()
      */
+    @Override
     public String getTitle() {
         return webdriver.getTitle();
     }
@@ -137,6 +148,7 @@ public class WebBrowserImpl implements WebBrowser {
      * @return
      * @see org.openqa.selenium.WebDriver#findElements(org.openqa.selenium.By)
      */
+    @Override
     public List<WebElement> findElements(By by) {
         return webdriver.findElements(by);
     }
@@ -146,6 +158,7 @@ public class WebBrowserImpl implements WebBrowser {
      * @return
      * @see org.openqa.selenium.WebDriver#findElement(org.openqa.selenium.By)
      */
+    @Override
     public WebElement findElement(By by) {
         return webdriver.findElement(by);
     }
@@ -154,6 +167,7 @@ public class WebBrowserImpl implements WebBrowser {
      * @return
      * @see org.openqa.selenium.WebDriver#getPageSource()
      */
+    @Override
     public String getPageSource() {
         return webdriver.getPageSource();
     }
@@ -162,6 +176,7 @@ public class WebBrowserImpl implements WebBrowser {
      *
      * @see org.openqa.selenium.WebDriver#close()
      */
+    @Override
     public void close() {
         webdriver.close();
     }
@@ -170,6 +185,7 @@ public class WebBrowserImpl implements WebBrowser {
      *
      * @see org.openqa.selenium.WebDriver#quit()
      */
+    @Override
     public void quit() {
         webdriver.quit();
         ALL_INSTANCES.remove(this);
@@ -179,6 +195,7 @@ public class WebBrowserImpl implements WebBrowser {
      * @return
      * @see org.openqa.selenium.WebDriver#getWindowHandles()
      */
+    @Override
     public Set<String> getWindowHandles() {
         return webdriver.getWindowHandles();
     }
@@ -187,6 +204,7 @@ public class WebBrowserImpl implements WebBrowser {
      * @return
      * @see org.openqa.selenium.WebDriver#getWindowHandle()
      */
+    @Override
     public String getWindowHandle() {
         return webdriver.getWindowHandle();
     }
@@ -195,6 +213,7 @@ public class WebBrowserImpl implements WebBrowser {
      * @return
      * @see org.openqa.selenium.WebDriver#switchTo()
      */
+    @Override
     public TargetLocator switchTo() {
         return webdriver.switchTo();
     }
@@ -203,6 +222,7 @@ public class WebBrowserImpl implements WebBrowser {
      * @return
      * @see org.openqa.selenium.WebDriver#navigate()
      */
+    @Override
     public Navigation navigate() {
         return webdriver.navigate();
     }
@@ -211,27 +231,24 @@ public class WebBrowserImpl implements WebBrowser {
      * @return
      * @see org.openqa.selenium.WebDriver#manage()
      */
+    @Override
     public Options manage() {
         return webdriver.manage();
     }
-
 
     @Override
     public WebDriver getWrappedDriver() {
         return webdriver;
     }
 
-
-
-	@Override
-	public String getCurrentRelativeUrl() {
-		final String currentUrl = getCurrentUrl();
-		if (currentUrl.startsWith(baseUrl)) {
-			return currentUrl.substring(baseUrl.length());
-		} else {
-			return currentUrl;
-		}
-	}
-
+    @Override
+    public String getCurrentRelativeUrl() {
+        final String currentUrl = getCurrentUrl();
+        if (currentUrl.startsWith(baseUrl)) {
+            return currentUrl.substring(baseUrl.length());
+        } else {
+            return currentUrl;
+        }
+    }
 
 }

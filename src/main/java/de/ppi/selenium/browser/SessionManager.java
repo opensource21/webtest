@@ -27,22 +27,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * SessionManager for the testing framework. Uses a {@link ThreadLocal}
- * so each thread of test execution has its own manager instance.
- * Based on https://github.com/FINRAOS/JTAF-ExtWebDriver for the properties
- * see http://finraos.github.io/JTAF-ExtWebDriver/clientproperties.html.
+ * SessionManager for the testing framework. Uses a {@link ThreadLocal} so each
+ * thread of test execution has its own manager instance. Based on
+ * https://github.com/FINRAOS/JTAF-ExtWebDriver for the properties see
+ * http://finraos.github.io/JTAF-ExtWebDriver/clientproperties.html.
  */
-//TODO Exceptionhandling!
+// TODO Exceptionhandling!
 public class SessionManager {
 
-	private final static Logger LOG = LoggerFactory.getLogger(SessionManager.class);
+    private final static Logger LOG = LoggerFactory
+            .getLogger(SessionManager.class);
 
-	/**
-	 * Key for the options to define a base-url.
-	 */
+    /**
+     * Key for the options to define a base-url.
+     */
     public static final String BASE_URL_KEY = "BASE_URL_KEY";
 
-	private Map<String, WebBrowser> sessions = new HashMap<String, WebBrowser>();
+    private Map<String, WebBrowser> sessions =
+            new HashMap<String, WebBrowser>();
 
     private final static String DEFAULT_SESSION = "default";
 
@@ -59,19 +61,21 @@ public class SessionManager {
 
     }
 
+    private static ThreadLocal<SessionManager> sessionManager =
+            new ThreadLocal<SessionManager>() {
+                @Override
+                protected synchronized SessionManager initialValue() {
+                    return new SessionManager();
+                }
+            };
 
-	private static ThreadLocal<SessionManager> sessionManager = new ThreadLocal<SessionManager>() {
-        protected synchronized SessionManager initialValue() {
-            return new SessionManager();
-        }
-    };
-
-    private static ThreadLocal<WebDriverFactory> WebDriverFactory = new ThreadLocal<WebDriverFactory>() {
-        protected synchronized WebDriverFactory initialValue() {
-            return new DefaultWebDriverFactory();
-        }
-    };
-
+    private static ThreadLocal<WebDriverFactory> WebDriverFactory =
+            new ThreadLocal<WebDriverFactory>() {
+                @Override
+                protected synchronized WebDriverFactory initialValue() {
+                    return new DefaultWebDriverFactory();
+                }
+            };
 
     /**
      * Obtain the ThreadLocal instance of SessionManager. Configures the
@@ -83,19 +87,21 @@ public class SessionManager {
      */
 
     public static SessionManager getInstance() {
-    	return sessionManager.get();
+        return sessionManager.get();
     }
 
     /**
      * Get the default base-url.
+     * 
      * @return the default base-url.
      */
     public String getDefaultBaseUrl() {
-		return defaultBaseUrl;
-	}
+        return defaultBaseUrl;
+    }
 
     /**
      * Possibility to set the default base-url.
+     * 
      * @param defaultBaseUrl the default base-url.
      */
     public void setDefaultBaseUrl(String defaultBaseUrl) {
@@ -107,7 +113,6 @@ public class SessionManager {
         this.defaultBaseUrl = defaultBaseUrl;
     }
 
-
     /**
      * Configure the current instance of SessionManager to use the given
      * WebDriverFactory instance as its WebDriverFactory, returning the newly
@@ -116,8 +121,8 @@ public class SessionManager {
      * SessionManager.getInstance().setWebDriverFactory(new
      * ustomWebDriverFactory()).
      *
-     * @param impl
-     *            a WebDriverFactory instance to be associated with this manager
+     * @param impl a WebDriverFactory instance to be associated with this
+     *            manager
      * @return SessionManager
      * @see getInstance
      */
@@ -133,9 +138,8 @@ public class SessionManager {
      * specific to a thread.
      *
      *
-     * @param createIfNotFound
-     *            set to true if a session should be created if no session is
-     *            associated with the current sessionId
+     * @param createIfNotFound set to true if a session should be created if no
+     *            session is associated with the current sessionId
      * @return WebBrowser an WebBrowser instance
      * @see getCurrentSession(), getSession(String), switchToDefaultSession(),
      *      switchToSession(String)
@@ -153,17 +157,18 @@ public class SessionManager {
             } catch (UnreachableBrowserException e) {
                 LOG.info("Couldn't reach Browser", e);
             } catch (Exception e) {
-            	throw new IllegalArgumentException("Problem to create instance: "
-            			+ e.getLocalizedMessage(), e);
+                throw new IllegalArgumentException(
+                        "Problem to create instance: "
+                                + e.getLocalizedMessage(), e);
             }
         }
         return null;
     }
 
     /**
-     * Convenience method for getting the current WebBrowser session
-     * associated with this SessionManager, creating a new session if the
-     * session does not exist.
+     * Convenience method for getting the current WebBrowser session associated
+     * with this SessionManager, creating a new session if the session does not
+     * exist.
      *
      * @return WebBrowser an instance of WebBrowser
      */
@@ -174,10 +179,11 @@ public class SessionManager {
 
     /**
      * Convenience method to get teh current session.
+     * 
      * @return the current session.
      */
     public static WebBrowser getSession() {
-    	return getInstance().getCurrentSession();
+        return getInstance().getCurrentSession();
     }
 
     /**
@@ -239,8 +245,7 @@ public class SessionManager {
     /**
      * Remove a session with the given ID from this SessionManager
      *
-     * @param sessionId
-     *            the ID of the session to be removed
+     * @param sessionId the ID of the session to be removed
      */
 
     public void removeSession(String sessionId) {
@@ -252,8 +257,7 @@ public class SessionManager {
      * that the session must have been created with this same thread as sessions
      * and unique IDs are only required to be thread-local and not global.
      *
-     * @param session
-     *            the WebBrowser session to be removed
+     * @param session the WebBrowser session to be removed
      */
 
     public void removeSession(WebBrowser session) {
@@ -261,11 +265,11 @@ public class SessionManager {
     }
 
     /**
-     * Create and return a new WebBrowser session with default options, and
-     * set it as the current session for this SessionManager.
+     * Create and return a new WebBrowser session with default options, and set
+     * it as the current session for this SessionManager.
      *
-     * @return A new WebBrowser instance with auto-generated ID. You can
-     *         obtain the Session ID with WebBrowser.getSessionId().
+     * @return A new WebBrowser instance with auto-generated ID. You can obtain
+     *         the Session ID with WebBrowser.getSessionId().
      * @throws Exception
      */
 
@@ -278,31 +282,28 @@ public class SessionManager {
      * setAsCurrent is true, set the new session as the current session for this
      * SessionManager.
      *
-     * @param setAsCurrent
-     *            set to true if the new session should become the current
-     *            session for this SessionManager
+     * @param setAsCurrent set to true if the new session should become the
+     *            current session for this SessionManager
      * @return A new WebBrowser session
      * @throws Exception
      */
 
     public WebBrowser getNewSession(boolean setAsCurrent) throws Exception {
-        Map<String, String> options = WebDriverFactory.get().createDefaultOptions();
+        Map<String, String> options =
+                WebDriverFactory.get().createDefaultOptions();
         return getNewSessionDo(options, setAsCurrent);
     }
 
     /**
-     * Create and return a new WebBrowser instance. The instance is
-     * constructed with default options, with the provided key/value pair
-     * overriding the corresponding key and value in the options, and will
-     * become the current session. This is a convenience method for use when
-     * only a single option needs to be overridden. If overriding multiple
-     * options, you must use getNewSession(Map<String, String>, boolean)
-     * instead.
+     * Create and return a new WebBrowser instance. The instance is constructed
+     * with default options, with the provided key/value pair overriding the
+     * corresponding key and value in the options, and will become the current
+     * session. This is a convenience method for use when only a single option
+     * needs to be overridden. If overriding multiple options, you must use
+     * getNewSession(Map<String, String>, boolean) instead.
      *
-     * @param key
-     *            The key whose default value will be overridden
-     * @param value
-     *            The value to be associated with the provided key
+     * @param key The key whose default value will be overridden
+     * @param value The value to be associated with the provided key
      * @return A new WebBrowser instance which is now the current session
      * @throws Exception
      */
@@ -312,71 +313,68 @@ public class SessionManager {
     }
 
     /**
-     * Create and return a new WebBrowser instance. The instance is
-     * constructed with default options, with the provided key/value pair
-     * overriding the corresponding key and value in the options. This is a
-     * convenience method for use when only a single option needs to be
-     * overridden. If overriding multiple options, you must use
-     * getNewSession(Map<String, String>, boolean) instead.
+     * Create and return a new WebBrowser instance. The instance is constructed
+     * with default options, with the provided key/value pair overriding the
+     * corresponding key and value in the options. This is a convenience method
+     * for use when only a single option needs to be overridden. If overriding
+     * multiple options, you must use getNewSession(Map<String, String>,
+     * boolean) instead.
      *
-     * @param key
-     *            The key whose default value will be overridden
-     * @param value
-     *            The value to be associated with the provided key
-     * @param setAsCurrent
-     *            set to true if the new session should become the current
-     *            session for this SessionManager
+     * @param key The key whose default value will be overridden
+     * @param value The value to be associated with the provided key
+     * @param setAsCurrent set to true if the new session should become the
+     *            current session for this SessionManager
      * @return A new WebBrowser instance
      * @throws Exception
      */
 
-    public WebBrowser getNewSession(String key, String value, boolean setAsCurrent)
-            throws Exception {
+    public WebBrowser getNewSession(String key, String value,
+            boolean setAsCurrent) throws Exception {
 
         /**
          * This is where the clientPropertiesFile is parsed and key-value pairs
          * are added into the options map
          */
-        Map<String, String> options = WebDriverFactory.get().createDefaultOptions();
+        Map<String, String> options =
+                WebDriverFactory.get().createDefaultOptions();
         options.put(key, value);
 
         return getNewSessionDo(options, setAsCurrent);
     }
 
     /**
-     * Create and return a new WebBrowser instance. The instance is
-     * constructed with default options, with the provided Map of key/value
-     * pairs overriding the corresponding pairs in the options. This new
-     * WebBrowser instance will then become the current session.
+     * Create and return a new WebBrowser instance. The instance is constructed
+     * with default options, with the provided Map of key/value pairs overriding
+     * the corresponding pairs in the options. This new WebBrowser instance will
+     * then become the current session.
      *
-     * @param override
-     *            A Map of options to be overridden
+     * @param override A Map of options to be overridden
      * @return A new WebBrowser instance which is now the current session
      * @throws Exception
      */
 
-    public WebBrowser getNewSession(Map<String, String> override) throws Exception {
+    public WebBrowser getNewSession(Map<String, String> override)
+            throws Exception {
         return getNewSession(override, true);
     }
 
     /**
-     * Create and return a new WebBrowser instance. The instance is
-     * constructed with default options, with the provided Map of key/value
-     * pairs overriding the corresponding pairs in the options.
+     * Create and return a new WebBrowser instance. The instance is constructed
+     * with default options, with the provided Map of key/value pairs overriding
+     * the corresponding pairs in the options.
      *
-     * @param override
-     *            A Map of options to be overridden
-     * @param setAsCurrent
-     *            set to true if the new session should become the current
-     *            session for this SessionManager
+     * @param override A Map of options to be overridden
+     * @param setAsCurrent set to true if the new session should become the
+     *            current session for this SessionManager
      * @return A new WebBrowser instance
      * @throws Exception
      */
 
-    public WebBrowser getNewSession(Map<String, String> override, boolean setAsCurrent)
-            throws Exception {
+    public WebBrowser getNewSession(Map<String, String> override,
+            boolean setAsCurrent) throws Exception {
 
-        Map<String, String> options = WebDriverFactory.get().createDefaultOptions();
+        Map<String, String> options =
+                WebDriverFactory.get().createDefaultOptions();
 
         for (Entry<String, String> opt : override.entrySet()) {
             options.put(opt.getKey(), opt.getValue());
@@ -385,17 +383,17 @@ public class SessionManager {
         return getNewSessionDo(options, setAsCurrent);
     }
 
-    private WebBrowser getNewSessionDo(Map<String, String> options, boolean setAsCurrent)
-            throws Exception {
+    private WebBrowser getNewSessionDo(Map<String, String> options,
+            boolean setAsCurrent) throws Exception {
 
-    	final Map<String, String> localOptions = new HashMap<>(options);
+        final Map<String, String> localOptions = new HashMap<>(options);
 
-    	final String baseUrl;
+        final String baseUrl;
         if (localOptions.containsKey(BASE_URL_KEY)) {
-        	baseUrl = localOptions.get(BASE_URL_KEY);
-        	localOptions.remove(BASE_URL_KEY);
+            baseUrl = localOptions.get(BASE_URL_KEY);
+            localOptions.remove(BASE_URL_KEY);
         } else {
-        	baseUrl = defaultBaseUrl;
+            baseUrl = defaultBaseUrl;
         }
 
         if (doCleanup) {
@@ -403,20 +401,21 @@ public class SessionManager {
             doCleanup = false;
         }
 
-
         // Get capabilities
-        DesiredCapabilities dc = WebDriverFactory.get().createCapabilities(localOptions);
+        DesiredCapabilities dc =
+                WebDriverFactory.get().createCapabilities(localOptions);
 
         // Get driver instance
-        WebDriver innerDriver = WebDriverFactory.get().createWebDriver(localOptions, dc);
+        WebDriver innerDriver =
+                WebDriverFactory.get().createWebDriver(localOptions, dc);
 
         String sessionId = getNextCustomSessionId();
         if (setAsCurrent) {
             currentSessionId = sessionId;
         }
 
-
-        final WebBrowser webBrowser = new WebBrowserImpl(innerDriver, sessionId, baseUrl);
+        final WebBrowser webBrowser =
+                new WebBrowserImpl(innerDriver, sessionId, baseUrl);
         // Store the session in sessions Map
         sessions.put(sessionId, webBrowser);
 
@@ -434,9 +433,9 @@ public class SessionManager {
     }
 
     public void quitAllSessions() {
-    	for (WebBrowser webBrowser : getSessions().values()) {
-			webBrowser.quit();
-		}
+        for (WebBrowser webBrowser : getSessions().values()) {
+            webBrowser.quit();
+        }
     }
 
 }

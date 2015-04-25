@@ -55,62 +55,73 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 /**
- * SessionPool functionality used by SessionManager instances.
- * Based on https://github.com/FINRAOS/JTAF-ExtWebDriver
+ * SessionPool functionality used by SessionManager instances. Based on
+ * https://github.com/FINRAOS/JTAF-ExtWebDriver
  *
  */
 
 public class DefaultWebDriverFactory implements WebDriverFactory {
 
     /**
-     * Key which holds the reference to an property-file which could be read from {@link ClientProperties}.
+     * Key which holds the reference to an property-file which could be read
+     * from {@link ClientProperties}.
      */
     public static final String CLIENT_PROPERTIES_KEY = "client";
     private static final long MILLISECONDS_IN_DAY = 86400000;
     private static final Object lock = new Object();
-    private static final Log log = LogFactory.getLog(DefaultWebDriverFactory.class);
+    private static final Log log = LogFactory
+            .getLog(DefaultWebDriverFactory.class);
     private static boolean executedTaskKill = false;
-
 
     @Override
     public void cleanup(Map<String, String> options) throws Exception {
 
-        ClientProperties properties = new ClientProperties(options.get(CLIENT_PROPERTIES_KEY));
-        //TODO Is this really needed?
+        ClientProperties properties =
+                new ClientProperties(options.get(CLIENT_PROPERTIES_KEY));
+        // TODO Is this really needed?
         if (!executedTaskKill) {
             synchronized (lock) {
                 if (properties.isKillTasksAtStartup()) {
                     if (properties.getBrowser().equalsIgnoreCase("ie")
-                            || properties.getBrowser().equalsIgnoreCase("iexplore")
-                            || properties.getBrowser().equalsIgnoreCase("*iexplore")) {
+                            || properties.getBrowser().equalsIgnoreCase(
+                                    "iexplore")
+                            || properties.getBrowser().equalsIgnoreCase(
+                                    "*iexplore")) {
                         try {
-                            Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe /T");
+                            Runtime.getRuntime().exec(
+                                    "taskkill /F /IM IEDriverServer.exe /T");
                         } catch (IOException e) {
                             log.warn("Taskkill failed to kill any rogue IEDriverServer.exe tasks");
                         }
                         try {
-                            Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe /T");
+                            Runtime.getRuntime().exec(
+                                    "taskkill /F /IM iexplore.exe /T");
                         } catch (IOException e) {
                             log.warn("Taskkill failed to kill any rogue Internet Explorer browsers");
                         }
-                    } else if (properties.getBrowser().equalsIgnoreCase("chrome")) {
+                    } else if (properties.getBrowser().equalsIgnoreCase(
+                            "chrome")) {
                         if (properties.getOS() == null
-                                || properties.getOS().equalsIgnoreCase("windows")) {
+                                || properties.getOS().equalsIgnoreCase(
+                                        "windows")) {
                             try {
-                                Runtime.getRuntime().exec("taskkill /F /IM chromedriver.exe /T");
+                                Runtime.getRuntime().exec(
+                                        "taskkill /F /IM chromedriver.exe /T");
 
                             } catch (IOException e) {
                                 log.warn("Taskkill failed to kill any rogue chromedriver.exe processes");
                             }
                             try {
-                                Runtime.getRuntime().exec("taskkill /F /IM chrome.exe /T");
+                                Runtime.getRuntime().exec(
+                                        "taskkill /F /IM chrome.exe /T");
                             } catch (IOException e) {
                                 log.warn("Taskkill failed to kill any rogue chrome browsers");
 
                             }
                         } else if (properties.getOS().equalsIgnoreCase("linux")) {
                             try {
-                                Runtime.getRuntime().exec("killall -9 chromedriver");
+                                Runtime.getRuntime().exec(
+                                        "killall -9 chromedriver");
                             } catch (IOException e) {
                                 log.warn("Taskkill failed to kill any rogue chromedriver.exe processes");
                             }
@@ -121,12 +132,14 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                             }
                         } else if (properties.getOS().equalsIgnoreCase("mac")) {
                             try {
-                                Runtime.getRuntime().exec("killall -KILL chromedriver");
+                                Runtime.getRuntime().exec(
+                                        "killall -KILL chromedriver");
                             } catch (IOException e) {
                                 log.warn("Taskkill failed to kill any rogue chromedriver tasks");
                             }
                             try {
-                                Runtime.getRuntime().exec("killall -KILL chrome");
+                                Runtime.getRuntime().exec(
+                                        "killall -KILL chrome");
                             } catch (IOException e) {
                                 log.warn("Taskkill failed to kill any rogue chrome browsers");
                             }
@@ -134,14 +147,18 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                             log.warn("Taskkill failed to kill any rogue chromedriver or chrome tasks because the OS"
                                     + "provided is either incorrect or not supported");
                         }
-                    } else if (properties.getBrowser().equalsIgnoreCase("firefox")
-                            || properties.getBrowser().equalsIgnoreCase("*firefox")) {
+                    } else if (properties.getBrowser().equalsIgnoreCase(
+                            "firefox")
+                            || properties.getBrowser().equalsIgnoreCase(
+                                    "*firefox")) {
                         if (properties.getOS() == null
-                                || properties.getOS().equalsIgnoreCase("windows")) {
+                                || properties.getOS().equalsIgnoreCase(
+                                        "windows")) {
                             // there is no taskkill for FirefoxDriver because
                             // there is no "server" used for Firefox
                             try {
-                                Runtime.getRuntime().exec("taskkill /F /IM firefox.exe /T");
+                                Runtime.getRuntime().exec(
+                                        "taskkill /F /IM firefox.exe /T");
 
                             } catch (IOException e) {
                                 log.warn("Taskkill failed to kill any rogue firefox browsers");
@@ -154,7 +171,8 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                             }
                         } else if (properties.getOS().equalsIgnoreCase("mac")) {
                             try {
-                                Runtime.getRuntime().exec("killall -KILL firefox");
+                                Runtime.getRuntime().exec(
+                                        "killall -KILL firefox");
                             } catch (IOException e) {
                                 log.warn("Taskkill failed to kill any rogue firefox browsers");
                             }
@@ -162,24 +180,29 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                             log.warn("Taskkill failed to kill any rogue firefox tasks because the OS"
                                     + "provided is either incorrect or not supported");
                         }
-                    }  else if (properties.getBrowser().equalsIgnoreCase("phantomjs")) {
-                    	if (properties.getOS() == null
-                                || properties.getOS().equalsIgnoreCase("windows")) {
+                    } else if (properties.getBrowser().equalsIgnoreCase(
+                            "phantomjs")) {
+                        if (properties.getOS() == null
+                                || properties.getOS().equalsIgnoreCase(
+                                        "windows")) {
                             try {
-                                Runtime.getRuntime().exec("taskkill /F /IM phantomjs.exe /T");
+                                Runtime.getRuntime().exec(
+                                        "taskkill /F /IM phantomjs.exe /T");
 
                             } catch (IOException e) {
                                 log.warn("Taskkill failed to kill any rogue phantomjs browsers");
                             }
                         } else if (properties.getOS().equalsIgnoreCase("linux")) {
                             try {
-                                Runtime.getRuntime().exec("killall -9 phantomjs");
+                                Runtime.getRuntime().exec(
+                                        "killall -9 phantomjs");
                             } catch (IOException e) {
                                 log.warn("Taskkill failed to kill any rogue phantomjs browsers");
                             }
                         } else if (properties.getOS().equalsIgnoreCase("mac")) {
                             try {
-                                Runtime.getRuntime().exec("killall -KILL phantomjs");
+                                Runtime.getRuntime().exec(
+                                        "killall -KILL phantomjs");
                             } catch (IOException e) {
                                 log.warn("Taskkill failed to kill any rogue phantomjs browsers");
                             }
@@ -198,9 +221,11 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
     }
 
     @Override
-    public DesiredCapabilities createCapabilities(Map<String, String> options) throws Exception {
+    public DesiredCapabilities createCapabilities(Map<String, String> options)
+            throws Exception {
 
-        ClientProperties properties = new ClientProperties(options.get(CLIENT_PROPERTIES_KEY));
+        ClientProperties properties =
+                new ClientProperties(options.get(CLIENT_PROPERTIES_KEY));
 
         final String browser = properties.getBrowser();
 
@@ -220,10 +245,12 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                         "You must provide 'grid.platform' to use Selenium Grid in client property file");
             }
 
-            if (browser.equalsIgnoreCase("ie") || browser.equalsIgnoreCase("iexplore")
+            if (browser.equalsIgnoreCase("ie")
+                    || browser.equalsIgnoreCase("iexplore")
                     || browser.equalsIgnoreCase("*iexplore")) {
                 capabilities = DesiredCapabilities.internetExplorer();
-            } else if ((browser.equalsIgnoreCase("firefox") || browser.equalsIgnoreCase("*firefox"))) {
+            } else if ((browser.equalsIgnoreCase("firefox") || browser
+                    .equalsIgnoreCase("*firefox"))) {
                 capabilities = DesiredCapabilities.firefox();
             } else if (browser.equalsIgnoreCase("chrome")) {
                 capabilities = DesiredCapabilities.chrome();
@@ -240,7 +267,8 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
             } else if (browser.equalsIgnoreCase("phantomjs")) {
                 capabilities = DesiredCapabilities.phantomjs();
             } else {
-                log.fatal("Unsupported browser: " + browser
+                log.fatal("Unsupported browser: "
+                        + browser
                         + " Please refer to documentation for supported browsers.");
             }
 
@@ -281,8 +309,10 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
             } catch (UnknownHostException e) {
             }
 
-            capabilities.setCapability("name", "WebBrowser client=" + properties.getClient()
-                    + "; started from " + computerName);
+            capabilities
+                    .setCapability("name",
+                            "WebBrowser client=" + properties.getClient()
+                                    + "; started from " + computerName);
 
             String gridProperties = properties.getGridProperties();
             if (gridProperties != null && gridProperties.length() > 0) {
@@ -290,7 +320,8 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 for (String gridPropertiesSlpittedCurrent : gridPropertiesSlpitted) {
                     if (gridPropertiesSlpittedCurrent != null
                             && gridPropertiesSlpittedCurrent.length() > 0) {
-                        String[] propertyNameAndValue = gridPropertiesSlpittedCurrent.split("=");
+                        String[] propertyNameAndValue =
+                                gridPropertiesSlpittedCurrent.split("=");
                         if (propertyNameAndValue.length == 2) {
                             capabilities.setCapability(propertyNameAndValue[0],
                                     propertyNameAndValue[1]);
@@ -304,7 +335,9 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
             log.debug("browser [" + browser + "]");
 
             // Turning off all console logs using java.util.logging
-            Handler[] h = java.util.logging.LogManager.getLogManager().getLogger("").getHandlers();
+            Handler[] h =
+                    java.util.logging.LogManager.getLogManager().getLogger("")
+                            .getHandlers();
             for (int i = 0; i < h.length; i++) {
                 if (h[i] instanceof ConsoleHandler) {
                     h[i].setLevel(Level.OFF);
@@ -315,16 +348,17 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
             DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
             if (proxyProperty != null) {
                 Proxy proxy = new Proxy();
-                proxy.setHttpProxy(proxyProperty).setFtpProxy(proxyProperty).setSslProxy(
-                        proxyProperty);
+                proxy.setHttpProxy(proxyProperty).setFtpProxy(proxyProperty)
+                        .setSslProxy(proxyProperty);
                 desiredCapabilities = new DesiredCapabilities();
                 if (browser != null && browser.equalsIgnoreCase("chrome")) {
                     // chrome way of proxy initialization
-                    desiredCapabilities.setCapability("chrome.switches", Arrays
-                            .asList("--proxy-server=http://" + proxy));
+                    desiredCapabilities.setCapability("chrome.switches",
+                            Arrays.asList("--proxy-server=http://" + proxy));
                 } else {
                     // ff and ie way of proxy initialization
-                    desiredCapabilities.setCapability(CapabilityType.PROXY, proxy);
+                    desiredCapabilities.setCapability(CapabilityType.PROXY,
+                            proxy);
                 }
             }
 
@@ -333,40 +367,49 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 // '0' means to download to the desktop, '1' means to download
                 // to the default "Downloads" directory, '2' means to use the
                 // directory you specify in "browser.download.dir"
-                desiredCapabilities.setCapability("browser.download.folderList", 2);
-                desiredCapabilities.setCapability("browser.download.dir", System
-                        .getProperty("user.dir")
-                        + System.getProperty("file.separator") + properties.getDownloadFolder());
+                desiredCapabilities.setCapability(
+                        "browser.download.folderList", 2);
+                desiredCapabilities.setCapability(
+                        "browser.download.dir",
+                        System.getProperty("user.dir")
+                                + System.getProperty("file.separator")
+                                + properties.getDownloadFolder());
                 desiredCapabilities
                         .setCapability(
                                 "browser.helperApps.neverAsk.saveToDisk",
                                 "text/csv, application/octet-stream, application/pdf, application/vnd.fdf, application/x-msdos-program, application/x-unknown-application-octet-stream, application/vnd.ms-powerpoint, application/excel, application/vnd.ms-publisher, application/x-unknown-message-rfc822, application/vnd.ms-excel, application/msword, application/x-mspublisher, application/x-tar, application/zip, application/x-gzip,application/x-stuffit,application/vnd.ms-works, application/powerpoint, application/rtf, application/postscript, application/x-gtar, video/quicktime, video/x-msvideo, video/mpeg, audio/x-wav, audio/x-midi, audio/x-aiff");
-                desiredCapabilities.setCapability("browser.helperApps.alwaysAsk.force", false);
-                desiredCapabilities.setCapability("browser.download.manager.showWhenStarting",
-                        false);
+                desiredCapabilities.setCapability(
+                        "browser.helperApps.alwaysAsk.force", false);
+                desiredCapabilities.setCapability(
+                        "browser.download.manager.showWhenStarting", false);
             }
             return desiredCapabilities;
         }
     }
 
     @Override
-    public WebDriver createWebDriver(Map<String, String> options, DesiredCapabilities capabilities) throws IOException {
-        ClientProperties properties = new ClientProperties(options.get(CLIENT_PROPERTIES_KEY));
+    public WebDriver createWebDriver(Map<String, String> options,
+            DesiredCapabilities capabilities) throws IOException {
+        ClientProperties properties =
+                new ClientProperties(options.get(CLIENT_PROPERTIES_KEY));
 
         WebDriver wd = null;
-        DesiredCapabilities desiredCapabilities = new DesiredCapabilities(capabilities);
+        DesiredCapabilities desiredCapabilities =
+                new DesiredCapabilities(capabilities);
         String browser = properties.getBrowser();
 
         if (properties.isUseGrid()) {
-            RemoteWebDriver remoteWebDriver = new RemoteWebDriver(new URL(properties.getGridUrl()),
-                    capabilities);
+            RemoteWebDriver remoteWebDriver =
+                    new RemoteWebDriver(new URL(properties.getGridUrl()),
+                            capabilities);
             remoteWebDriver.setFileDetector(new LocalFileDetector());
             wd = remoteWebDriver;
         } else {
             if (browser == null || browser.equals("")) {
                 throw new RuntimeException(
                         "Browser cannot be null. Please set 'browser' in client properties. Supported browser types: IE, Firefox, Chrome, Safari, HtmlUnit.");
-            } else if (browser.equalsIgnoreCase("ie") || browser.equalsIgnoreCase("iexplore")
+            } else if (browser.equalsIgnoreCase("ie")
+                    || browser.equalsIgnoreCase("iexplore")
                     || browser.equalsIgnoreCase("*iexplore")) {
                 String webdriverIEDriver = properties.getWebDriverIEDriver();
 
@@ -381,7 +424,8 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                             "When using IE as the browser, please set 'browser.version' in client properties");
                 } else {
                     if (browserVersion.startsWith("9")) {
-                        desiredCapabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+                        desiredCapabilities.setCapability(
+                                CapabilityType.ACCEPT_SSL_CERTS, true);
                         desiredCapabilities
                                 .setCapability(
                                         InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
@@ -391,8 +435,10 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                         wd = new InternetExplorerDriver(desiredCapabilities);
                     }
                 }
-            } else if ((browser.equalsIgnoreCase("firefox") || browser.equalsIgnoreCase("*firefox"))) {
-                final String ffProfileFolder = properties.getFirefoxProfileFolder();
+            } else if ((browser.equalsIgnoreCase("firefox") || browser
+                    .equalsIgnoreCase("*firefox"))) {
+                final String ffProfileFolder =
+                        properties.getFirefoxProfileFolder();
                 final String ffProfileFile = properties.getFirefoxProfileFile();
                 final String path = properties.getBinaryPath();
 
@@ -412,7 +458,8 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
 
                     addPreferences(ffp);
 
-                    List<String> ffExtensions = properties.getFirefoxExtensions();
+                    List<String> ffExtensions =
+                            properties.getFirefoxExtensions();
                     if (ffExtensions != null && ffExtensions.size() > 0) {
                         addExtensionsToFirefoxProfile(ffp, ffExtensions);
                     }
@@ -423,10 +470,12 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 }
             } else if (browser.equalsIgnoreCase("chrome")) {
 
-                String webdriverChromeDriver = properties.getWebDriverChromeDriver();
+                String webdriverChromeDriver =
+                        properties.getWebDriverChromeDriver();
 
                 if (webdriverChromeDriver != null) {
-                    System.setProperty("webdriver.chrome.driver", webdriverChromeDriver);
+                    System.setProperty("webdriver.chrome.driver",
+                            webdriverChromeDriver);
                 }
 
                 wd = new ChromeDriver(desiredCapabilities);
@@ -436,27 +485,36 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 wd = new HtmlUnitDriver(desiredCapabilities);
                 ((HtmlUnitDriver) wd).setJavascriptEnabled(true);
             } else if (browser.equalsIgnoreCase("phantomjs")) {
-                wd = new PhantomJSDriver(ResolvingPhantomJSDriverService
-                        .createDefaultService(), desiredCapabilities);
+                wd =
+                        new PhantomJSDriver(
+                                ResolvingPhantomJSDriverService
+                                        .createDefaultService(),
+                                desiredCapabilities);
             } else {
-                throw new IllegalArgumentException("Unsupported browser type: " + browser
-                        + ". Supported browser types: IE, Firefox, Chrome, Safari, HtmlUnit, phantomjs.");
+                throw new IllegalArgumentException(
+                        "Unsupported browser type: "
+                                + browser
+                                + ". Supported browser types: IE, Firefox, Chrome, Safari, HtmlUnit, phantomjs.");
             }
 
             // move browser windows to specific position. It's useful for
             // debugging...
-            final int browserInitPositionX = properties.getBrowserInitPositionX();
-            final int browserInitPositionY = properties.getBrowserInitPositionY();
+            final int browserInitPositionX =
+                    properties.getBrowserInitPositionX();
+            final int browserInitPositionY =
+                    properties.getBrowserInitPositionY();
             if (browserInitPositionX != 0 || browserInitPositionY != 0) {
                 wd.manage().window().setSize(new Dimension(1280, 1024));
-                wd.manage().window().setPosition(new Point(browserInitPositionX, browserInitPositionY));
+                wd.manage()
+                        .window()
+                        .setPosition(
+                                new Point(browserInitPositionX,
+                                        browserInitPositionY));
             }
         }
 
         return wd;
     }
-
-
 
     @Override
     public Map<String, String> createDefaultOptions() {
@@ -470,32 +528,41 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
 
     /**
      *
-     * @param ffp
-     *            for use in setting the firefox profile for the tests to use
+     * @param ffp for use in setting the firefox profile for the tests to use
      *            when running firefox
      */
     private static void addPreferences(FirefoxProfile ffp) {
-        ffp.setPreference("capability.policy.default.HTMLDocument.readyState", "allAccess");
-        ffp.setPreference("capability.policy.default.HTMLDocument.compatMode", "allAccess");
-        ffp.setPreference("capability.policy.default.Document.compatMode", "allAccess");
-        ffp.setPreference("capability.policy.default.Location.href", "allAccess");
-        ffp.setPreference("capability.policy.default.Window.pageXOffset", "allAccess");
-        ffp.setPreference("capability.policy.default.Window.pageYOffset", "allAccess");
-        ffp.setPreference("capability.policy.default.Window.frameElement", "allAccess");
-        ffp.setPreference("capability.policy.default.Window.frameElement.get", "allAccess");
-        ffp.setPreference("capability.policy.default.Window.QueryInterface", "allAccess");
-        ffp.setPreference("capability.policy.default.Window.mozInnerScreenY", "allAccess");
-        ffp.setPreference("capability.policy.default.Window.mozInnerScreenX", "allAccess");
+        ffp.setPreference("capability.policy.default.HTMLDocument.readyState",
+                "allAccess");
+        ffp.setPreference("capability.policy.default.HTMLDocument.compatMode",
+                "allAccess");
+        ffp.setPreference("capability.policy.default.Document.compatMode",
+                "allAccess");
+        ffp.setPreference("capability.policy.default.Location.href",
+                "allAccess");
+        ffp.setPreference("capability.policy.default.Window.pageXOffset",
+                "allAccess");
+        ffp.setPreference("capability.policy.default.Window.pageYOffset",
+                "allAccess");
+        ffp.setPreference("capability.policy.default.Window.frameElement",
+                "allAccess");
+        ffp.setPreference("capability.policy.default.Window.frameElement.get",
+                "allAccess");
+        ffp.setPreference("capability.policy.default.Window.QueryInterface",
+                "allAccess");
+        ffp.setPreference("capability.policy.default.Window.mozInnerScreenY",
+                "allAccess");
+        ffp.setPreference("capability.policy.default.Window.mozInnerScreenX",
+                "allAccess");
     }
 
     /**
      *
-     * @param ffp
-     *            the firefox profile you are using
-     * @param propertiesFile
-     *            the properties you want to add to the profile
+     * @param ffp the firefox profile you are using
+     * @param propertiesFile the properties you want to add to the profile
      */
-    private static void addPreferences(FirefoxProfile ffp, String propertiesFile) {
+    private static void
+            addPreferences(FirefoxProfile ffp, String propertiesFile) {
         Properties firefoxProfile = new Properties();
 
         try {
@@ -517,14 +584,18 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
 
                 if (value.contains("${PROJECT_PATH}")) {
                     String projectPath = (new File("")).getAbsolutePath();
-                    value = projectPath + value.replaceAll("\\$\\{PROJECT_PATH\\}", "");
+                    value =
+                            projectPath
+                                    + value.replaceAll("\\$\\{PROJECT_PATH\\}",
+                                            "");
                 }
 
                 if (type.equalsIgnoreCase("BOOLEAN")) {
                     ffp.setPreference(getVal, Boolean.parseBoolean(value));
                 } else if (type.equalsIgnoreCase("STRING")) {
                     ffp.setPreference(getVal, value);
-                } else if (type.equalsIgnoreCase("INTEGER") || type.equalsIgnoreCase("INT")) {
+                } else if (type.equalsIgnoreCase("INTEGER")
+                        || type.equalsIgnoreCase("INT")) {
                     ffp.setPreference(getVal, Integer.parseInt(value));
                 }
             }
@@ -533,14 +604,12 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
 
     /**
      *
-     * @param ffp
-     *            the firefox profile specified
-     * @param extensions
-     *            extensions desired to be added
+     * @param ffp the firefox profile specified
+     * @param extensions extensions desired to be added
      * @throws IOException
      */
-    private static void addExtensionsToFirefoxProfile(FirefoxProfile ffp, List<String> extensions)
-            throws IOException {
+    private static void addExtensionsToFirefoxProfile(FirefoxProfile ffp,
+            List<String> extensions) throws IOException {
         for (String s : extensions) {
             ffp.addExtension(new File(s));
         }
@@ -548,15 +617,18 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
 
     /**
      *
-     * @param filePath
-     *            the binary path location of the firefox app (where it's
+     * @param filePath the binary path location of the firefox app (where it's
      *            installed)
      * @return
      */
     private static FirefoxBinary getFFBinary(String filePath) {
-        File[] possibleLocations = { new File(filePath != null ? filePath : ""),
-                new File("C:\\Program Files\\Mozilla Firefox\\firefox.exe"),
-                new File("C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe"), };
+        File[] possibleLocations =
+                {
+                        new File(filePath != null ? filePath : ""),
+                        new File(
+                                "C:\\Program Files\\Mozilla Firefox\\firefox.exe"),
+                        new File(
+                                "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe"), };
 
         File ffbinary = null;
 
@@ -581,13 +653,14 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
      * This method cleans out folders where the WebDriver temp information is
      * stored.
      *
-     * @param properties
-     *            client properties specified
+     * @param properties client properties specified
      */
-    private static void removeWebDriverTempOldFolders(ClientProperties properties) {
+    private static void removeWebDriverTempOldFolders(
+            ClientProperties properties) {
         String tempFolder = System.getProperty("java.io.tmpdir");
 
-        int numberOfDaysToKeepTempFolders = properties.getNumberOfDaysToKeepTempFolders();
+        int numberOfDaysToKeepTempFolders =
+                properties.getNumberOfDaysToKeepTempFolders();
         if (numberOfDaysToKeepTempFolders < 0) {
             numberOfDaysToKeepTempFolders = 7;
         }
@@ -598,33 +671,34 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
         tempFolderNameContainsList.add("webdriver-ie");
 
         // add parameters from config file
-        String tempFolderNameContainsListFromProp = properties.getTempFolderNameContainsList();
+        String tempFolderNameContainsListFromProp =
+                properties.getTempFolderNameContainsList();
         if (tempFolderNameContainsListFromProp != null) {
-            String[] tempFolderNameContainsListFromPropSpit = tempFolderNameContainsListFromProp
-                    .split(",");
+            String[] tempFolderNameContainsListFromPropSpit =
+                    tempFolderNameContainsListFromProp.split(",");
             for (String name : tempFolderNameContainsListFromPropSpit) {
                 tempFolderNameContainsList.add(name);
             }
         }
 
-        removeFolders(tempFolder, tempFolderNameContainsList, numberOfDaysToKeepTempFolders);
+        removeFolders(tempFolder, tempFolderNameContainsList,
+                numberOfDaysToKeepTempFolders);
     }
 
     /**
      * This method can be called to remove specific folders or set how long you
      * want to keep the temp information.
      *
-     * @param folder
-     *            which temp folder you want to remove
-     * @param folderTemplates
-     *            the templates of these temp folders
-     * @param numberOfDaysToKeepTempFolders
-     *            how long you want to keep the temp information
+     * @param folder which temp folder you want to remove
+     * @param folderTemplates the templates of these temp folders
+     * @param numberOfDaysToKeepTempFolders how long you want to keep the temp
+     *            information
      */
-    private final static void removeFolders(String folder, List<String> folderTemplates,
-            int numberOfDaysToKeepTempFolders) {
-        long dateToRemoveFiledAfter = (new Date()).getTime()
-                - (numberOfDaysToKeepTempFolders * MILLISECONDS_IN_DAY);
+    private final static void removeFolders(String folder,
+            List<String> folderTemplates, int numberOfDaysToKeepTempFolders) {
+        long dateToRemoveFiledAfter =
+                (new Date()).getTime()
+                        - (numberOfDaysToKeepTempFolders * MILLISECONDS_IN_DAY);
 
         File tempFolder = new File(folder);
         for (File currentFile : tempFolder.listFiles()) {
@@ -635,9 +709,11 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                         try {
                             currentFile.delete();
                             FileUtils.deleteDirectory(currentFile);
-                            log.debug("Folder '" + currentFile.getName() + "' deleted...");
+                            log.debug("Folder '" + currentFile.getName()
+                                    + "' deleted...");
                         } catch (Exception e) {
-                            log.fatal("Error deleting folder '" + currentFile.getName() + "'");
+                            log.fatal("Error deleting folder '"
+                                    + currentFile.getName() + "'");
                         }
                     }
                 }
