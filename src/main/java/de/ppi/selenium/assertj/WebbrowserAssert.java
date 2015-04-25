@@ -14,9 +14,15 @@
 
 package de.ppi.selenium.assertj;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.WritableAssertionInfo;
+import org.assertj.core.internal.Iterables;
 import org.assertj.core.internal.Objects;
+import org.openqa.selenium.Cookie;
 
 import de.ppi.selenium.browser.WebBrowser;
 
@@ -29,13 +35,30 @@ public class WebbrowserAssert extends AbstractAssert<WebbrowserAssert, WebBrowse
     }
 
     /**
-     * check if it is at the current page. Call the page.isAt() methods
+     * Check if the browser is at the relativeURL.
      *
-     * @return
+     * @return this
      */
     public WebbrowserAssert hasRelativeUrl(String relativeUrl) {
     	Objects.instance().assertEqual(info, actual.getCurrentRelativeUrl(), relativeUrl);
         return this;
     }
+
+    /**
+     * Check if a cookie with the given name exists.
+     *
+     * @return this
+     */
+    public WebbrowserAssert hasCookies(String... searchedCookies) {
+    	final Set<Cookie> cookies = actual.manage().getCookies();
+    	final List<String> cookieNames = new ArrayList<>();
+    	for (Cookie cookie : cookies) {
+    		cookieNames.add(cookie.getName());
+		}
+    	//assertThat(cookieNames).contains(searchedCookies);
+    	Iterables.instance().assertContains(info, cookieNames, searchedCookies);
+        return this;
+    }
+
 
 }
