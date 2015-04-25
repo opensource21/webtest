@@ -20,79 +20,93 @@ import de.ppi.selenium.util.Protocol;
  *
  */
 public class ProtocolRule extends TestWatcher {
-	private static final Logger LOG = LoggerFactory.getLogger(ProtocolRule.class);
+    private static final Logger LOG = LoggerFactory
+            .getLogger(ProtocolRule.class);
 
-	private final File baseDir;
+    private final File baseDir;
 
-	private static final String protocolStart = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss").format(new Date());
+    private static final String protocolStart = new SimpleDateFormat(
+            "yyyy-MM-dd_HH_mm_ss").format(new Date());
 
-	/**
-	 * Creates a new instance.
-	 */
-	public ProtocolRule() {
-		this(System.getProperty("webtest.protocoldir", "."));
-	}
+    /**
+     * Creates a new instance.
+     */
+    public ProtocolRule() {
+        this(System.getProperty("webtest.protocoldir", "."));
+    }
 
-	/**
-	 * Creates a new instance.
-	 * @param baseDir - the base-directory where the protocol is written.
-	 */
-	public ProtocolRule(String baseDir) {
-		this(new File(baseDir));
-	}
+    /**
+     * Creates a new instance.
+     *
+     * @param baseDir - the base-directory where the protocol is written.
+     */
+    public ProtocolRule(String baseDir) {
+        this(new File(baseDir));
+    }
 
-	/**
-	 * Creates a new instance.
-	 * @param baseDir - the base-directory where the protocol is written.
-	 */
-	public ProtocolRule(File baseDir) {
-		super();
-		boolean baseDirOk = true;
-		if (!baseDir.exists()) {
-			if (!baseDir.mkdirs()) {
-				baseDirOk = false;
-				LOG.error("Couldn't create basedDir " + baseDir.getAbsolutePath());
-			}
-		}
-		if (!baseDir.isDirectory()) {
-			baseDirOk = false;
-			LOG.error("basedDir " + baseDir.getAbsolutePath() + " isn't a directory");
-		}
-		if (baseDirOk) {
-			this.baseDir = new File(baseDir, protocolStart);
-		} else {
-			this.baseDir = new File(protocolStart);
-		}
-		this.baseDir.mkdirs();
-	}
+    /**
+     * Creates a new instance.
+     *
+     * @param baseDir - the base-directory where the protocol is written.
+     */
+    public ProtocolRule(File baseDir) {
+        super();
+        boolean baseDirOk = true;
+        if (!baseDir.exists()) {
+            if (!baseDir.mkdirs()) {
+                baseDirOk = false;
+                LOG.error("Couldn't create basedDir "
+                        + baseDir.getAbsolutePath());
+            }
+        }
+        if (!baseDir.isDirectory()) {
+            baseDirOk = false;
+            LOG.error("basedDir " + baseDir.getAbsolutePath()
+                    + " isn't a directory");
+        }
+        if (baseDirOk) {
+            this.baseDir = new File(baseDir, protocolStart);
+        } else {
+            this.baseDir = new File(protocolStart);
+        }
+        this.baseDir.mkdirs();
+    }
 
+    @Override
+    protected void failed(Throwable e, Description description) {
+        Protocol.log("Failed", "The test " + description.getDisplayName()
+                + " failed!", SessionManager.getSession());
+    }
 
-	@Override
-	protected void failed(Throwable e, Description description) {
-		Protocol.log("Failed", "The test " + description.getDisplayName() + " failed!",
-				SessionManager.getSession());
-	}
+    @Override
+    protected void starting(Description description) {
+        final File testProtocolDir = getTestProtocolDir(description);
+        testProtocolDir.mkdirs();
+        Protocol.setCurrentProtocol(new Protocol(testProtocolDir));
+    }
 
+    @Override
+    protected void finished(Description description) {
+        final File protocolDir = getTestProtocolDir(description);
+        deleteDirIfEmpty(protocolDir);
+        deleteDirIfEmpty(protocolDir.getParentFile());
 
-	@Override
-	protected void starting(Description description) {
-		final File testProtocolDir = getTestProtocolDir(description);
-		testProtocolDir.mkdirs();
-		Protocol.setCurrentProtocol(new Protocol(testProtocolDir));
-	}
+    }
 
-	@Override
-	protected void finished(Description description) {
-		final File protocolDir = getTestProtocolDir(description);
-		if (protocolDir.exists() && protocolDir.listFiles().length == 0) {
-			protocolDir.delete();
-		}
-	}
+    private void deleteDirIfEmpty(File protocolDir) {
+        if (protocolDir.exists() && protocolDir.listFiles().length == 0) {
+            protocolDir.delete();
+        }
+    }
 
-	private File getTestProtocolDir(Description description) {
-		File protDir = new File(baseDir, description.getClassName().replaceAll("\\W+", "_"));
-		protDir = new File(protDir, description.getMethodName().replaceAll("\\W+", "_"));
-		return protDir;
-	}
+    private File getTestProtocolDir(Description description) {
+        File protDir =
+                new File(baseDir, description.getClassName().replaceAll("\\W+",
+                        "_"));
+        protDir =
+                new File(protDir, description.getMethodName().replaceAll(
+                        "\\W+", "_"));
+        return protDir;
+    }
 
 }
