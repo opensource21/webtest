@@ -14,19 +14,19 @@
 
 package de.ppi.selenium.assertj;
 
-import org.assertj.core.api.AbstractAssert;
-import org.selophane.elements.base.Element;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
+import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.api.AbstractAssert;
+import org.selophane.elements.base.Element;
 
+public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
 
     public ElementAssert(Element actual) {
         super(actual, ElementAssert.class);
     }
-
 
     private void failIsEnabled() {
         super.failWithMessage("Object not enabled");
@@ -123,12 +123,13 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
      * @return
      */
     public ElementAssert hasText(String textToFind) {
-        if(!actual.getText().contains(textToFind)){
-            super.failWithMessage("The element does not contain the text: " + textToFind + " . Actual text found : " + actual.getText());
+        if (!actual.getText().contains(textToFind)) {
+            super.failWithMessage("The element does not contain the text: "
+                    + textToFind + " . Actual text found : " + actual.getText());
 
         }
 
-       return this;
+        return this;
     }
 
     /**
@@ -137,12 +138,14 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
      * @return
      */
     public ElementAssert hasTextMatching(String regexToBeMatched) {
-        if(!actual.getText().matches(regexToBeMatched)){
-            super.failWithMessage("The element does not match the regex: " + regexToBeMatched + " . Actual text found : " + actual.getText());
+        if (!actual.getText().matches(regexToBeMatched)) {
+            super.failWithMessage("The element does not match the regex: "
+                    + regexToBeMatched + " . Actual text found : "
+                    + actual.getText());
 
         }
 
-       return this;
+        return this;
     }
 
     /**
@@ -151,11 +154,11 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
      * @return
      */
     public ElementAssert hasNotText(String textToFind) {
-        if(actual.getText().contains(textToFind)){
+        if (actual.getText().contains(textToFind)) {
             super.failWithMessage("The element contain the text: " + textToFind);
         }
 
-       return this;
+        return this;
     }
 
     private void failIsSelected() {
@@ -169,31 +172,52 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
     /**
      * check if the element has the given id
      *
-	 * @param id to check
+     * @param id to check
      * @return
      */
-	public ElementAssert hasId(String id) {
-		if(!actual.getAttribute("id").equals(id)) {
-			super.failWithMessage("The element does not have the id: " + id + " . Actual id found : " + actual.getAttribute("id"));
-		}
-		return this;
-	}
+    public ElementAssert hasId(String id) {
+        if (!actual.getAttribute("id").equals(id)) {
+            super.failWithMessage("The element does not have the id: " + id
+                    + " . Actual id found : " + actual.getAttribute("id"));
+        }
+        return this;
+    }
+
+    /**
+     * check if the element has the not the class
+     *
+     * @param classToFind
+     * @return this
+     */
+    public ElementAssert hasNotClass(String classToFind) {
+        if (getClasses().contains(classToFind)) {
+            super.failWithMessage("The element has the class: " + classToFind
+                    + " . Actual class found : " + actual.getAttribute("class"));
+        }
+        return this;
+    }
 
     /**
      * check if the element has the class
      *
-	 * @param classToFind
-     * @return
+     * @param classToFind
+     * @return this
      */
     public ElementAssert hasClass(String classToFind) {
-        if(!getClasses().contains(classToFind)) {
-            super.failWithMessage("The element does not have the class: " + classToFind + " . Actual class found : " + actual.getAttribute("class"));
+        if (!getClasses().contains(classToFind)) {
+            super.failWithMessage("The element does not have the class: "
+                    + classToFind + " . Actual class found : "
+                    + actual.getAttribute("class"));
         }
         return this;
     }
 
     private List<String> getClasses() {
-        final String[] primitiveList = actual.getAttribute("class").split(" ");
+        final String classAttribute = actual.getAttribute("class");
+        if (StringUtils.isEmpty(classAttribute)) {
+            return new ArrayList<>();
+        }
+        final String[] primitiveList = classAttribute.split(" ");
         return Arrays.asList(primitiveList);
     }
 }
