@@ -14,13 +14,10 @@
 
 package de.ppi.selenium.assertj;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.AbstractAssert;
 import org.selophane.elements.base.Element;
+
+import de.ppi.selenium.util.CSSHelper;
 
 public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
 
@@ -190,7 +187,7 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
      * @return this
      */
     public ElementAssert hasNotClass(String classToFind) {
-        if (getClasses().contains(classToFind)) {
+        if (CSSHelper.getClasses(actual).contains(classToFind)) {
             super.failWithMessage("The element has the class: " + classToFind
                     + " . Actual class found : " + actual.getAttribute("class"));
         }
@@ -204,7 +201,7 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
      * @return this
      */
     public ElementAssert hasClass(String classToFind) {
-        if (!getClasses().contains(classToFind)) {
+        if (!CSSHelper.getClasses(actual).contains(classToFind)) {
             super.failWithMessage("The element does not have the class: "
                     + classToFind + " . Actual class found : "
                     + actual.getAttribute("class"));
@@ -212,12 +209,4 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
         return this;
     }
 
-    private List<String> getClasses() {
-        final String classAttribute = actual.getAttribute("class");
-        if (StringUtils.isEmpty(classAttribute)) {
-            return new ArrayList<>();
-        }
-        final String[] primitiveList = classAttribute.split(" ");
-        return Arrays.asList(primitiveList);
-    }
 }
