@@ -13,28 +13,54 @@
  */
 package de.ppi.selenium.assertj;
 
+import org.assertj.core.api.Assert;
 import org.openqa.selenium.Alert;
 import org.selophane.elements.base.Element;
 
 import de.ppi.selenium.browser.WebBrowser;
 
-
+/**
+ * Helper class to get easily the selenium specific asserts.
+ *
+ */
 public final class SeleniumAssertions {
 
+    /**
+     *
+     * Initiates an object of type SeleniumAssertions.
+     */
     private SeleniumAssertions() {
-        //only static
+        // only static
     }
 
+    /**
+     * Return an {@link ElementAssert}.
+     *
+     * @param actual the actual object.
+     * @return the {@link Assert}.
+     */
     public static ElementAssert assertThat(Element actual) {
         return new ElementAssert(actual);
     }
 
+    /**
+     * Return an {@link AlertAssert}.
+     *
+     * @param actual the actual object.
+     * @return the {@link Assert}.
+     */
     public static AlertAssert assertThat(Alert actual) {
         return new AlertAssert(actual);
     }
 
+    /**
+     * Return an {@link WebbrowserAssert}.
+     *
+     * @param actual the actual object.
+     * @return the {@link Assert}.
+     */
     public static WebbrowserAssert assertThat(WebBrowser actual) {
-    	return new WebbrowserAssert(actual);
+        return new WebbrowserAssert(actual);
     }
 
 }

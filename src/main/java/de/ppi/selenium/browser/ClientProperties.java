@@ -35,7 +35,8 @@ import org.slf4j.LoggerFactory;
  * from https://github.com/FINRAOS/JTAF-ExtWebDriver
  */
 public class ClientProperties {
-    private final Logger logger = LoggerFactory
+
+    private static final Logger LOG = LoggerFactory
             .getLogger(ClientProperties.class);
 
     private URL client;
@@ -106,7 +107,7 @@ public class ClientProperties {
             String message =
                     "Client configuration could not be loaded from file: \""
                             + filePath + "\"";
-            this.logger.error(message, e);
+            LOG.error(message, e);
             throw new RuntimeException(message, e);
         }
         propertiesConfigurationLayout = config.getLayout();
@@ -126,7 +127,7 @@ public class ClientProperties {
         try {
             browserInitPositionX = Integer.parseInt(browserInitPositionXStr);
         } catch (Exception e) {
-            logger.error("Error parsing '"
+            LOG.error("Error parsing '"
                     + browserInitPositionXStr
                     + "' (value of 'browser.init.position.x' property from client properties file) as integer. Please fix your test configuration.");
         }
@@ -137,7 +138,7 @@ public class ClientProperties {
         try {
             browserInitPositionY = Integer.parseInt(browserInitPositionYStr);
         } catch (Exception e) {
-            logger.error("Error parsing '"
+            LOG.error("Error parsing '"
                     + browserInitPositionYStr
                     + "' (value of 'browser.init.position.y' property from client properties file) as integer. Please fix your test configuration.");
         }
@@ -151,6 +152,7 @@ public class ClientProperties {
         try {
             maxPageWait = Integer.parseInt(maxPageWaitString);
         } catch (Exception e) {
+            LOG.warn("error parsing maxPageWaitString", e);
         }
 
         appearWaitTimeString =
@@ -159,6 +161,7 @@ public class ClientProperties {
         try {
             appearWaitTime = Integer.parseInt(appearWaitTimeString);
         } catch (Exception e) {
+            LOG.warn("error parsing appearWaitTimeString", e);
         }
 
         maxRequestTimeoutString =
@@ -168,6 +171,7 @@ public class ClientProperties {
         try {
             maxRequestTimeout = Integer.parseInt(maxRequestTimeoutString);
         } catch (Exception e) {
+            LOG.warn("error parsing maxRequestTimeoutString", e);
         }
 
         maxDownloadWaitTime =
@@ -226,7 +230,7 @@ public class ClientProperties {
                         .equalsIgnoreCase("yes"))) {
                 doTaskKill = true;
             } else {
-                logger.error("Property 'doTaskKill' is not within range of accepted values. (Range of accepted values are '1'/'0', 'Yes'/'No' and 'True'/'False')");
+                LOG.error("Property 'doTaskKill' is not within range of accepted values. (Range of accepted values are '1'/'0', 'Yes'/'No' and 'True'/'False')");
                 doTaskKill = true;
             }
         } else {
@@ -242,6 +246,7 @@ public class ClientProperties {
             numberOfDaysToKeepTempFolders =
                     Integer.parseInt(numberOfDaysToKeepTempFoldersStr);
         } catch (Exception e) {
+            LOG.warn("error parsing numberOfDaysToKeepTempFoldersStr", e);
         }
 
         tempFolderNameContainsList =
@@ -268,7 +273,7 @@ public class ClientProperties {
                 || highlight.equalsIgnoreCase("0")) {
             isHighlight = false;
         } else {
-            logger.error("Error parsing client property 'highlight' ('"
+            LOG.error("Error parsing client property 'highlight' ('"
                     + highlight
                     + "'). It can be one of 'true / false', 'yes / no', '1 / 0'.");
         }
@@ -342,7 +347,7 @@ public class ClientProperties {
                     }
                     config.save(config.getPath());
                 } catch (ConfigurationException e) {
-                    logger.error("Error saving updated property file ('"
+                    LOG.error("Error saving updated property file ('"
                             + config.getPath() + "')" + e);
                 }
             }
@@ -363,12 +368,13 @@ public class ClientProperties {
                 String[] splits = current.split("\\.");
                 if (splits.length > 1) {
                     String val = config.getString(current);
-                    if (val.startsWith("rgb"))
+                    if (val.startsWith("rgb")) {
                         highlightColorMap.put(splits[1].toUpperCase(), val);
-                    else
-                        logger.warn("Please check property "
+                    } else {
+                        LOG.warn("Please check property "
                                 + current
                                 + ". The highlight color has to specify RGB values in this format: eg. highlight.find=rgb(255,255,0)");
+                    }
                 } else if (splits[0].equals("highlight")) {
 
                     continue;
@@ -377,22 +383,25 @@ public class ClientProperties {
         }
 
         // default load
-        logger.warn("No RGB property for highlight was provided. Colors set to default.");
-        if (!highlightColorMap.containsKey("find"))
+        LOG.warn("No RGB property for highlight was provided. Colors set to default.");
+        if (!highlightColorMap.containsKey("find")) {
             highlightColorMap.put(
                     "find".toUpperCase(),
                     load("highlight.find", "rgb(255, 255, 0)",
                             "color for highlight element during finding"));
-        if (!highlightColorMap.containsKey("get"))
+        }
+        if (!highlightColorMap.containsKey("get")) {
             highlightColorMap.put(
                     "get".toUpperCase(),
                     load("highlight.get", "rgb(135, 206, 250)",
                             "color for highlight element during finding"));
-        if (!highlightColorMap.containsKey("put"))
+        }
+        if (!highlightColorMap.containsKey("put")) {
             highlightColorMap.put(
                     "put".toUpperCase(),
                     load("highlight.put", "rgb(152, 251, 152)",
                             "color for highlight element during finding"));
+        }
 
     }
 

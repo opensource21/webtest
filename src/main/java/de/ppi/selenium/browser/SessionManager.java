@@ -69,7 +69,7 @@ public class SessionManager {
                 }
             };
 
-    private static ThreadLocal<WebDriverFactory> WebDriverFactory =
+    private static ThreadLocal<WebDriverFactory> webDriverFactory =
             new ThreadLocal<WebDriverFactory>() {
                 @Override
                 protected synchronized WebDriverFactory initialValue() {
@@ -128,7 +128,7 @@ public class SessionManager {
      */
 
     public SessionManager setWebDriverFactory(WebDriverFactory impl) {
-        WebDriverFactory.set(impl);
+        webDriverFactory.set(impl);
         return this;
     }
 
@@ -290,7 +290,7 @@ public class SessionManager {
 
     public WebBrowser getNewSession(boolean setAsCurrent) throws Exception {
         Map<String, String> options =
-                WebDriverFactory.get().createDefaultOptions();
+                webDriverFactory.get().createDefaultOptions();
         return getNewSessionDo(options, setAsCurrent);
     }
 
@@ -336,7 +336,7 @@ public class SessionManager {
          * are added into the options map
          */
         Map<String, String> options =
-                WebDriverFactory.get().createDefaultOptions();
+                webDriverFactory.get().createDefaultOptions();
         options.put(key, value);
 
         return getNewSessionDo(options, setAsCurrent);
@@ -374,7 +374,7 @@ public class SessionManager {
             boolean setAsCurrent) throws Exception {
 
         Map<String, String> options =
-                WebDriverFactory.get().createDefaultOptions();
+                webDriverFactory.get().createDefaultOptions();
 
         for (Entry<String, String> opt : override.entrySet()) {
             options.put(opt.getKey(), opt.getValue());
@@ -397,17 +397,17 @@ public class SessionManager {
         }
 
         if (doCleanup) {
-            WebDriverFactory.get().cleanup(localOptions);
+            webDriverFactory.get().cleanup(localOptions);
             doCleanup = false;
         }
 
         // Get capabilities
         DesiredCapabilities dc =
-                WebDriverFactory.get().createCapabilities(localOptions);
+                webDriverFactory.get().createCapabilities(localOptions);
 
         // Get driver instance
         WebDriver innerDriver =
-                WebDriverFactory.get().createWebDriver(localOptions, dc);
+                webDriverFactory.get().createWebDriver(localOptions, dc);
 
         String sessionId = getNextCustomSessionId();
         if (setAsCurrent) {

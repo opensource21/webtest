@@ -43,30 +43,53 @@ import org.slf4j.LoggerFactory;
  *
  * Based on JTafExtWebdriver.
  */
-public class ScreenshotUtils {
+public final class ScreenshotUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ScreenshotUtils.class);
+    /** The LOG-Instance. */
+    private static final Logger LOG = LoggerFactory
+            .getLogger(ScreenshotUtils.class);
 
+    /**
+     * Maximal number of retries to get a screenshot.
+     */
+    private static final int MAXIMAL_NR_OF_RETRIES = 10;
+
+    /**
+     * Default threshold so that 2 pictures are similar.
+     */
+    private static final double DEFAULT_THRESHOLD = .85;
+
+    /**
+     *
+     * Initiates an object of type ScreenshotUtils.
+     */
+    private ScreenshotUtils() {
+
+    }
 
     /**
      * Save a screenshot.
      *
      * @param screenshotFileName name of the file, without ending.
+     * @param driver the webdriver.
      */
-    public static void saveScreenshot(String screenshotFileName, WebDriver driver) {
+    public static void saveScreenshot(String screenshotFileName,
+            WebDriver driver) {
         try {
-        	WebDriver wrappedDriver = driver;
-        	while (wrappedDriver instanceof WrapsDriver) {
-        		wrappedDriver = ((WrapsDriver) wrappedDriver).getWrappedDriver();
-        	}
+            WebDriver wrappedDriver = driver;
+            while (wrappedDriver instanceof WrapsDriver) {
+                wrappedDriver =
+                        ((WrapsDriver) wrappedDriver).getWrappedDriver();
+            }
             if (wrappedDriver instanceof TakesScreenshot) {
                 File screenshot =
                         ((TakesScreenshot) wrappedDriver)
                                 .getScreenshotAs(OutputType.FILE);
-                FileUtils.copyFile(screenshot, new File(screenshotFileName + ".png"));
+                FileUtils.copyFile(screenshot, new File(screenshotFileName
+                        + ".png"));
             } else if (wrappedDriver instanceof HtmlUnitDriver) {
                 FileUtils.write(new File(screenshotFileName + ".html"),
-                		wrappedDriver.getPageSource());
+                        wrappedDriver.getPageSource());
             } else {
                 LOG.warn("The current driver doesn't make screenshots");
             }
@@ -75,23 +98,21 @@ public class ScreenshotUtils {
         }
     }
 
-
     /***
      * You can use this method to take your control pictures. Note that the file
      * should be a png.
      *
-     * @param element
-     * @param toSaveAs
-     * @throws IOException
-     * @throws WidgetException
-     * @throws WidgetTimeoutException
-     * @throws Exception
+     * @param element the webelement
+     * @param toSaveAs the file where the screenshot should be save.
+     * @param wd the webdriver.
+     * @throws IOException if something goes wrong writing the result.
      */
-    public static void takeScreenshotOfElement(WebElement element, File toSaveAs, WebDriver wd)
-            throws IOException {
+    public static void takeScreenshotOfElement(WebElement element,
+            File toSaveAs, WebDriver wd) throws IOException {
 
-        for (int i = 0; i < 10; i++) { // Loop up to 10x to ensure a clean
-                                       // screenshot was taken
+        for (int i = 0; i < MAXIMAL_NR_OF_RETRIES; i++) { // Loop up to 10x to
+                                                          // ensure a clean
+            // screenshot was taken
             LOG.info("Taking screen shot of locator " + element
                     + " ... attempt #" + (i + 1));
 
@@ -148,6 +169,7 @@ public class ScreenshotUtils {
      * control picture, controlPicture, is both the same size as, and, has a
      * similarity value greater than or equal to the threshold.
      *
+     * @param wd the webdriver.
      * @param element - the element to be tested
      * @param controlPicture - the file of the picture that will serve as the
      *            control
@@ -156,11 +178,12 @@ public class ScreenshotUtils {
      * @param threshold - you are asserting that the similarity between the two
      *            pictures is a double greater than or equal to this double
      *            (between 0.0 and 1.0)
-     * @throws IOException
+     * @return true is the pictures are similar.
+     * @throws IOException if something goes wrong writing or reading.
      */
-    public static boolean isSimilarToScreenshot(WebDriver wd, WebElement element,
-            File controlPicture, File toSaveAs, double threshold)
-            throws IOException {
+    public static boolean isSimilarToScreenshot(WebDriver wd,
+            WebElement element, File controlPicture, File toSaveAs,
+            double threshold) throws IOException {
 
         takeScreenshotOfElement(element, toSaveAs, wd);
 
@@ -180,22 +203,31 @@ public class ScreenshotUtils {
      * control picture, controlPicture, is both the same size as, and, has a
      * similarity value greater than or equal to the default threshold of .85.
      *
+     * @param wd the webdriver.
      * @param element - the element to be tested
      * @param controlPicture - the file of the picture that will serve as the
      *            control
      * @param toSaveAs - for example, save the file at
      *            "testData/textFieldWidget/screenshot.png"
-     * @throws WidgetException
-     * @throws IOException
-     * @throws Exception
+     * @return true if the screenshots are similar.
+     * @throws IOException if something goes wrong reading or writing.
      */
-    public static boolean isSimilarToScreenshot(WebDriver wd, WebElement element,
-            File controlPicture, File toSaveAs) throws IOException {
-        return isSimilarToScreenshot(wd, element, controlPicture, toSaveAs, .85);
+    public static boolean isSimilarToScreenshot(WebDriver wd,
+            WebElement element, File controlPicture, File toSaveAs)
+            throws IOException {
+        return isSimilarToScreenshot(wd, element, controlPicture, toSaveAs,
+                DEFAULT_THRESHOLD);
     }
 
+    /**
+     * Checks if a screenshot is complete black.
+     *
+     * @param var the image.
+     * @return true if it is black.
+     */
     private static boolean isBlack(BufferedImage var) {
-        double[] varArr = new double[var.getWidth() * var.getHeight() * 3];
+        final int scale = 3;
+        double[] varArr = new double[var.getWidth() * var.getHeight() * scale];
         // unroll pixels
         for (int i = 0; i < var.getHeight(); i++) {
             for (int j = 0; j < var.getWidth(); j++) {
@@ -217,16 +249,34 @@ public class ScreenshotUtils {
         return true;
     }
 
+    /**
+     * Check if tw pictures are similar.
+     *
+     * @param var picture1
+     * @param cont picture2
+     * @param threshold - you are asserting that the similarity between the two
+     *            pictures is a double greater than or equal to this double
+     *            (between 0.0 and 1.0)
+     *
+     * @return true if the pictures are similar.
+     */
     private static boolean isSimilar(BufferedImage var, BufferedImage cont,
             double threshold) {
         return similarity(var, cont) >= threshold;
     }
 
-    // Returns a double between 0 and 1.0
+    /**
+     * Calculate how similar the 2 immages are.
+     * 
+     * @param var picture1
+     * @param cont picture2
+     * @return a value between 0 and 1.
+     */
     private static double similarity(BufferedImage var, BufferedImage cont) {
 
-        double[] varArr = new double[var.getWidth() * var.getHeight() * 3];
-        double[] contArr = new double[cont.getWidth() * cont.getHeight() * 3];
+        final int scale = 3;
+        double[] varArr = new double[var.getWidth() * var.getHeight() * scale];
+        double[] contArr = new double[cont.getWidth() * cont.getHeight() * scale];
 
         if (varArr.length != contArr.length) {
             throw new IllegalStateException("The pictures are different sizes!");

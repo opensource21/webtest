@@ -43,7 +43,6 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>${selenium.version}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -65,13 +64,20 @@
             <version>1.2.1</version>
             <scope>test</scope>
             <exclusions>
-            	<exclusion>
-            		<artifactId>selenium-remote-driver</artifactId>
-            		<groupId>org.seleniumhq.selenium</groupId>
-            	</exclusion>
+                <exclusion>
+                    <artifactId>selenium-remote-driver</artifactId>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
+
+        <!-- Test -->
         <dependency>
             <groupId>org.jboss.arquillian.extension</groupId>
             <artifactId>arquillian-phantom-driver</artifactId>
@@ -90,18 +96,6 @@
             <version>1.9.8</version>
             <scope>test</scope>
         </dependency>
-        <!-- Test -->
-
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-
-
 
     </dependencies>
     <build>

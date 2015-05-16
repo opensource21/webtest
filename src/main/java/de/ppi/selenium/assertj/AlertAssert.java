@@ -20,22 +20,35 @@ import org.openqa.selenium.NoAlertPresentException;
 
 import de.ppi.selenium.browser.SessionManager;
 
+/**
+ *
+ * Assert for selenium {@link Alert}.
+ *
+ */
 public class AlertAssert extends AbstractAssert<AlertAssert, Alert> {
 
+    /**
+     * Initiates an object of type AlertAssert.
+     *
+     * @param actual the current object.
+     */
     public AlertAssert(Alert actual) {
         super(actual, AlertAssert.class);
     }
 
     /**
-     * Check that the alert box contains the given text
+     * Check that the alert box contains the given text.
      *
+     * @param textToFind the text which should be find.
      * @return self
      */
     public AlertAssert hasText(String textToFind) {
         try {
             if (!actual.getText().contains(textToFind)) {
-                super.failWithMessage("The alert box does not contain the text: " + textToFind
-                        + " . Actual text found : " + actual.getText());
+                super.failWithMessage("The alert box does not contain the text: "
+                        + textToFind
+                        + " . Actual text found : "
+                        + actual.getText());
             }
         } catch (NoAlertPresentException e) {
             super.failWithMessage("There is no alert box");
@@ -45,13 +58,13 @@ public class AlertAssert extends AbstractAssert<AlertAssert, Alert> {
     }
 
     /**
-     * Check that an alert box is present
+     * Check that an alert box is present.
      *
      * @return self
      */
     public AlertAssert isPresent() {
         try {
-        	SessionManager.getSession().switchTo().alert();
+            SessionManager.getSession().switchTo().alert();
         } catch (NoAlertPresentException e) {
             super.failWithMessage("There is no alert box");
         }

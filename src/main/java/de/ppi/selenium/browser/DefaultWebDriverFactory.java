@@ -53,6 +53,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SessionPool functionality used by SessionManager instances. Based on
@@ -61,6 +63,10 @@ import org.openqa.selenium.safari.SafariDriver;
  */
 
 public class DefaultWebDriverFactory implements WebDriverFactory {
+
+    /** The LOG-Instance. */
+    private static final Logger LOG = LoggerFactory
+            .getLogger(DefaultWebDriverFactory.class);
 
     /**
      * Key which holds the reference to an property-file which could be read
@@ -307,6 +313,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
             try {
                 computerName = InetAddress.getLocalHost().getHostName();
             } catch (UnknownHostException e) {
+                LOG.warn("error getting the computer-name", e);
             }
 
             capabilities
@@ -368,7 +375,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 // to the default "Downloads" directory, '2' means to use the
                 // directory you specify in "browser.download.dir"
                 desiredCapabilities.setCapability(
-                        "browser.download.folderList", 2);
+                        "browser.download.folderList", Integer.valueOf(2));
                 desiredCapabilities.setCapability(
                         "browser.download.dir",
                         System.getProperty("user.dir")

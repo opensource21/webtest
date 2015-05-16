@@ -4,24 +4,33 @@ import org.junit.rules.ExternalResource;
 
 import de.ppi.selenium.browser.SessionManager;
 
+/**
+ * Junit-Rule to start a webserver.
+ *
+ */
 public class WebServerRule extends ExternalResource {
 
-	private final WebServer webServer;
+    /**
+     * The webserver.
+     */
+    private final WebServer webServer;
 
-	public WebServerRule(WebServer webServer) {
-		this.webServer = webServer;
-		SessionManager.getInstance().setDefaultBaseUrl(webServer.getBaseUrl());
-	}
+    /**
+     *
+     * Initiates an object of type WebServerRule.
+     * 
+     * @param webServer the webserver.
+     */
+    public WebServerRule(WebServer webServer) {
+        this.webServer = webServer;
+        SessionManager.getInstance().setDefaultBaseUrl(webServer.getBaseUrl());
+    }
 
-
-
-	@Override
-	protected void before() throws Throwable {
-		if (!webServer.isRunning()) {
-			webServer.start();
-		}
-	}
-
-
+    @Override
+    protected void before() throws Throwable {
+        if (!webServer.isRunning()) {
+            webServer.start();
+        }
+    }
 
 }

@@ -11,7 +11,15 @@ import org.openqa.selenium.WebElement;
  * Helper to handle css-characteristics.
  *
  */
-public class CSSHelper {
+public final class CSSHelper {
+
+    /**
+     *
+     * Initiates an object of type CSSHelper.
+     */
+    private CSSHelper() {
+        // Utility-Construktor.
+    }
 
     /**
      * Get a list of name of classes, which stands in the attribut class.
@@ -20,7 +28,7 @@ public class CSSHelper {
      *
      * @return a list of css-classes or an empty-list.
      */
-    public static final List<String> getClasses(WebElement element) {
+    public static List<String> getClasses(WebElement element) {
         final String classAttribute = element.getAttribute("class");
         if (StringUtils.isEmpty(classAttribute)) {
             return new ArrayList<>();

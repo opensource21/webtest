@@ -8,6 +8,7 @@ import org.openqa.selenium.internal.WrapsDriver;
 
 /**
  * Access to the web-browser.
+ * 
  * @author niels
  *
  */
@@ -17,6 +18,7 @@ public interface WebBrowser extends WebDriver, WrapsDriver {
 
     /**
      * Base url which should be added to each relative-url.
+     * 
      * @return the base-url withou trailing slash.
      */
     String getBaseUrl();
@@ -32,9 +34,9 @@ public interface WebBrowser extends WebDriver, WrapsDriver {
      * Get a string representing the current URL that the browser is looking at,
      * without the base-url.
      *
-     * @return The URL of the page currently loaded in the browser, without the base-url.
+     * @return The URL of the page currently loaded in the browser, without the
+     *         base-url.
      */
     String getCurrentRelativeUrl();
-
 
 }

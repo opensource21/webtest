@@ -26,10 +26,24 @@ import org.openqa.selenium.Cookie;
 
 import de.ppi.selenium.browser.WebBrowser;
 
-public class WebbrowserAssert extends AbstractAssert<WebbrowserAssert, WebBrowser> {
+/**
+ * Special asserts for the {@link WebBrowser}.
+ *
+ */
+public class WebbrowserAssert extends
+        AbstractAssert<WebbrowserAssert, WebBrowser> {
 
-	private final WritableAssertionInfo info =  new WritableAssertionInfo();;
+    /**
+     * Infos about assertions.
+     */
+    private final WritableAssertionInfo info = new WritableAssertionInfo();;
 
+    /**
+     *
+     * Initiates an object of type WebbrowserAssert.
+     *
+     * @param actual the current object.
+     */
     public WebbrowserAssert(WebBrowser actual) {
         super(actual, WebbrowserAssert.class);
     }
@@ -37,28 +51,30 @@ public class WebbrowserAssert extends AbstractAssert<WebbrowserAssert, WebBrowse
     /**
      * Check if the browser is at the relativeURL.
      *
+     * @param relativeUrl the relative url.
      * @return this
      */
     public WebbrowserAssert hasRelativeUrl(String relativeUrl) {
-    	Objects.instance().assertEqual(info, actual.getCurrentRelativeUrl(), relativeUrl);
+        Objects.instance().assertEqual(info, actual.getCurrentRelativeUrl(),
+                relativeUrl);
         return this;
     }
 
     /**
      * Check if a cookie with the given name exists.
      *
+     * @param searchedCookies a list of cookies which should be found.
      * @return this
      */
     public WebbrowserAssert hasCookies(String... searchedCookies) {
-    	final Set<Cookie> cookies = actual.manage().getCookies();
-    	final List<String> cookieNames = new ArrayList<>();
-    	for (Cookie cookie : cookies) {
-    		cookieNames.add(cookie.getName());
-		}
-    	//assertThat(cookieNames).contains(searchedCookies);
-    	Iterables.instance().assertContains(info, cookieNames, searchedCookies);
+        final Set<Cookie> cookies = actual.manage().getCookies();
+        final List<String> cookieNames = new ArrayList<>();
+        for (Cookie cookie : cookies) {
+            cookieNames.add(cookie.getName());
+        }
+        // assertThat(cookieNames).contains(searchedCookies);
+        Iterables.instance().assertContains(info, cookieNames, searchedCookies);
         return this;
     }
-
 
 }

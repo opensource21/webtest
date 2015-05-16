@@ -33,10 +33,16 @@ import de.ppi.selenium.util.Protocol;
  */
 public class SeleniumSoftAssertions extends AbstractSoftAssertions implements
         TestRule {
-
-    final ErrorCollectorWithScreenshots collector =
+    /**
+     * Collector for errors.
+     */
+    private final ErrorCollectorWithScreenshots collector =
             new ErrorCollectorWithScreenshots();
 
+    /**
+     *
+     * Initiates an object of type SeleniumSoftAssertions.
+     */
     public SeleniumSoftAssertions() {
         super();
     }
@@ -92,7 +98,13 @@ public class SeleniumSoftAssertions extends AbstractSoftAssertions implements
         return (V) enhancer.create(array(actualClass), array(actual));
     }
 
+    /**
+     *
+     * Class which collects errors and create screenshots.
+     *
+     */
     static class ErrorCollectorWithScreenshots implements MethodInterceptor {
+        /** List of errors. */
         private final List<Throwable> errors = new ArrayList<Throwable>();
 
         @Override
@@ -109,6 +121,11 @@ public class SeleniumSoftAssertions extends AbstractSoftAssertions implements
             return obj;
         }
 
+        /**
+         * Returns the list of errors.
+         * 
+         * @return the list of errors.
+         */
         public List<Throwable> errors() {
             return Collections.unmodifiableList(errors);
         }

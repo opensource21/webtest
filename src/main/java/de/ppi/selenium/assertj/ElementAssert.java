@@ -19,24 +19,40 @@ import org.selophane.elements.base.Element;
 
 import de.ppi.selenium.util.CSSHelper;
 
+/**
+ * Asserts for {@link Element}.
+ *
+ */
 public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
 
+    /**
+     *
+     * Initiates an object of type ElementAssert.
+     *
+     * @param actual the current object.
+     */
     public ElementAssert(Element actual) {
         super(actual, ElementAssert.class);
     }
 
+    /**
+     * Fail if the object is enabled.
+     */
     private void failIsEnabled() {
         super.failWithMessage("Object not enabled");
     }
 
+    /**
+     * Fail if the object is not enabled.
+     */
     private void failIsNotEnabled() {
         super.failWithMessage("Object is enabled");
     }
 
     /**
-     * check if the element is enabled
+     * check if the element is enabled.
      *
-     * @return
+     * @return self
      */
     public ElementAssert isEnabled() {
         if (!actual.isEnabled()) {
@@ -46,9 +62,9 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
     }
 
     /**
-     * check if the element is not enabled
+     * check if the element is not enabled.
      *
-     * @return
+     * @return self
      */
     public ElementAssert isNotEnabled() {
         if (actual.isEnabled()) {
@@ -58,66 +74,60 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
     }
 
     /**
-     * check if the element is displayed
+     * check if the element is displayed.
      *
-     * @return
+     * @return self.
      */
     public ElementAssert isDisplayed() {
         if (!actual.isDisplayed()) {
-            failIsNotDisplayed();
+            super.failWithMessage("Object is displayed");
         }
 
         return this;
     }
 
     /**
-     * check if the element is not displayed
+     * check if the element is not displayed.
      *
-     * @return
+     * @return self
      */
     public ElementAssert isNotDisplayed() {
         if (actual.isDisplayed()) {
-            failIsDisplayed();
+            super.failWithMessage("Object not displayed");
         }
         return this;
     }
 
-    private void failIsDisplayed() {
-        super.failWithMessage("Object not displayed");
-    }
-
-    private void failIsNotDisplayed() {
-        super.failWithMessage("Object is displayed");
-    }
-
     /**
-     * check if the element is selected
+     * check if the element is selected.
      *
-     * @return
+     * @return self
      */
     public ElementAssert isSelected() {
         if (!actual.isSelected()) {
-            failIsSelected();
+            super.failWithMessage("Object not selected");
         }
         return this;
     }
 
     /**
-     * check if the element is not selected
+     * check if the element is not selected.
      *
-     * @return
+     * @return self
      */
     public ElementAssert isNotSelected() {
         if (actual.isSelected()) {
-            failIsNotSelected();
+            super.failWithMessage("Object is selected");
         }
         return this;
     }
 
     /**
-     * check if the element contains the text
+     * check if the element contains the text.
      *
-     * @return
+     * @param textToFind the text which should be found.
+     *
+     * @return self
      */
     public ElementAssert hasText(String textToFind) {
         if (!actual.getText().contains(textToFind)) {
@@ -130,9 +140,10 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
     }
 
     /**
-     * check if the element matches the given regex
+     * check if the element matches the given regex.
      *
-     * @return
+     * @param regexToBeMatched the text which should be found as regeexp.
+     * @return self
      */
     public ElementAssert hasTextMatching(String regexToBeMatched) {
         if (!actual.getText().matches(regexToBeMatched)) {
@@ -146,9 +157,10 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
     }
 
     /**
-     * check if the element does not contain the text
+     * check if the element does not contain the text.
      *
-     * @return
+     * @param textToFind the text which should be found.
+     * @return self
      */
     public ElementAssert hasNotText(String textToFind) {
         if (actual.getText().contains(textToFind)) {
@@ -158,19 +170,11 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
         return this;
     }
 
-    private void failIsSelected() {
-        super.failWithMessage("Object not selected");
-    }
-
-    private void failIsNotSelected() {
-        super.failWithMessage("Object is selected");
-    }
-
     /**
-     * check if the element has the given id
+     * check if the element has the given id.
      *
      * @param id to check
-     * @return
+     * @return self
      */
     public ElementAssert hasId(String id) {
         if (!actual.getAttribute("id").equals(id)) {
@@ -181,10 +185,10 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
     }
 
     /**
-     * check if the element has the not the class
+     * check if the element has the not the class.
      *
-     * @param classToFind
-     * @return this
+     * @param classToFind the css-class which should not be found.
+     * @return self
      */
     public ElementAssert hasNotClass(String classToFind) {
         if (CSSHelper.getClasses(actual).contains(classToFind)) {
@@ -195,9 +199,9 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
     }
 
     /**
-     * check if the element has the class
+     * check if the element has the class.
      *
-     * @param classToFind
+     * @param classToFind the css-class which should be found.
      * @return this
      */
     public ElementAssert hasClass(String classToFind) {

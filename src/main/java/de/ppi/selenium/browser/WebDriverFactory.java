@@ -36,33 +36,29 @@ public interface WebDriverFactory {
 
     /**
      * Cleans up the session - closed all taks
-     * @param options
-     *            the options for cleaning up
+     *
+     * @param options the options for cleaning up
      * @throws Exception
      */
     public void cleanup(Map<String, String> options) throws Exception;
 
-
-
     /**
-    *
-    * @param options
-    *            the options you want the capabilities instance to have
-    * @return the capabilities of webdriver
-    * @throws Exception
-    */
-   public DesiredCapabilities createCapabilities(Map<String, String> options) throws Exception;
+     *
+     * @param options the options you want the capabilities instance to have
+     * @return the capabilities of webdriver
+     * @throws Exception
+     */
+    public DesiredCapabilities createCapabilities(Map<String, String> options)
+            throws Exception;
 
     /**
      *
-     * @param options
-     *            the options passed on to the webdriver instance
-     * @param capabilities
-     *            the capabilities you want webdriver to have
+     * @param options the options passed on to the webdriver instance
+     * @param capabilities the capabilities you want webdriver to have
      * @return the instance of WebDriver not wrapped by our extended version
      * @throws IOException can't access the browser.
      */
-    public WebDriver createWebDriver(Map<String, String> options, DesiredCapabilities capabilities)
-            throws IOException;
+    public WebDriver createWebDriver(Map<String, String> options,
+            DesiredCapabilities capabilities) throws IOException;
 
 }

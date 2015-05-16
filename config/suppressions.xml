@@ -8,5 +8,8 @@
     <!-- You can't use "/" here because it fails. "." can be used for "/" and "\".
           Another possibility is ".* Test.java" -->
     <suppress checks="JavadocPackage" files=".*src.test.java.*.java"/>
+    <suppress checks="NewlineAtEndOfFile" files=".*.gitkeep"/>
+    <!-- copied code which can't be easily fix. -->
+    <suppress checks=".*" files=".*src.main.java.de.ppi.selenium.browser.*.java"/>
 </suppressions>
 

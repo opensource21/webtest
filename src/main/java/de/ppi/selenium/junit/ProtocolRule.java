@@ -1,6 +1,3 @@
-/**
- *
- */
 package de.ppi.selenium.junit;
 
 import java.io.File;
@@ -16,16 +13,28 @@ import de.ppi.selenium.browser.SessionManager;
 import de.ppi.selenium.util.Protocol;
 
 /**
+ * Junit-Rule which helps to create a protocol.
+ *
  * @author niels
  *
  */
 public class ProtocolRule extends TestWatcher {
+
+    /**
+     * The Log.
+     */
     private static final Logger LOG = LoggerFactory
             .getLogger(ProtocolRule.class);
 
+    /**
+     * Basedir where all protocol-dirs are relative.
+     */
     private final File baseDir;
 
-    private static final String protocolStart = new SimpleDateFormat(
+    /**
+     * Start-time as String.
+     */
+    private static final String PROTOCOL_START = new SimpleDateFormat(
             "yyyy-MM-dd_HH_mm_ss").format(new Date());
 
     /**
@@ -65,9 +74,9 @@ public class ProtocolRule extends TestWatcher {
                     + " isn't a directory");
         }
         if (baseDirOk) {
-            this.baseDir = new File(baseDir, protocolStart);
+            this.baseDir = new File(baseDir, PROTOCOL_START);
         } else {
-            this.baseDir = new File(protocolStart);
+            this.baseDir = new File(PROTOCOL_START);
         }
         this.baseDir.mkdirs();
     }
@@ -93,12 +102,23 @@ public class ProtocolRule extends TestWatcher {
 
     }
 
+    /**
+     * Deletes the directory it is empty.
+     *
+     * @param protocolDir the directory.
+     */
     private void deleteDirIfEmpty(File protocolDir) {
         if (protocolDir.exists() && protocolDir.listFiles().length == 0) {
             protocolDir.delete();
         }
     }
 
+    /**
+     * Create the name of the protocol-directory.
+     *
+     * @param description the test-description.
+     * @return a protocol directory.
+     */
     private File getTestProtocolDir(Description description) {
         File protDir =
                 new File(baseDir, description.getClassName().replaceAll("\\W+",
