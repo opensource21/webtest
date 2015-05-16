@@ -92,7 +92,7 @@ public class SessionManager {
 
     /**
      * Get the default base-url.
-     * 
+     *
      * @return the default base-url.
      */
     public String getDefaultBaseUrl() {
@@ -101,7 +101,7 @@ public class SessionManager {
 
     /**
      * Possibility to set the default base-url.
-     * 
+     *
      * @param defaultBaseUrl the default base-url.
      */
     public void setDefaultBaseUrl(String defaultBaseUrl) {
@@ -167,19 +167,18 @@ public class SessionManager {
 
     /**
      * Convenience method for getting the current WebBrowser session associated
-     * with this SessionManager, creating a new session if the session does not
-     * exist.
+     * with this SessionManager, the session must exists.
      *
      * @return WebBrowser an instance of WebBrowser
      */
 
     public WebBrowser getCurrentSession() {
-        return getCurrentSession(true);
+        return getCurrentSession(false);
     }
 
     /**
-     * Convenience method to get teh current session.
-     * 
+     * Convenience method to get the current session.
+     *
      * @return the current session.
      */
     public static WebBrowser getSession() {

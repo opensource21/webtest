@@ -25,13 +25,17 @@ public class WebDriverRule extends ExternalResource {
     @Override
     protected void before() throws Throwable {
         nrOfTests++;
+        final SessionManager manager = SessionManager.getInstance();
         if (nrOfTests > MAX_NR_OF_REUSE) {
-            final SessionManager manager = SessionManager.getInstance();
             final WebBrowser browser = manager.getCurrentSession(false);
             if (browser != null) {
                 manager.removeSession(browser);
                 browser.quit();
             }
+        }
+        final WebBrowser browser = manager.getCurrentSession(false);
+        if (browser == null) {
+            manager.getCurrentSession(true);
         }
     }
 
