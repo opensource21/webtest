@@ -13,3 +13,8 @@ must be set via `-D<propertyName>=value`.
 - `webtest.baseurl` - defines the base-url.
 - `phantomjs.binary.path` - defines the path to phantomjs for example
    `C:\\RegFreeProgs\\phantomjs\\phantomjs.exe`
+
+### Browser
+The browser is configured by a file `client.properties`. The properties are explained at
+[Jtaf-EXTWebdriver](http://finraos.github.io/JTAF-ExtWebDriver/clientproperties.html)
+which is the base of my code.
