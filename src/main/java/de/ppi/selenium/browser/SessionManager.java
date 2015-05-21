@@ -435,6 +435,7 @@ public class SessionManager {
         for (WebBrowser webBrowser : getSessions().values()) {
             webBrowser.quit();
         }
+        getSessions().clear();
     }
 
 }
