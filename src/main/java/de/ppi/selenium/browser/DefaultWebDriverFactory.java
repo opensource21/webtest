@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -518,6 +519,10 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                                 new Point(browserInitPositionX,
                                         browserInitPositionY));
             }
+            wd.manage()
+                    .timeouts()
+                    .implicitlyWait(properties.getAppearWaitTime(),
+                            TimeUnit.SECONDS);
         }
 
         return wd;
