@@ -55,7 +55,7 @@ public class SessionManager {
     private String currentSessionId = DEFAULT_SESSION;
     private int nextCustomSessionId = 1;
 
-    private boolean doCleanup = true;
+    private boolean doCleanup = false;
 
     private SessionManager() {
 
