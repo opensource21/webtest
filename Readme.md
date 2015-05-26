@@ -18,3 +18,5 @@ must be set via `-D<propertyName>=value`.
 The browser is configured by a file `client.properties`. The properties are explained at
 [Jtaf-EXTWebdriver](http://finraos.github.io/JTAF-ExtWebDriver/clientproperties.html)
 which is the base of my code.
+Additional you can define
+`webdriver.phantomjs.driver`

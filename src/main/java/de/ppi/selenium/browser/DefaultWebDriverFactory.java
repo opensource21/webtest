@@ -49,6 +49,7 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
@@ -493,11 +494,22 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 wd = new HtmlUnitDriver(desiredCapabilities);
                 ((HtmlUnitDriver) wd).setJavascriptEnabled(true);
             } else if (browser.equalsIgnoreCase("phantomjs")) {
-                wd =
-                        new PhantomJSDriver(
-                                ResolvingPhantomJSDriverService
-                                        .createDefaultService(),
-                                desiredCapabilities);
+                String webdriverPhantomJSDriver =
+                        properties.getWebDriverPhantomJSDriver();
+
+                if (webdriverPhantomJSDriver != null) {
+                    desiredCapabilities
+                            .setCapability(
+                                    PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
+                                    webdriverPhantomJSDriver);
+                    wd = new PhantomJSDriver(desiredCapabilities);
+                } else {
+                    wd =
+                            new PhantomJSDriver(
+                                    ResolvingPhantomJSDriverService
+                                            .createDefaultService(),
+                                    desiredCapabilities);
+                }
             } else {
                 throw new IllegalArgumentException(
                         "Unsupported browser type: "
@@ -522,7 +534,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
             wd.manage()
                     .timeouts()
                     .implicitlyWait(properties.getAppearWaitTime(),
-                            TimeUnit.SECONDS);
+                            TimeUnit.MILLISECONDS);
         }
 
         return wd;

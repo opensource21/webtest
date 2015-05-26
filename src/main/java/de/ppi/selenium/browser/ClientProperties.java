@@ -69,6 +69,7 @@ public class ClientProperties {
     private final String binaryPath;
     private final String webDriverIEDriver;
     private final String webDriverChromeDriver;
+    private final String webDriverPhantomJsDriver;
 
     private boolean isHighlight;
     private final Map<String, String> highlightColorMap;
@@ -187,6 +188,10 @@ public class ClientProperties {
                 load("webdriver.ie.driver", null, "Path to IEDriverServer.exe");
         webDriverChromeDriver =
                 load("webdriver.chrome.driver", null,
+                        "Path to chromedriver executable");
+
+        webDriverPhantomJsDriver =
+                load("webdriver.phantomjs.driver", null,
                         "Path to chromedriver executable");
 
         String uploadFolderStr =
@@ -555,6 +560,15 @@ public class ClientProperties {
      */
     public String getWebDriverChromeDriver() {
         return webDriverChromeDriver;
+    }
+
+    /**
+     * Returns the path to phantomjs.exe.
+     *
+     * @return the path to phantomjs.exe
+     */
+    public String getWebDriverPhantomJSDriver() {
+        return webDriverPhantomJsDriver;
     }
 
     /**
