@@ -18,5 +18,9 @@ must be set via `-D<propertyName>=value`.
 The browser is configured by a file `client.properties`. The properties are explained at
 [Jtaf-EXTWebdriver](http://finraos.github.io/JTAF-ExtWebDriver/clientproperties.html)
 which is the base of my code.
-Additional you can define
-`webdriver.phantomjs.driver`
+Additional you can define:
+
+- `webdriver.phantomjs.driver` - the path to phantom.js
+- `browser.accept_languages` - to set the accepted languages, doesn't work for IE.
+   For HTMLUnit it sets the browser language.
+

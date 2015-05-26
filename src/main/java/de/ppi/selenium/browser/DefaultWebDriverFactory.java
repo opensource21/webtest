@@ -59,6 +59,8 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+
 /**
  * SessionPool functionality used by SessionManager instances. Based on
  * https://github.com/FINRAOS/JTAF-ExtWebDriver
@@ -504,7 +506,12 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
             } else if (browser.equalsIgnoreCase("safari")) {
                 wd = new SafariDriver(desiredCapabilities);
             } else if (browser.equalsIgnoreCase("htmlunit")) {
-                wd = new HtmlUnitDriver(desiredCapabilities);
+                final BrowserVersion browserVersion = BrowserVersion.FIREFOX_24;
+                if (properties.getAcceptedLanguages() != null) {
+                    browserVersion.setBrowserLanguage(properties
+                            .getAcceptedLanguages().split(",")[0]);
+                }
+                wd = new HtmlUnitDriver(browserVersion);
                 ((HtmlUnitDriver) wd).setJavascriptEnabled(true);
             } else if (browser.equalsIgnoreCase("phantomjs")) {
                 String webdriverPhantomJSDriver =
