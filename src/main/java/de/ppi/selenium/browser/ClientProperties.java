@@ -65,6 +65,8 @@ public class ClientProperties {
     private final String downloadFolder;
     private final String uploadFolder;
 
+    private final String acceptLanguages;
+
     private final String maxAllowedSessions;
     private final String binaryPath;
     private final String webDriverIEDriver;
@@ -143,6 +145,9 @@ public class ClientProperties {
                     + browserInitPositionYStr
                     + "' (value of 'browser.init.position.y' property from client properties file) as integer. Please fix your test configuration.");
         }
+
+        acceptLanguages =
+                load("browser.accept_languages", null, "Accepted Languages.");
 
         os = load("os", null, null);
         osVersion = load("os.version", null, null);
@@ -434,6 +439,10 @@ public class ClientProperties {
      */
     public final String getBrowserVersion() {
         return browserVersion;
+    }
+
+    public final String getAcceptedLanguages() {
+        return acceptLanguages;
     }
 
     /**

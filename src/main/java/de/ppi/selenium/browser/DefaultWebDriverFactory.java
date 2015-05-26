@@ -43,6 +43,7 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -450,32 +451,32 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                         properties.getFirefoxProfileFolder();
                 final String ffProfileFile = properties.getFirefoxProfileFile();
                 final String path = properties.getBinaryPath();
+                final FirefoxProfile ffp;
+                if (ffProfileFolder != null) {
+                    ffp = new FirefoxProfile(new File(ffProfileFolder));
+                } else {
+                    ffp = new FirefoxProfile();
+                }
+
+                if (ffProfileFile != null) {
+                    addPreferences(ffp, ffProfileFile);
+                }
+
+                addPreferences(ffp, properties);
+
+                List<String> ffExtensions = properties.getFirefoxExtensions();
+                if (ffExtensions != null && ffExtensions.size() > 0) {
+                    addExtensionsToFirefoxProfile(ffp, ffExtensions);
+                }
 
                 if (path != null) {
                     FirefoxBinary fireFox = getFFBinary(path);
-                    FirefoxProfile ffp = null;
-
-                    if (ffProfileFolder != null) {
-                        ffp = new FirefoxProfile(new File(ffProfileFolder));
-                    } else {
-                        ffp = new FirefoxProfile();
-                    }
-
-                    if (ffProfileFile != null) {
-                        addPreferences(ffp, ffProfileFile);
-                    }
-
-                    addPreferences(ffp);
-
-                    List<String> ffExtensions =
-                            properties.getFirefoxExtensions();
-                    if (ffExtensions != null && ffExtensions.size() > 0) {
-                        addExtensionsToFirefoxProfile(ffp, ffExtensions);
-                    }
-
                     wd = new FirefoxDriver(fireFox, ffp, desiredCapabilities);
                 } else {
-                    wd = new FirefoxDriver(desiredCapabilities);
+                    wd =
+                            new FirefoxDriver(new FirefoxBinary(), ffp,
+                                    desiredCapabilities);
+
                 }
             } else if (browser.equalsIgnoreCase("chrome")) {
 
@@ -487,7 +488,19 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                             webdriverChromeDriver);
                 }
 
+                if (properties.getAcceptedLanguages() != null) {
+                    final ChromeOptions chromeOptions = new ChromeOptions();
+                    final Map<String, Object> prefs =
+                            new HashMap<String, Object>();
+                    prefs.put("intl.accept_languages",
+                            properties.getAcceptedLanguages());
+                    chromeOptions.setExperimentalOption("prefs", prefs);
+                    desiredCapabilities.setCapability(ChromeOptions.CAPABILITY,
+                            chromeOptions);
+                }
+
                 wd = new ChromeDriver(desiredCapabilities);
+
             } else if (browser.equalsIgnoreCase("safari")) {
                 wd = new SafariDriver(desiredCapabilities);
             } else if (browser.equalsIgnoreCase("htmlunit")) {
@@ -555,7 +568,8 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
      * @param ffp for use in setting the firefox profile for the tests to use
      *            when running firefox
      */
-    private static void addPreferences(FirefoxProfile ffp) {
+    private static void addPreferences(FirefoxProfile ffp,
+            ClientProperties properties) {
         ffp.setPreference("capability.policy.default.HTMLDocument.readyState",
                 "allAccess");
         ffp.setPreference("capability.policy.default.HTMLDocument.compatMode",
@@ -578,6 +592,10 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 "allAccess");
         ffp.setPreference("capability.policy.default.Window.mozInnerScreenX",
                 "allAccess");
+        if (properties.getAcceptedLanguages() != null) {
+            ffp.setPreference("intl.accept_languages",
+                    properties.getAcceptedLanguages());
+        }
     }
 
     /**
