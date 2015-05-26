@@ -509,6 +509,11 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
             } else if (browser.equalsIgnoreCase("phantomjs")) {
                 String webdriverPhantomJSDriver =
                         properties.getWebDriverPhantomJSDriver();
+                if (properties.getAcceptedLanguages() != null) {
+                    desiredCapabilities.setCapability(
+                            "phantomjs.page.customHeaders.Accept-Language",
+                            properties.getAcceptedLanguages());
+                }
 
                 if (webdriverPhantomJSDriver != null) {
                     desiredCapabilities
