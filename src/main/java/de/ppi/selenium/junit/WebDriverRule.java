@@ -1,6 +1,12 @@
 package de.ppi.selenium.junit;
 
-import org.junit.rules.ExternalResource;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.internal.runners.model.MultipleFailureException;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
+import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import de.ppi.selenium.browser.SessionManager;
 import de.ppi.selenium.browser.WebBrowser;
@@ -9,7 +15,8 @@ import de.ppi.selenium.browser.WebBrowser;
  * Junit-Rule which handle the WebDriver.
  *
  */
-public class WebDriverRule extends ExternalResource {
+@SuppressWarnings("deprecation")
+public class WebDriverRule extends TestWatcher {
 
     /**
      * The number of test which runs.
@@ -23,7 +30,27 @@ public class WebDriverRule extends ExternalResource {
     private static final long MAX_NR_OF_REUSE = 10;
 
     @Override
-    protected void before() throws Throwable {
+    protected void failed(Throwable e, Description description) {
+        final List<Throwable> failures = new ArrayList<>();
+        if (e instanceof MultipleFailureException) {
+            final MultipleFailureException mfe = (MultipleFailureException) e;
+            failures.addAll(mfe.getFailures());
+        }
+        for (Throwable throwable : failures) {
+            if (throwable instanceof UnreachableBrowserException) {
+                final SessionManager manager = SessionManager.getInstance();
+                final WebBrowser browser = manager.getCurrentSession(false);
+                if (browser != null) {
+                    manager.removeSession(browser);
+                    browser.quit();
+                }
+                return;
+            }
+        }
+    }
+
+    @Override
+    protected void starting(Description description) {
         nrOfTests++;
         final SessionManager manager = SessionManager.getInstance();
         if (nrOfTests > MAX_NR_OF_REUSE) {

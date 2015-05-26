@@ -187,8 +187,8 @@ public class WebBrowserImpl implements WebBrowser {
      */
     @Override
     public void quit() {
-        webdriver.quit();
         ALL_INSTANCES.remove(this);
+        webdriver.quit();
     }
 
     /**
