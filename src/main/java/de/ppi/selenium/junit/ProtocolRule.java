@@ -89,6 +89,7 @@ public class ProtocolRule extends TestWatcher {
 
     @Override
     protected void starting(Description description) {
+        LOG.debug("Start: {}", description.getDisplayName());
         final File testProtocolDir = getTestProtocolDir(description);
         testProtocolDir.mkdirs();
         Protocol.setCurrentProtocol(new Protocol(testProtocolDir));
