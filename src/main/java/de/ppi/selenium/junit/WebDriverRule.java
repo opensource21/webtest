@@ -39,11 +39,7 @@ public class WebDriverRule extends TestWatcher {
         for (Throwable throwable : failures) {
             if (throwable instanceof UnreachableBrowserException) {
                 final SessionManager manager = SessionManager.getInstance();
-                final WebBrowser browser = manager.getCurrentSession(false);
-                if (browser != null) {
-                    manager.removeSession(browser);
-                    browser.quit();
-                }
+                quitBrowser(manager);
                 return;
             }
         }
@@ -54,15 +50,25 @@ public class WebDriverRule extends TestWatcher {
         nrOfTests++;
         final SessionManager manager = SessionManager.getInstance();
         if (nrOfTests > MAX_NR_OF_REUSE) {
-            final WebBrowser browser = manager.getCurrentSession(false);
-            if (browser != null) {
-                manager.removeSession(browser);
-                browser.quit();
-            }
+            quitBrowser(manager);
         }
         final WebBrowser browser = manager.getCurrentSession(false);
         if (browser == null) {
             manager.getCurrentSession(true);
+        }
+    }
+
+    /**
+     * Quits the browser.
+     * 
+     * @param manager the {@link SessionManager}.
+     */
+    private void quitBrowser(final SessionManager manager) {
+        final WebBrowser browser = manager.getCurrentSession(false);
+        if (browser != null) {
+            nrOfTests = 0;
+            manager.removeSession(browser);
+            browser.quit();
         }
     }
 
