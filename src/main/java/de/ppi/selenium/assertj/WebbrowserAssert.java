@@ -22,6 +22,7 @@ import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.WritableAssertionInfo;
 import org.assertj.core.internal.Iterables;
 import org.assertj.core.internal.Objects;
+import org.assertj.core.internal.Strings;
 import org.openqa.selenium.Cookie;
 
 import de.ppi.selenium.browser.WebBrowser;
@@ -57,6 +58,18 @@ public class WebbrowserAssert extends
     public WebbrowserAssert hasRelativeUrl(String relativeUrl) {
         Objects.instance().assertEqual(info, actual.getCurrentRelativeUrl(),
                 relativeUrl);
+        return this;
+    }
+
+    /**
+     * check if the relative url matches the given regex.
+     *
+     * @param regexToBeMatched the text which should be found as regeexp.
+     * @return self
+     */
+    public WebbrowserAssert hasRalativeUrlMatching(String regexToBeMatched) {
+        Strings.instance().assertMatches(info, actual.getCurrentRelativeUrl(),
+                regexToBeMatched);
         return this;
     }
 
