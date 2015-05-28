@@ -35,6 +35,8 @@ public class WebDriverRule extends TestWatcher {
         if (e instanceof MultipleFailureException) {
             final MultipleFailureException mfe = (MultipleFailureException) e;
             failures.addAll(mfe.getFailures());
+        } else {
+            failures.add(e);
         }
         for (Throwable throwable : failures) {
             if (throwable instanceof UnreachableBrowserException) {
@@ -60,7 +62,7 @@ public class WebDriverRule extends TestWatcher {
 
     /**
      * Quits the browser.
-     * 
+     *
      * @param manager the {@link SessionManager}.
      */
     private void quitBrowser(final SessionManager manager) {
