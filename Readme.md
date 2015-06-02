@@ -71,11 +71,13 @@ to declare a constant-class, like:
                 .outerRule(
                         new WebServerRule(new DelegatingWebServer(
                                 new JettyWebServer("/fuwesta"))))
-                .around(new WebDriverRule()).around(new ProtocolRule("weblog"));
+                .around(new WebDriverRule())
+                .around(new ProtocolRule("weblog"));
         /**
          * Standard_Rule for WebTests.
          */
-        RuleChain WEBTEST = RuleChain.outerRule(WEBTEST_WITHOUT_AUTHENTICATION)
+        RuleChain WEBTEST =
+                    RuleChain.outerRule(WEBTEST_WITHOUT_AUTHENTICATION)
                 .around(new AuthRule());
     }
 
