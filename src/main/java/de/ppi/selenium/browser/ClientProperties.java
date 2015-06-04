@@ -186,17 +186,19 @@ public class ClientProperties {
         downloadFolder =
                 load("download.folder", null, "Default download folder");
         binaryPath =
-                load("binaryPath",
+                loadAndCheckFileExists(
+                        "binaryPath",
                         null,
                         "Path to Firefox executable (if you want to use specific version installed on your machine instead of default FF installation)");
         webDriverIEDriver =
-                load("webdriver.ie.driver", null, "Path to IEDriverServer.exe");
+                loadAndCheckFileExists("webdriver.ie.driver", null,
+                        "Path to IEDriverServer.exe");
         webDriverChromeDriver =
-                load("webdriver.chrome.driver", null,
+                loadAndCheckFileExists("webdriver.chrome.driver", null,
                         "Path to chromedriver executable");
 
         webDriverPhantomJsDriver =
-                load("webdriver.phantomjs.driver", null,
+                loadAndCheckFileExists("webdriver.phantomjs.driver", null,
                         "Path to chromedriver executable");
 
         String uploadFolderStr =
@@ -209,10 +211,11 @@ public class ClientProperties {
             uploadFolder = ".";
         }
         firefoxProfileFolder =
-                load("firefoxProfile.folder", null,
+                loadAndCheckFileExists("firefoxProfile.folder", null,
                         "Path to custom Firefox profile (setup Firefox profile)");
         firefoxPropertiesFile =
-                load("firefoxProfile.file",
+                loadAndCheckFileExists(
+                        "firefoxProfile.file",
                         null,
                         "Properties file containing configuration you want to load to current Firefox profile (setup Firefox properties file)");
 
@@ -324,6 +327,36 @@ public class ClientProperties {
         gridProperties =
                 load("grid.properties", "record-screenshots=true",
                         "Space separated Selenium Grid properties (e.g. 'record-screenshots=true')");
+    }
+
+    /**
+     * Method similar to {@link #load(String, String, String)}, but checks if
+     * the given String is an existing file.
+     *
+     * @param key the key to be put into the configuration
+     * @param defaultValue the value to be put into the configuration; if
+     *            {@code null}, then no change is made to the configuration
+     * @param comment a comment to be set for the key/value pair; {@code null}
+     *            values permitted
+     * @return the newly set value, or the current value if the configuration
+     *         already contains the given key
+     * @return the newly set value, or the current value if the configuration
+     *         already contains the given key, null if the file doesn't exists.
+     */
+    private final String loadAndCheckFileExists(String key,
+            String defaultValue, String comment) {
+        String result = load(key, defaultValue, comment);
+        if (result == null) {
+            return null;
+        }
+
+        final File file = new File(result);
+        if (!file.exists()) {
+            LOG.error("The file {} defined under the key {} doesn't exist.",
+                    file.getAbsolutePath(), key);
+            return null;
+        }
+        return result;
     }
 
     /**
