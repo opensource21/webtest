@@ -514,7 +514,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 wd = new HtmlUnitDriver(browserVersion);
                 ((HtmlUnitDriver) wd).setJavascriptEnabled(true);
             } else if (browser.equalsIgnoreCase("phantomjs")) {
-                String webdriverPhantomJSDriver =
+                final String webdriverPhantomJSDriver =
                         properties.getWebDriverPhantomJSDriver();
                 if (properties.getAcceptedLanguages() != null) {
                     desiredCapabilities.setCapability(
