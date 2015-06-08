@@ -16,7 +16,7 @@ It used selophane in a special version.
     - WebDriverRule: Creates at the beginning a WebBrowser in the SessionManager.
       If selenium loose the connection to the browser or more than 10 test
       use the webbrowser a new instance is created.
-    - Starts at the beginning the webserver.
+    - WebServerRule: Starts at the beginning the webserver.
 - SessionManager which handles different session and create webdriver instances.
 
 ## Configuration
@@ -30,6 +30,7 @@ must be set via `-D<propertyName>=value`.
 - `webtest.baseurl` - defines the base-url.
 - `phantomjs.binary.path` - defines the path to phantomjs for example
    `C:\\RegFreeProgs\\phantomjs\\phantomjs.exe`
+-  `webtest.maxNrOfBrowserReuse` - defines the number of reuses of the browser, default is 100.
 
 ### Browser
 The browser is configured by a file `client.properties`. The properties are explained at
