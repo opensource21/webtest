@@ -1,4 +1,4 @@
-# WebTest
+# WebTest[![Build Status](https://travis-ci.org/opensource21/webtest.svg?branch=master)](https://travis-ci.org/opensource21/webtest)
 
 WebTest provides some base-classes which makes Selenium test more comfortable.
 It's inspired by [Jtaf-EXTWebdriver](http://finraos.github.io/JTAF-ExtWebDriver)
