@@ -10,8 +10,8 @@ import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
 
 /**
- * An implementation of the Element interface. Delegates its work to an underlying WebElement instance for
- * custom functionality.
+ * An implementation of the Element interface. Delegates its work to an
+ * underlying WebElement instance for custom functionality.
  */
 public class ElementImpl implements Element {
 
@@ -32,7 +32,7 @@ public class ElementImpl implements Element {
     private WebElement getElement() {
         return uniqueElementLocator.findElement();
     }
-    
+
     @Override
     public void click() {
         getElement().click();

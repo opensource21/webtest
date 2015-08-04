@@ -17,22 +17,26 @@ public class CheckBoxImpl extends ElementImpl implements CheckBox {
         super(elementLocator);
     }
 
+    @Override
     public void toggle() {
         getWrappedElement().click();
     }
 
+    @Override
     public void check() {
         if (!isChecked()) {
             toggle();
         }
     }
 
+    @Override
     public void uncheck() {
         if (isChecked()) {
             toggle();
         }
     }
 
+    @Override
     public boolean isChecked() {
         return getWrappedElement().isSelected();
     }

@@ -12,87 +12,91 @@ import org.openqa.selenium.support.pagefactory.ElementLocatorFactory;
 import org.selophane.elements.base.UniqueElementLocator;
 
 /**
- * {@link ElementLocatorFactory} which use a {@link ElementLocator} instead of 
- * a {@link SearchContext}.
+ * {@link ElementLocatorFactory} which use a {@link ElementLocator} instead of a
+ * {@link SearchContext}.
+ *
  * @author niels
  *
  */
-//TODO AJAX-Variant.
+// TODO AJAX-Variant.
 public class ChainedElementLocatorFactory implements ElementLocatorFactory {
 
     private final UniqueElementLocator elementLocator;
-    
-    
+
     /**
      * New instance.
-     * @param elementLocator {@link ElementLocator} which defines the {@link WebElement} as base for a search.
-     * @param pos the position which elements of the {@link ElementLocator} should be used.
+     *
+     * @param elementLocator {@link ElementLocator} which defines the
+     *            {@link WebElement} as base for a search.
+     * @param pos the position which elements of the {@link ElementLocator}
+     *            should be used.
      */
     public ChainedElementLocatorFactory(UniqueElementLocator elementLocator) {
         this.elementLocator = elementLocator;
     }
 
-
-
     @Override
     public ElementLocator createLocator(Field field) {
         return new ChainedElementLocator(elementLocator, field);
     }
-    
-    private final static class ChainedElementLocator implements ElementLocator {
+
+    private static final class ChainedElementLocator implements ElementLocator {
         private final UniqueElementLocator elementLocator;
         private final boolean shouldCache;
         private final By by;
         private WebElement cachedElement;
         private List<WebElement> cachedElementList;
-        
+
         /**
          * Creates a new element locator.
-         * 
+         *
          * @param elementLocator a elementLocator
-         * @param field The field on the Page Object that will hold the located value
+         * @param field The field on the Page Object that will hold the located
+         *            value
          */
-        public ChainedElementLocator(UniqueElementLocator elementLocator, Field field) {
-          this.elementLocator= elementLocator;
-          Annotations annotations = new Annotations(field);
-          shouldCache = annotations.isLookupCached();
-          by = annotations.buildBy();
+        public ChainedElementLocator(UniqueElementLocator elementLocator,
+                Field field) {
+            this.elementLocator = elementLocator;
+            Annotations annotations = new Annotations(field);
+            shouldCache = annotations.isLookupCached();
+            by = annotations.buildBy();
         }
 
         /**
          * Find the element.
          */
+        @Override
         public WebElement findElement() {
-          if (cachedElement != null && shouldCache) {
-            return cachedElement;
-          }
+            if (cachedElement != null && shouldCache) {
+                return cachedElement;
+            }
 
-          WebElement element = elementLocator.findElement().findElement(by);
-          if (shouldCache) {
-            cachedElement = element;
-          }
+            WebElement element = elementLocator.findElement().findElement(by);
+            if (shouldCache) {
+                cachedElement = element;
+            }
 
-          return element;
+            return element;
         }
 
         /**
          * Find the element list.
          */
+        @Override
         public List<WebElement> findElements() {
-          if (cachedElementList != null && shouldCache) {
-            return cachedElementList;
-          }
+            if (cachedElementList != null && shouldCache) {
+                return cachedElementList;
+            }
 
-          List<WebElement> elements = elementLocator.findElement().findElements(by);
-          if (shouldCache) {
-            cachedElementList = elements;
-          }
+            List<WebElement> elements =
+                    elementLocator.findElement().findElements(by);
+            if (shouldCache) {
+                cachedElementList = elements;
+            }
 
-          return elements;
+            return elements;
         }
 
     }
-    
-    
 
 }

@@ -23,19 +23,22 @@ public class ElementListHandler implements InvocationHandler {
     private final WebDriver webDriver;
     private final ElementLocator locator;
     private final Class<?> wrappingType;
-    
+
     private List<Object> wrappedList;
-    private List<WebElement> webElementList; 
+    private List<WebElement> webElementList;
 
     /**
-     * Given an interface and a locator, apply a wrapper over a list of elements.
+     * Given an interface and a locator, apply a wrapper over a list of
+     * elements.
      *
-     * @param interfaceType interface type we're trying to wrap around the element.
-     * @param webDriver     the underlying {@link WebDriver}.
-     * @param locator       locator on the page for the elements.
-     * @param <T>           type of the interface.
+     * @param interfaceType interface type we're trying to wrap around the
+     *            element.
+     * @param webDriver the underlying {@link WebDriver}.
+     * @param locator locator on the page for the elements.
+     * @param <T> type of the interface.
      */
-    public <T> ElementListHandler(Class<T> interfaceType, WebDriver webDriver, ElementLocator locator) {
+    public <T> ElementListHandler(Class<T> interfaceType, WebDriver webDriver,
+            ElementLocator locator) {
         this.webDriver = webDriver;
         this.locator = locator;
         if (!Element.class.isAssignableFrom(interfaceType)) {
@@ -46,25 +49,28 @@ public class ElementListHandler implements InvocationHandler {
     }
 
     /**
-     * Executed on invoke of the requested proxy. Used to gather a list of wrapped WebElements.
+     * Executed on invoke of the requested proxy. Used to gather a list of
+     * wrapped WebElements.
      *
-     * @param o       object to invoke on
-     * @param method  method to invoke
+     * @param o object to invoke on
+     * @param method method to invoke
      * @param objects parameters for method
      * @return return value from method
      * @throws Throwable when frightened.
      */
+    @SuppressWarnings("boxing")
     @Override
-    public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+    public Object invoke(Object o, Method method, Object[] objects)
+            throws Throwable {
         final List<WebElement> newWebElemenList = locator.findElements();
-        
+
         final String methodName = method.getName();
         if ("size".equals(methodName)) {
             return newWebElemenList.size();
         } else if ("isEmpty".equals(methodName)) {
-            return newWebElemenList.isEmpty();
+            return Boolean.valueOf(newWebElemenList.isEmpty());
         }
-        
+
         if (wrappedList == null || newWebElemenList != webElementList) {
             webElementList = newWebElemenList;
             wrappedList = new ArrayList<Object>();
@@ -73,7 +79,8 @@ public class ElementListHandler implements InvocationHandler {
             final int nrOfElements = newWebElemenList.size();
             for (int index = 0; index < nrOfElements; index++) {
                 final UniqueElementLocator uniqueElementLocator =
-                        new LocatorWrappingUniqueElementLocator(webDriver, locator, index);
+                        new LocatorWrappingUniqueElementLocator(webDriver,
+                                locator, index);
                 Object thing = cons.newInstance(uniqueElementLocator);
                 wrappedList.add(wrappingType.cast(thing));
             }
@@ -86,6 +93,5 @@ public class ElementListHandler implements InvocationHandler {
             throw e.getCause();
         }
     }
-
 
 }

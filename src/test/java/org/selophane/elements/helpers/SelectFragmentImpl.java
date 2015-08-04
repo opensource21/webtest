@@ -15,22 +15,30 @@ import org.selophane.elements.widget.Select;
 
 /**
  * Implementation of {@link SelectFragment}.
+ * 
  * @author niels
  *
  */
 public class SelectFragmentImpl extends ElementImpl implements SelectFragment {
 
-    
     @FindBy(id = "option1")
     private Select option1;
+
     /**
      * A Select-Fragment
+     * 
      * @param elementLocator the locator of the webelement.
      */
-   public SelectFragmentImpl(final UniqueElementLocator elementLocator) {
-       super(elementLocator);
-       PageFactory.initElements(new ElementDecorator(elementLocator.getWebDriver(), new ChainedElementLocatorFactory(elementLocator)), this); 
-   }
+    public SelectFragmentImpl(final UniqueElementLocator elementLocator) {
+        super(elementLocator);
+        PageFactory
+                .initElements(
+                        new ElementDecorator(
+                                elementLocator.getWebDriver(),
+                                new ChainedElementLocatorFactory(elementLocator)),
+                        this);
+    }
+
     @Override
     public Select getOption1() {
         return option1;
@@ -40,7 +48,5 @@ public class SelectFragmentImpl extends ElementImpl implements SelectFragment {
     public WebElement getSubElement(By by) {
         return findElement(by);
     }
-    
-    
 
 }

@@ -8,22 +8,25 @@ import org.selophane.elements.base.UniqueElementLocator;
 /**
  * Implementation of a {@link UniqueElementLocator} which wraps an existing
  * locator.
+ * 
  * @author niels
  *
  */
-public class LocatorWrappingUniqueElementLocator implements UniqueElementLocator {
+public class LocatorWrappingUniqueElementLocator implements
+        UniqueElementLocator {
     /**
      * Underlying locator.
      */
     private final ElementLocator elementLocator;
-    
+
     /**
      * The underlying {@link WebDriver}.
      */
     private final WebDriver webDriver;
-    
+
     /**
-     * Index which elements of {@link ElementLocator#findElements()} should be used. 
+     * Index which elements of {@link ElementLocator#findElements()} should be
+     * used.
      */
     private final int index;
 
@@ -32,25 +35,29 @@ public class LocatorWrappingUniqueElementLocator implements UniqueElementLocator
      * 
      * @param webDriver the underlying webdriver
      * @param elementLocator a elementLocator
-     * @param index Index which elements of {@link ElementLocator#findElements()} should be used,
-     * if -1 the method {@link ElementLocator#findElement()} is used.
+     * @param index Index which elements of
+     *            {@link ElementLocator#findElements()} should be used, if -1
+     *            the method {@link ElementLocator#findElement()} is used.
      */
-    public LocatorWrappingUniqueElementLocator(WebDriver webDriver, ElementLocator elementLocator, int index) {
+    public LocatorWrappingUniqueElementLocator(WebDriver webDriver,
+            ElementLocator elementLocator, int index) {
         this.webDriver = webDriver;
         this.elementLocator = elementLocator;
         this.index = index;
     }
-    
+
     /**
-     * Creates a new element locator where the method {@link ElementLocator#findElement()} is used.
+     * Creates a new element locator where the method
+     * {@link ElementLocator#findElement()} is used.
      * 
      * @param webDriver the underlying webdriver
      * @param elementLocator a elementLocator
      */
-    public LocatorWrappingUniqueElementLocator(WebDriver webDriver, ElementLocator elementLocator) {
+    public LocatorWrappingUniqueElementLocator(WebDriver webDriver,
+            ElementLocator elementLocator) {
         this(webDriver, elementLocator, -1);
     }
-    
+
     /**
      * {@inheritDoc}
      */

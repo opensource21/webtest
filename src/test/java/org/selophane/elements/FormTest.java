@@ -30,10 +30,10 @@ public class FormTest {
         driver = new HtmlUnitDriver();
         testObject = FormTestObject.initialize(driver);
     }
-    
+
     @Before
     public void beforeTest() {
-    	testObject.get();
+        testObject.get();
     }
 
     @Test
@@ -57,8 +57,10 @@ public class FormTest {
     @Test
     public void selectWiredProperly() {
         testObject.selectFragment.getOption1().selectByIndex(0);
-        Assert.assertEquals(1, testObject.selectFragment.getOption1().getAllSelectedOptions().size());
-        Assert.assertNotNull(testObject.selectFragment.getSubElement(By.id("option1")));
+        Assert.assertEquals(1, testObject.selectFragment.getOption1()
+                .getAllSelectedOptions().size());
+        Assert.assertNotNull(testObject.selectFragment.getSubElement(By
+                .id("option1")));
     }
 
     @Test
@@ -115,72 +117,78 @@ public class FormTest {
     public void formWebElement() {
         Assert.assertTrue(testObject.webElement.isDisplayed());
     }
-    
+
     @Test
     public void tableRowCount() {
-    	Assert.assertEquals(4, testObject.table.getRowCount());
+        Assert.assertEquals(4, testObject.table.getRowCount());
     }
-    
+
     @Test
     public void tableColumnCount() {
-    	Assert.assertEquals(2, testObject.table.getColumnCount());
+        Assert.assertEquals(2, testObject.table.getColumnCount());
     }
-    
+
     @Test
     public void tableGetHeaderCell() {
-    	Assert.assertEquals("Month", testObject.table.getCellAtIndex(0, 0).getText());
+        Assert.assertEquals("Month", testObject.table.getCellAtIndex(0, 0)
+                .getText());
     }
-    
+
     @Test
     public void tableGetBodyCell() {
-    	Assert.assertEquals("$80", testObject.table.getCellAtIndex(2, 1).getText());
+        Assert.assertEquals("$80", testObject.table.getCellAtIndex(2, 1)
+                .getText());
     }
-    
+
     @Test
     public void tableGetFooterCell() {
-    	Assert.assertEquals("Sum", testObject.table.getCellAtIndex(3, 0).getText());
+        Assert.assertEquals("Sum", testObject.table.getCellAtIndex(3, 0)
+                .getText());
     }
-    
-    @Test(expected=InvalidElementStateException.class)
+
+    @Test(expected = InvalidElementStateException.class)
     public void selectDisabledElement() {
-        Assert.assertEquals("option1", testObject.option1.getFirstSelectedOption().getText());
+        Assert.assertEquals("option1", testObject.option1
+                .getFirstSelectedOption().getText());
         final String disabledOptionText = "Disabled option";
         testObject.option1.selectByVisibleText(disabledOptionText);
     }
-    
-    @Test(expected=InvalidElementStateException.class)
+
+    @Test(expected = InvalidElementStateException.class)
     public void selectDisabledElementByValue() {
-        Assert.assertEquals("option1", testObject.option1.getFirstSelectedOption().getText());
+        Assert.assertEquals("option1", testObject.option1
+                .getFirstSelectedOption().getText());
         testObject.option1.selectByValue("option3");
     }
 
-    
-    @Test(expected=InvalidElementStateException.class)
+    @Test(expected = InvalidElementStateException.class)
     public void selectDisabledElementByIndex() {
-        Assert.assertEquals("option1", testObject.option1.getFirstSelectedOption().getText());
+        Assert.assertEquals("option1", testObject.option1
+                .getFirstSelectedOption().getText());
         testObject.option1.selectByIndex(2);
     }
 
-       
-    @Test(expected=NoSuchElementException.class)
+    @Test(expected = NoSuchElementException.class)
     public void selectNonExistingElementSelectByIndex() {
-        Assert.assertEquals("option1", testObject.option1.getFirstSelectedOption().getText());
+        Assert.assertEquals("option1", testObject.option1
+                .getFirstSelectedOption().getText());
         testObject.option1.selectByIndex(10);
     }
 
-    @Test(expected=NoSuchElementException.class)
+    @Test(expected = NoSuchElementException.class)
     public void selectNonExistingElementSelectByValue() {
-        Assert.assertEquals("option1", testObject.option1.getFirstSelectedOption().getText());
+        Assert.assertEquals("option1", testObject.option1
+                .getFirstSelectedOption().getText());
         testObject.option1.selectByValue("foofoo");
     }
 
-    @Test(expected=NoSuchElementException.class)
+    @Test(expected = NoSuchElementException.class)
     public void selectNonExistingElementSelectByVisibleText() {
-        Assert.assertEquals("option1", testObject.option1.getFirstSelectedOption().getText());
+        Assert.assertEquals("option1", testObject.option1
+                .getFirstSelectedOption().getText());
         testObject.option1.selectByVisibleText("fooBar");
     }
 
-    
     @AfterClass
     public static void afterClass() {
         driver.close();

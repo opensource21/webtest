@@ -18,7 +18,7 @@ public class SelectImpl extends ElementImpl implements Select {
 
     private org.openqa.selenium.support.ui.Select seleniumSelect;
     private WebElement seleniumSelectWebelement;
-    
+
     /**
      * Wraps a WebElement with checkbox functionality.
      *
@@ -34,6 +34,7 @@ public class SelectImpl extends ElementImpl implements Select {
      * @return boolean if this is a multiselect.
      * @see org.openqa.selenium.support.ui.Select#isMultiple()
      */
+    @Override
     public boolean isMultiple() {
         return getInnerSelect().isMultiple();
     }
@@ -44,6 +45,7 @@ public class SelectImpl extends ElementImpl implements Select {
      * @param index index to select
      * @see org.openqa.selenium.support.ui.Select#deselectByIndex(int)
      */
+    @Override
     public void deselectByIndex(int index) {
         getInnerSelect().deselectByIndex(index);
     }
@@ -51,13 +53,14 @@ public class SelectImpl extends ElementImpl implements Select {
     /**
      * Select all options that have a value matching the argument. That is, when
      * given "foo" this would select an option like:
-     * 
+     *
      * &lt;option value="foo"&gt;Bar&lt;/option&gt;
-     * 
+     *
      * @param value The value to match against
      * @throws NoSuchElementException If no matching option elements are found
      *             or the elements are not visible or disabled.
      */
+    @Override
     public void selectByValue(String value) {
         StringBuilder builder = new StringBuilder(".//option[@value = ");
         builder.append(escapeQuotes(value));
@@ -82,6 +85,7 @@ public class SelectImpl extends ElementImpl implements Select {
      * @return WebElement of the first selected option.
      * @see org.openqa.selenium.support.ui.Select#getFirstSelectedOption()
      */
+    @Override
     public WebElement getFirstSelectedOption() {
         return getInnerSelect().getFirstSelectedOption();
     }
@@ -89,14 +93,15 @@ public class SelectImpl extends ElementImpl implements Select {
     /**
      * Select all options that display text matching the argument. That is, when
      * given "Bar" this would select an option like:
-     * 
+     *
      * &lt;option value="foo"&gt;Bar&lt;/option&gt;
-     * 
+     *
      * @param text The visible text to match against
      * @throws NoSuchElementException If no matching option elements are found
      *             or the elements are not visible or disabled.
      * @see org.openqa.selenium.support.ui.Select#selectByVisibleText(String)
      */
+    @Override
     public void selectByVisibleText(String text) {
         final WebElement element = getWrappedElement();
         // try to find the option via XPATH ...
@@ -107,7 +112,7 @@ public class SelectImpl extends ElementImpl implements Select {
         State state = State.NOT_FOUND;
         for (WebElement option : options) {
             state = state.recognizeNewState(setSelected(option));
-            if (!isMultiple() && state == State.SELECTED) {                
+            if (!isMultiple() && state == State.SELECTED) {
                 return;
             }
         }
@@ -129,7 +134,7 @@ public class SelectImpl extends ElementImpl implements Select {
             for (WebElement option : candidates) {
                 if (text.equals(option.getText())) {
                     state = state.recognizeNewState(setSelected(option));
-                    if (!isMultiple()  && state == State.SELECTED) {
+                    if (!isMultiple() && state == State.SELECTED) {
                         return;
                     }
                 }
@@ -137,7 +142,7 @@ public class SelectImpl extends ElementImpl implements Select {
         }
 
         state.checkState("text: " + text);
-        
+
     }
 
     /**
@@ -146,6 +151,7 @@ public class SelectImpl extends ElementImpl implements Select {
      * @param value value to deselect
      * @see org.openqa.selenium.support.ui.Select#deselectByValue(String)
      */
+    @Override
     public void deselectByValue(String value) {
         getInnerSelect().deselectByValue(value);
     }
@@ -155,6 +161,7 @@ public class SelectImpl extends ElementImpl implements Select {
      *
      * @see org.openqa.selenium.support.ui.Select#deselectAll()
      */
+    @Override
     public void deselectAll() {
         getInnerSelect().deselectAll();
     }
@@ -165,6 +172,7 @@ public class SelectImpl extends ElementImpl implements Select {
      * @return List of WebElements selected in the select
      * @see org.openqa.selenium.support.ui.Select#getAllSelectedOptions()
      */
+    @Override
     public List<WebElement> getAllSelectedOptions() {
         return getInnerSelect().getAllSelectedOptions();
     }
@@ -175,6 +183,7 @@ public class SelectImpl extends ElementImpl implements Select {
      * @return list of all options in the select.
      * @see org.openqa.selenium.support.ui.Select#getOptions()
      */
+    @Override
     public List<WebElement> getOptions() {
         return getInnerSelect().getOptions();
     }
@@ -185,6 +194,7 @@ public class SelectImpl extends ElementImpl implements Select {
      * @param text text to deselect by visible text
      * @see org.openqa.selenium.support.ui.Select#deselectByVisibleText(String)
      */
+    @Override
     public void deselectByVisibleText(String text) {
         getInnerSelect().deselectByVisibleText(text);
     }
@@ -192,12 +202,13 @@ public class SelectImpl extends ElementImpl implements Select {
     /**
      * Select the option at the given index. This is done by examing the "index"
      * attribute of an element, and not merely by counting.
-     * 
+     *
      * @param index The option at this index will be selected
      * @throws NoSuchElementException If no matching option elements are found
      *             or the elements are not visible or disabled.
      * @see org.openqa.selenium.support.ui.Select#selectByIndex(int)
      */
+    @Override
     public void selectByIndex(int index) {
         String match = String.valueOf(index);
 
@@ -205,7 +216,7 @@ public class SelectImpl extends ElementImpl implements Select {
         for (WebElement option : getOptions()) {
             if (match.equals(option.getAttribute("index"))) {
                 state = state.recognizeNewState(setSelected(option));
-                if (!isMultiple()  && state == State.SELECTED) {
+                if (!isMultiple() && state == State.SELECTED) {
                     return;
                 }
             }
@@ -273,10 +284,13 @@ public class SelectImpl extends ElementImpl implements Select {
      */
     private org.openqa.selenium.support.ui.Select getInnerSelect() {
         final WebElement wrappedElement = getWrappedElement();
-        if (seleniumSelect == null || wrappedElement != seleniumSelectWebelement) {
+        if (seleniumSelect == null
+                || wrappedElement != seleniumSelectWebelement) {
             seleniumSelectWebelement = wrappedElement;
-            seleniumSelect = new org.openqa.selenium.support.ui.Select(seleniumSelectWebelement);
-            
+            seleniumSelect =
+                    new org.openqa.selenium.support.ui.Select(
+                            seleniumSelectWebelement);
+
         }
         return seleniumSelect;
     }
@@ -298,16 +312,21 @@ public class SelectImpl extends ElementImpl implements Select {
             switch (this) {
             case NOT_VISIBLE:
                 throw new ElementNotVisibleException(
-                        "You may only interact with visible elements" + searchCriteria);
+                        "You may only interact with visible elements"
+                                + searchCriteria);
             case DISABLED:
                 throw new InvalidElementStateException(
-                        "You may only interact with enabled elements with " + searchCriteria);
+                        "You may only interact with enabled elements with "
+                                + searchCriteria);
             case NOT_FOUND:
-                throw new NoSuchElementException(
-                        "Cannot locate option with " + searchCriteria);
+                throw new NoSuchElementException("Cannot locate option with "
+                        + searchCriteria);
             case SELECTED:
-                //DO_NOTHING;
+            default:
+                // DO_NOTHING;
+
             }
+
         }
 
     }

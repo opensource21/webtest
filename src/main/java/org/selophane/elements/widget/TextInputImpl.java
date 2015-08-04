@@ -5,7 +5,7 @@ import org.selophane.elements.base.ElementImpl;
 import org.selophane.elements.base.UniqueElementLocator;
 
 /**
- * TextInput  wrapper.
+ * TextInput wrapper.
  */
 public class TextInputImpl extends ElementImpl implements TextInput {
     /**
@@ -31,6 +31,7 @@ public class TextInputImpl extends ElementImpl implements TextInput {
 
     /**
      * Gets the value of an input field.
+     * 
      * @return String with the value of the field.
      */
     @Override

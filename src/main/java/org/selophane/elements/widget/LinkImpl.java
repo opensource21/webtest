@@ -12,13 +12,14 @@ import org.selophane.elements.base.UniqueElementLocator;
 
 /**
  * The implementation of a link.
+ * 
  * @author niels
  *
  */
 public class LinkImpl extends ElementImpl implements Link {
 
     private final WebDriver webDriver;
-    
+
     /**
      * @param elementLocator
      */
@@ -50,7 +51,5 @@ public class LinkImpl extends ElementImpl implements Link {
         button.click();
         wait.until(ExpectedConditions.stalenessOf(button));
     }
-    
-    
 
 }

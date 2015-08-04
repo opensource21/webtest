@@ -27,7 +27,7 @@ public class FormTestObject {
 
     @FindBy(id = "test1")
     public WebElement webElement;
-    
+
     public Select option1;
 
     @FindBy(id = SelectFragment.ID_LOCATOR)
@@ -35,7 +35,7 @@ public class FormTestObject {
 
     @FindBy(id = "checkbox")
     public CheckBox checkbox;
-    
+
     @FindBy(id = "table")
     public Table table;
 

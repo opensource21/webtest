@@ -26,23 +26,26 @@ import org.selophane.elements.factory.internal.ElementListHandler;
 import org.selophane.elements.factory.internal.LocatorWrappingUniqueElementLocator;
 
 /**
- * WrappedElementDecorator recognizes a few things that DefaultFieldDecorator does not.
+ * WrappedElementDecorator recognizes a few things that DefaultFieldDecorator
+ * does not.
  * <p/>
- * It is designed to support and return concrete implementations of wrappers for a variety of common html elements.
+ * It is designed to support and return concrete implementations of wrappers for
+ * a variety of common html elements.
  */
 public class ElementDecorator implements FieldDecorator {
     /**
      * factory to use when generating ElementLocator.
      */
     private ElementLocatorFactory factory;
-    
+
     /**
      * Hold the underlying {@link WebDriver}.
      */
     private final WebDriver webDriver;
 
     /**
-     * Constructor for an ElementLocatorFactory. This class is designed to replace DefaultFieldDecorator.
+     * Constructor for an ElementLocatorFactory. This class is designed to
+     * replace DefaultFieldDecorator.
      *
      * @param webDriver the underlying {@link WebDriver}.
      * @param factory for locating elements.
@@ -61,7 +64,7 @@ public class ElementDecorator implements FieldDecorator {
         if (field.getDeclaringClass() == ElementImpl.class) {
             return null;
         }
-        
+
         ElementLocator locator = factory.createLocator(field);
         if (locator == null) {
             return null;
@@ -89,7 +92,8 @@ public class ElementDecorator implements FieldDecorator {
         if (!(genericType instanceof ParameterizedType)) {
             return null;
         }
-        return (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
+        return (Class<?>) ((ParameterizedType) genericType)
+                .getActualTypeArguments()[0];
     }
 
     private boolean isDecoratableList(Field field) {
@@ -106,7 +110,8 @@ public class ElementDecorator implements FieldDecorator {
             return false;
         }
 
-        if (field.getAnnotation(FindBy.class) == null && field.getAnnotation(FindBys.class) == null) {
+        if (field.getAnnotation(FindBy.class) == null
+                && field.getAnnotation(FindBys.class) == null) {
             return false;
         }
 
@@ -114,35 +119,44 @@ public class ElementDecorator implements FieldDecorator {
     }
 
     /**
-     * Creates an instance of the sublcass of {@link ElementImpl}. 
+     * Creates an instance of the sublcass of {@link ElementImpl}.
+     * 
      * @param interfaceType Interface wrapping the underlying WebElement
-     * @param locator       ElementLocator pointing at a proxy of the object on the page
+     * @param locator ElementLocator pointing at a proxy of the object on the
+     *            page
      *
-     * @param <T>           The interface of the class.
+     * @param <T> The interface of the class.
      * @return a an instance which wrappes the locator.
      */
     @SuppressWarnings("unchecked")
-    private <T> T getInstance(Class<T> interfaceType, final ElementLocator locator)  {
+    private <T> T getInstance(Class<T> interfaceType,
+            final ElementLocator locator) {
         try {
             final Class<?> wrappingType = getWrapperClass(interfaceType);
-            final Constructor<?> cons = wrappingType.getConstructor(UniqueElementLocator.class);
-            return (T)cons.newInstance(new LocatorWrappingUniqueElementLocator(webDriver, locator));
+            final Constructor<?> cons =
+                    wrappingType.getConstructor(UniqueElementLocator.class);
+            return (T) cons
+                    .newInstance(new LocatorWrappingUniqueElementLocator(
+                            webDriver, locator));
         } catch (Exception e) {
-            throw new IllegalStateException("Can't create instance of " + interfaceType.getName(), e);
+            throw new IllegalStateException("Can't create instance of "
+                    + interfaceType.getName(), e);
         }
     }
 
     /**
      * generates a proxy for a list of elements to be wrapped.
      *
-     * @param loader        classloader for the class we're presently wrapping with proxies
+     * @param loader classloader for the class we're presently wrapping with
+     *            proxies
      * @param interfaceType type of the element to be wrapped
-     * @param locator       locator for items on the page being wrapped
-     * @param <T>           class of the interface.
+     * @param locator locator for items on the page being wrapped
+     * @param <T> class of the interface.
      * @return proxy with the same type as we started with.
      */
     @SuppressWarnings("unchecked")
-    protected <T> List<T> proxyForListLocator(ClassLoader loader, Class<T> interfaceType, ElementLocator locator) {
+    protected <T> List<T> proxyForListLocator(ClassLoader loader,
+            Class<T> interfaceType, ElementLocator locator) {
         InvocationHandler handler;
         if (interfaceType.getAnnotation(ImplementedBy.class) != null) {
             handler = new ElementListHandler(interfaceType, webDriver, locator);
@@ -150,8 +164,9 @@ public class ElementDecorator implements FieldDecorator {
             handler = new LocatingElementListHandler(locator);
         }
         List<T> proxy;
-        proxy = (List<T>) Proxy.newProxyInstance(
-                loader, new Class[]{List.class}, handler);
+        proxy =
+                (List<T>) Proxy.newProxyInstance(loader,
+                        new Class[] { List.class }, handler);
         return proxy;
     }
 }

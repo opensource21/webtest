@@ -11,17 +11,19 @@ import org.selophane.elements.base.ElementImpl;
 import org.selophane.elements.base.UniqueElementLocator;
 
 /**
- * Implementation of a button that starts an action so that
- * this button will at the end of the action not in the DOM.
+ * Implementation of a button that starts an action so that this button will at
+ * the end of the action not in the DOM.
+ * 
  * @author niels
  *
  */
 public class ButtonImpl extends ElementImpl implements Button {
 
     private final WebDriver webDriver;
-    
+
     /**
      * Creates a new instance.
+     * 
      * @param elementLocator locator to get the underlying webelement.
      */
     public ButtonImpl(UniqueElementLocator elementLocator) {
@@ -41,7 +43,5 @@ public class ButtonImpl extends ElementImpl implements Button {
     public String getLabel() {
         return getText();
     }
-    
-    
 
 }
