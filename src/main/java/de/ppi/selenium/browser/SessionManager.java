@@ -408,7 +408,8 @@ public class SessionManager {
         WebDriver innerDriver =
                 webDriverFactory.get().createWebDriver(localOptions, dc);
 
-        String sessionId = getNextCustomSessionId();
+        final String sessionId =
+                innerDriver.toString() + getNextCustomSessionId();
         if (setAsCurrent) {
             currentSessionId = sessionId;
         }
