@@ -82,11 +82,11 @@ public final class ScreenshotUtils {
                         ((WrapsDriver) wrappedDriver).getWrappedDriver();
             }
             if (wrappedDriver instanceof TakesScreenshot) {
-                File screenshot =
+                final byte[] screenshot =
                         ((TakesScreenshot) wrappedDriver)
-                                .getScreenshotAs(OutputType.FILE);
-                FileUtils.copyFile(screenshot, new File(screenshotFileName
-                        + ".png"));
+                                .getScreenshotAs(OutputType.BYTES);
+                FileUtils.writeByteArrayToFile(new File(screenshotFileName
+                        + ".png"), screenshot);
             } else if (wrappedDriver instanceof HtmlUnitDriver) {
                 FileUtils.write(new File(screenshotFileName + ".html"),
                         wrappedDriver.getPageSource());
@@ -267,7 +267,7 @@ public final class ScreenshotUtils {
 
     /**
      * Calculate how similar the 2 immages are.
-     * 
+     *
      * @param var picture1
      * @param cont picture2
      * @return a value between 0 and 1.
@@ -276,7 +276,8 @@ public final class ScreenshotUtils {
 
         final int scale = 3;
         double[] varArr = new double[var.getWidth() * var.getHeight() * scale];
-        double[] contArr = new double[cont.getWidth() * cont.getHeight() * scale];
+        double[] contArr =
+                new double[cont.getWidth() * cont.getHeight() * scale];
 
         if (varArr.length != contArr.length) {
             throw new IllegalStateException("The pictures are different sizes!");
