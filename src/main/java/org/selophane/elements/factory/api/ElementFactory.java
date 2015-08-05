@@ -13,7 +13,11 @@ import org.openqa.selenium.support.pagefactory.FieldDecorator;
  * Element factory for wrapped elements. Similar to
  * {@link org.openqa.selenium.support.PageFactory}
  */
-public class ElementFactory {
+public final class ElementFactory {
+
+    private ElementFactory() {
+        // UTILITY-Konstruktor
+    }
 
     /**
      * See {@link
@@ -30,7 +34,7 @@ public class ElementFactory {
      * As
      * {@link ElementFactory#initElements(org.openqa.selenium.WebDriver, Class)}
      * but will only replace the fields of an already instantiated Page Object.
-     * 
+     *
      * @param webDriver A webdriver that will be used to look up the elements
      * @param page The object with WebElement and List<WebElement> fields that
      *            should be proxied.

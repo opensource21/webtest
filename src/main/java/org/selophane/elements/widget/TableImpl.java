@@ -43,12 +43,12 @@ public class TableImpl extends ElementImpl implements Table {
 
         List<WebElement> cells;
 
-        // Cells are most likely to be td tags
+        // CSOFF: InnerAssignment For Performance-Reason this seems to be right.
         if ((cells = row.findElements(By.tagName("td"))).size() > 0) {
+            // Cells are most likely to be td tags
             return cells.get(colIdx);
-        }
-        // Failing that try th tags
-        else if ((cells = row.findElements(By.tagName("th"))).size() > 0) {
+        } else if ((cells = row.findElements(By.tagName("th"))).size() > 0) {
+            // Failing that try th tags
             return cells.get(colIdx);
         } else {
             final String error =
@@ -56,6 +56,7 @@ public class TableImpl extends ElementImpl implements Table {
                             Integer.valueOf(rowIdx), Integer.valueOf(colIdx));
             throw new RuntimeException(error);
         }
+        // CSON: InnerAssignment
     }
 
     /**

@@ -9,7 +9,10 @@
           Another possibility is ".* Test.java" -->
     <suppress checks="JavadocPackage" files=".*src.test.java.*.java"/>
     <suppress checks="NewlineAtEndOfFile" files=".*.gitkeep"/>
+    <suppress checks="(VisibilityModifier|MagicNumber)" files=".*src.test.java.org.selophane.*.java"/>
     <!-- copied code which can't be easily fix. -->
     <suppress checks=".*" files=".*src.main.java.de.ppi.selenium.browser.*.java"/>
+    <suppress checks="Javadoc.*" files=".*src.main.java.org.selophane.*.java"/>
+    <suppress checks="Javadoc.*" files=".*src.test.java.org.selophane.*.java"/>
 </suppressions>
 
