@@ -1,4 +1,4 @@
-package de.ppi.selenium.logevent;
+package de.ppi.selenium.logevent.api;
 
 /**
  * Storage for the events with the following workflow:
@@ -23,21 +23,16 @@ public interface EventStorage {
     /**
      * Start inserting data of a test.
      *
-     * @param testclassname name of the test-class.
-     * @param testmethodname name of the test-method.
+     * @param eventData the eventdata.
      */
-    void startInsert(String testclassname, String testmethodname);
+    void startBatch(EventData eventData);
 
     /**
-     * Collect the testdata.
+     * Insert the event-data.
      *
-     * @param eventType the type of an event.
-     * @param browserId the id of the browser.
-     * @param description the description.
-     * @param screenshot the screenshot (optional)
+     * @param eventData the eventdata.
      */
-    void insert(String eventType, String browserId, String description,
-            byte[] screenshot);
+    void insert(EventData eventData);
 
     /**
      * Writes the collected data.
@@ -48,6 +43,14 @@ public interface EventStorage {
      * Close the storage system.
      */
     void close();
+
+    /**
+     * Delivers all Events of a testrun as an Iterable.
+     *
+     * @param testrunId the id of the testrun.
+     * @return an Iterable of {@link EventData}.
+     */
+    Iterable<EventData> getAllEvents(String testrunId);
 
     /**
      * Returns the browser-id of the last insert.

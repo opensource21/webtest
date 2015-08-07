@@ -114,6 +114,8 @@ public class SeleniumSoftAssertions extends AbstractSoftAssertions implements
                 proxy.invokeSuper(obj, args);
             } catch (AssertionError e) {
                 errors.add(e);
+                // TODO herausbekommen, was eine sinnvolle Meldung ist.
+                // TODO Benötigt man ein Identifier?
                 Protocol.log(
                         "Assertion " + method.getName() + Arrays.toString(args),
                         e.getLocalizedMessage(), SessionManager.getSession());

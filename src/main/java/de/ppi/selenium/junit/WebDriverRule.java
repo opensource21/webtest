@@ -36,6 +36,7 @@ public class WebDriverRule extends TestWatcher {
     @Override
     protected void failed(Throwable e, Description description) {
         final List<Throwable> failures = new ArrayList<>();
+        // TODO Hier kann man die Statistik protokollieren
         if (e instanceof MultipleFailureException) {
             final MultipleFailureException mfe = (MultipleFailureException) e;
             failures.addAll(mfe.getFailures());
