@@ -23,6 +23,8 @@ import org.selophane.elements.base.Element;
 
 import de.ppi.selenium.browser.SessionManager;
 import de.ppi.selenium.browser.WebBrowser;
+import de.ppi.selenium.logevent.api.EventLoggerFactory;
+import de.ppi.selenium.logevent.api.EventSource;
 import de.ppi.selenium.util.Protocol;
 
 /**
@@ -104,6 +106,11 @@ public class SeleniumSoftAssertions extends AbstractSoftAssertions implements
      *
      */
     static class ErrorCollectorWithScreenshots implements MethodInterceptor {
+
+        /** Eventlogger-Factory. */
+        private static final EventLoggerFactory EVENT_LOGGER =
+                EventLoggerFactory.getInstance(EventSource.ASSERTION);
+
         /** List of errors. */
         private final List<Throwable> errors = new ArrayList<Throwable>();
 
@@ -114,8 +121,8 @@ public class SeleniumSoftAssertions extends AbstractSoftAssertions implements
                 proxy.invokeSuper(obj, args);
             } catch (AssertionError e) {
                 errors.add(e);
-                // TODO herausbekommen, was eine sinnvolle Meldung ist.
-                // TODO Benötigt man ein Identifier?
+                EVENT_LOGGER.onFailure(obj.getClass().getName(),
+                        method.getName()).logAssertionError(e);
                 Protocol.log(
                         "Assertion " + method.getName() + Arrays.toString(args),
                         e.getLocalizedMessage(), SessionManager.getSession());
@@ -125,7 +132,7 @@ public class SeleniumSoftAssertions extends AbstractSoftAssertions implements
 
         /**
          * Returns the list of errors.
-         * 
+         *
          * @return the list of errors.
          */
         public List<Throwable> errors() {
