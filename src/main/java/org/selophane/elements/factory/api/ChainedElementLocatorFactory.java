@@ -18,7 +18,7 @@ import org.selophane.elements.base.UniqueElementLocator;
  * @author niels
  *
  */
-// TODO AJAX-Variant.
+// TODO Improvement AJAX-Variant.
 public class ChainedElementLocatorFactory implements ElementLocatorFactory {
 
     private final UniqueElementLocator elementLocator;

@@ -32,11 +32,11 @@ import org.slf4j.LoggerFactory;
  * https://github.com/FINRAOS/JTAF-ExtWebDriver for the properties see
  * http://finraos.github.io/JTAF-ExtWebDriver/clientproperties.html.
  */
-// TODO Exceptionhandling!
+// TODO Improvement Exceptionhandling!
 public class SessionManager {
 
-    private final static Logger LOG = LoggerFactory
-            .getLogger(SessionManager.class);
+    private final static Logger LOG =
+            LoggerFactory.getLogger(SessionManager.class);
 
     /**
      * Key for the options to define a base-url.
@@ -159,7 +159,8 @@ public class SessionManager {
             } catch (Exception e) {
                 throw new IllegalArgumentException(
                         "Problem to create instance: "
-                                + e.getLocalizedMessage(), e);
+                                + e.getLocalizedMessage(),
+                        e);
             }
         }
         return null;

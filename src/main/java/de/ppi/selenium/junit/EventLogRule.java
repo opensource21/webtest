@@ -28,7 +28,8 @@ public class EventLogRule implements TestRule {
      * {@inheritDoc}
      */
     @Override
-    public Statement apply(final Statement base, final Description description) {
+    public Statement apply(final Statement base,
+            final Description description) {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
@@ -41,11 +42,11 @@ public class EventLogRule implements TestRule {
 
                 try {
                     base.evaluate();
-                    EVENT_LOGGER_FACTORY.onDoku(group, item).log(
-                            "TEST_FINISHED", "Start " + displayName);
+                    EVENT_LOGGER_FACTORY.onDoku(group, item)
+                            .log("TEST_FINISHED", "Start " + displayName);
                 } catch (AssumptionViolatedException e) {
-                    EVENT_LOGGER_FACTORY.onDoku(group, item).log(
-                            "TEST_SKIPPED", "Skipped " + displayName);
+                    EVENT_LOGGER_FACTORY.onDoku(group, item).log("TEST_SKIPPED",
+                            "Skipped " + displayName);
                 } catch (Throwable e) {
                     if (e instanceof AssertionError) {
                         EVENT_LOGGER_FACTORY.onFailure(group, item)
@@ -62,8 +63,7 @@ public class EventLogRule implements TestRule {
                                 "Finish with " + nrOfAssertions + " failures "
                                         + displayName);
                     } else {
-                        EVENT_LOGGER_FACTORY
-                                .onException(group, item)
+                        EVENT_LOGGER_FACTORY.onException(group, item)
                                 .withScreenshot(Priority.EXCEPTION,
                                         SessionManager.getSession())
                                 .log("TEST_EXCEPTION", e.getLocalizedMessage());
