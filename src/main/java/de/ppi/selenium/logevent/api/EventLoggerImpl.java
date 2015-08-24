@@ -124,7 +124,8 @@ public class EventLoggerImpl implements EventLogger {
         if (Priority.FAILURE.isMoreImportantThan(screenshotPriorityLevel)) {
             if (LOGGED_ASSERTION_ERRORS.add(assertionError)) {
                 this.withScreenshot(Priority.FAILURE,
-                        SessionManager.getSession()).log("ASSERTION_FAILED",
+                        SessionManager.getSession()).log(EventActions.ASSERTION_FAILED,
+                                "assertion.failed",
                                 assertionError.getLocalizedMessage());
             }
         }

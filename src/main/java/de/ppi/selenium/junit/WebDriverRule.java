@@ -30,13 +30,12 @@ public class WebDriverRule extends TestWatcher {
     /**
      * Maximalnumber of costs before the webdriver should newly created.
      */
-    private static final long MAX_NR_OF_REUSE = Long.parseLong(System
-            .getProperty("webtest.maxNrOfBrowserReuse", "100"));
+    private static final long MAX_NR_OF_REUSE = Long.parseLong(
+            System.getProperty("webtest.maxNrOfBrowserReuse", "100"));
 
     @Override
     protected void failed(Throwable e, Description description) {
         final List<Throwable> failures = new ArrayList<>();
-        // TODO Hier kann man die Statistik protokollieren
         if (e instanceof MultipleFailureException) {
             final MultipleFailureException mfe = (MultipleFailureException) e;
             failures.addAll(mfe.getFailures());

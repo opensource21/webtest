@@ -29,11 +29,10 @@ public interface EventLogger {
     /**
      * Logs the event.
      *
-     * @param action the action.
+     * @param action the action @see {@link EventActions}.
      * @param message the message.
      * @param args argument for the message.
      */
-    // TODO alle actions Strings sollten dokumentiert in einem Interface sein.
     void log(String action, String message, Object... args);
 
     /**
