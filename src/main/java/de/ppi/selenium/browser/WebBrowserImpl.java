@@ -22,10 +22,11 @@ import de.ppi.selenium.util.Protocol;
  * @author niels
  *
  */
+// TODO LOG alle Events loggen
 public class WebBrowserImpl implements WebBrowser {
 
-    public static final Logger LOG = LoggerFactory
-            .getLogger(WebBrowserImpl.class);
+    public static final Logger LOG =
+            LoggerFactory.getLogger(WebBrowserImpl.class);
 
     private static final List<WebBrowser> ALL_INSTANCES = new ArrayList<>();
 
@@ -48,9 +49,8 @@ public class WebBrowserImpl implements WebBrowser {
                     } catch (UnreachableBrowserException ube) {
                         // no problem.
                     } catch (Exception e) {
-                        LOG.warn(
-                                "Problem to shutdown a browser ("
-                                        + webBrowser.getSessionId() + ")", e);
+                        LOG.warn("Problem to shutdown a browser ("
+                                + webBrowser.getSessionId() + ")", e);
                     }
                 }
                 super.run();
@@ -59,10 +59,10 @@ public class WebBrowserImpl implements WebBrowser {
         });
     }
 
-    private final boolean logBeforeGet = Boolean
-            .getBoolean("webtest.logBeforeGet");
-    private final boolean logAfterGet = Boolean
-            .getBoolean("webtest.logAfterGet");
+    private final boolean logBeforeGet =
+            Boolean.getBoolean("webtest.logBeforeGet");
+    private final boolean logAfterGet =
+            Boolean.getBoolean("webtest.logAfterGet");
 
     /**
      * Creates a new browser-session.
@@ -71,7 +71,8 @@ public class WebBrowserImpl implements WebBrowser {
      * @param sessionId the id of the session to get the webbrowser.
      * @param baseUrl the basis url, where all other are relative to.
      */
-    public WebBrowserImpl(WebDriver webdriver, String sessionId, String baseUrl) {
+    public WebBrowserImpl(WebDriver webdriver, String sessionId,
+            String baseUrl) {
         super();
         ALL_INSTANCES.add(this);
         this.sessionId = sessionId;

@@ -13,6 +13,7 @@ import org.openqa.selenium.internal.Locatable;
  * An implementation of the Element interface. Delegates its work to an
  * underlying WebElement instance for custom functionality.
  */
+// TODO LOG alle Events loggen
 public class ElementImpl implements Element {
 
     private final UniqueElementLocator uniqueElementLocator;
