@@ -62,6 +62,11 @@ public class EventData {
     private String description;
 
     /**
+     * A list of possible arguments for the description.
+     */
+    private Object[] arguments;
+
+    /**
      * Screenshottype png or html.
      */
     private String screenShotType;
@@ -195,6 +200,20 @@ public class EventData {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * @return the arguments
+     */
+    public Object[] getArguments() {
+        return arguments;
+    }
+
+    /**
+     * @param arguments the arguments to set
+     */
+    public void setArguments(Object[] arguments) {
+        this.arguments = arguments;
     }
 
     /**

@@ -30,10 +30,11 @@ public interface EventLogger {
      * Logs the event.
      *
      * @param action the action.
-     * @param description the description.
+     * @param message the message.
+     * @param args argument for the message.
      */
     // TODO alle actions Strings sollten dokumentiert in einem Interface sein.
-    void log(String action, String description);
+    void log(String action, String message, Object... args);
 
     /**
      * Return if a message will be logged.

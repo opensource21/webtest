@@ -28,7 +28,7 @@ public class EmptyLogger implements EventLogger {
      * {@inheritDoc}
      */
     @Override
-    public void log(String action, String description) {
+    public void log(String action, String message, Object... args) {
         // DO NOTHING.
     }
 

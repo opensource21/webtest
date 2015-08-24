@@ -25,8 +25,8 @@ public class EventLoggerImpl implements EventLogger {
     /**
      * The Logger.
      */
-    private static final Logger LOG = LoggerFactory
-            .getLogger(EventLoggerImpl.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(EventLoggerImpl.class);
 
     /**
      * Set of Assertions which are logged.
@@ -91,8 +91,8 @@ public class EventLoggerImpl implements EventLogger {
                     eventData.setScreenShotType("png");
                 } else if (wrappedDriver instanceof HtmlUnitDriver) {
                     eventData.setScreenShotType("html");
-                    eventData.setScreenshot(wrappedDriver.getPageSource()
-                            .getBytes("UTF-8"));
+                    eventData.setScreenshot(
+                            wrappedDriver.getPageSource().getBytes("UTF-8"));
                 } else {
                     LOG.warn("The current driver doesn't make screenshots");
                 }
@@ -108,10 +108,10 @@ public class EventLoggerImpl implements EventLogger {
      * {@inheritDoc}
      */
     @Override
-    public void log(String action, String description) {
+    public void log(String action, String message, Object... args) {
         eventData.setTs(new Timestamp(System.currentTimeMillis()));
         eventData.setAction(action);
-        eventData.setDescription(description);
+        eventData.setDescription(message);
         eventStorage.insert(eventData);
 
     }
@@ -125,7 +125,7 @@ public class EventLoggerImpl implements EventLogger {
             if (LOGGED_ASSERTION_ERRORS.add(assertionError)) {
                 this.withScreenshot(Priority.FAILURE,
                         SessionManager.getSession()).log("ASSERTION_FAILED",
-                        assertionError.getLocalizedMessage());
+                                assertionError.getLocalizedMessage());
             }
         }
 
