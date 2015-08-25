@@ -62,7 +62,8 @@ public class FormTestObject {
      * @return FormTestObject.
      */
     public static FormTestObject initialize(WebDriver driver) {
-        return ElementFactory.initElements(driver, FormTestObject.class);
+        return ElementFactory.initElements(driver, FormTestObject.class,
+                "FormTest", "");
     }
 
     public void get() {

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.selophane.elements.helpers;
 
@@ -15,7 +15,7 @@ import org.selophane.elements.widget.Select;
 
 /**
  * Implementation of {@link SelectFragment}.
- * 
+ *
  * @author niels
  *
  */
@@ -26,17 +26,17 @@ public class SelectFragmentImpl extends ElementImpl implements SelectFragment {
 
     /**
      * A Select-Fragment
-     * 
+     *
      * @param elementLocator the locator of the webelement.
      */
     public SelectFragmentImpl(final UniqueElementLocator elementLocator) {
         super(elementLocator);
-        PageFactory
-                .initElements(
-                        new ElementDecorator(
-                                elementLocator.getWebDriver(),
-                                new ChainedElementLocatorFactory(elementLocator)),
-                        this);
+        PageFactory.initElements(
+                new ElementDecorator(elementLocator.getWebDriver(),
+                        new ChainedElementLocatorFactory(elementLocator),
+                        elementLocator.getPageName(),
+                        elementLocator.getFieldDescription()),
+                this);
     }
 
     @Override

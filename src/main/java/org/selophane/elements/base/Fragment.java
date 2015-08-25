@@ -18,11 +18,11 @@ public class Fragment extends ElementImpl {
      */
     public Fragment(final UniqueElementLocator elementLocator) {
         super(elementLocator);
-        PageFactory
-                .initElements(
-                        new ElementDecorator(
-                                elementLocator.getWebDriver(),
-                                new ChainedElementLocatorFactory(elementLocator)),
-                        this);
+        PageFactory.initElements(
+                new ElementDecorator(elementLocator.getWebDriver(),
+                        new ChainedElementLocatorFactory(elementLocator),
+                        elementLocator.getPageName(),
+                        elementLocator.getFieldDescription()),
+                this);
     }
 }

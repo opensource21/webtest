@@ -44,20 +44,40 @@ public class ElementDecorator implements FieldDecorator {
     private final WebDriver webDriver;
 
     /**
+     * Name of the page where the element is.
+     */
+    private final String pageName;
+
+    /**
+     * Description of the context.
+     */
+    private final String contextDescription;
+
+    /**
      * Constructor for an ElementLocatorFactory. This class is designed to
      * replace DefaultFieldDecorator.
      *
      * @param webDriver the underlying {@link WebDriver}.
      * @param factory for locating elements.
+     * @param pageName name of the page where the element is.
+     * @param fieldDescription description of the field, including the context.
      */
-    public ElementDecorator(WebDriver webDriver, ElementLocatorFactory factory) {
+    public ElementDecorator(WebDriver webDriver, ElementLocatorFactory factory,
+            String pageName, String contextDescription) {
         this.webDriver = webDriver;
         this.factory = factory;
+        this.pageName = pageName;
+        this.contextDescription =
+                contextDescription == null ? "" : contextDescription;
     }
 
     @Override
     public Object decorate(ClassLoader loader, Field field) {
-        if (!(WebElement.class.isAssignableFrom(field.getType()) || isDecoratableList(field))) {
+        // TODO LOG Evtl. besseren Feldnamen.
+        final String fieldDescription =
+                contextDescription + "." + field.getName();
+        if (!(WebElement.class.isAssignableFrom(field.getType())
+                || isDecoratableList(field))) {
             return null;
         }
 
@@ -76,10 +96,11 @@ public class ElementDecorator implements FieldDecorator {
         }
 
         if (WebElement.class.isAssignableFrom(fieldType)) {
-            return getInstance(fieldType, locator);
+            return getInstance(fieldType, locator, fieldDescription);
         } else if (List.class.isAssignableFrom(fieldType)) {
             Class<?> erasureClass = getErasureClass(field);
-            return proxyForListLocator(loader, erasureClass, locator);
+            return proxyForListLocator(loader, erasureClass, locator,
+                    fieldDescription);
         } else {
             return null;
         }
@@ -120,27 +141,27 @@ public class ElementDecorator implements FieldDecorator {
 
     /**
      * Creates an instance of the sublcass of {@link ElementImpl}.
-     * 
+     *
      * @param interfaceType Interface wrapping the underlying WebElement
      * @param locator ElementLocator pointing at a proxy of the object on the
      *            page
      *
      * @param <T> The interface of the class.
+     * @param fieldDescription the description of the field including context.
      * @return a an instance which wrappes the locator.
      */
     @SuppressWarnings("unchecked")
     private <T> T getInstance(Class<T> interfaceType,
-            final ElementLocator locator) {
+            final ElementLocator locator, String fieldDescription) {
         try {
             final Class<?> wrappingType = getWrapperClass(interfaceType);
             final Constructor<?> cons =
                     wrappingType.getConstructor(UniqueElementLocator.class);
-            return (T) cons
-                    .newInstance(new LocatorWrappingUniqueElementLocator(
-                            webDriver, locator));
+            return (T) cons.newInstance(new LocatorWrappingUniqueElementLocator(
+                    webDriver, locator, pageName, fieldDescription));
         } catch (Exception e) {
-            throw new IllegalStateException("Can't create instance of "
-                    + interfaceType.getName(), e);
+            throw new IllegalStateException(
+                    "Can't create instance of " + interfaceType.getName(), e);
         }
     }
 
@@ -152,21 +173,23 @@ public class ElementDecorator implements FieldDecorator {
      * @param interfaceType type of the element to be wrapped
      * @param locator locator for items on the page being wrapped
      * @param <T> class of the interface.
+     * @param fieldDescription the description of the field including context.
      * @return proxy with the same type as we started with.
      */
     @SuppressWarnings("unchecked")
     protected <T> List<T> proxyForListLocator(ClassLoader loader,
-            Class<T> interfaceType, ElementLocator locator) {
+            Class<T> interfaceType, ElementLocator locator,
+            String fieldDescription) {
         InvocationHandler handler;
         if (interfaceType.getAnnotation(ImplementedBy.class) != null) {
-            handler = new ElementListHandler(interfaceType, webDriver, locator);
+            handler = new ElementListHandler(interfaceType, webDriver, locator,
+                    pageName, fieldDescription);
         } else {
             handler = new LocatingElementListHandler(locator);
         }
         List<T> proxy;
-        proxy =
-                (List<T>) Proxy.newProxyInstance(loader,
-                        new Class[] { List.class }, handler);
+        proxy = (List<T>) Proxy.newProxyInstance(loader,
+                new Class[] { List.class }, handler);
         return proxy;
     }
 }
