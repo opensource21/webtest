@@ -31,6 +31,10 @@ public final class EventLoggerFactory {
     /** The source of the event. */
     private final EventSource eventSource;
 
+    static {
+        setDefaultPriority(Priority.FAILURE);
+    }
+
     /**
      * Initiates an object of type EventLoggerFactory.
      *
@@ -141,7 +145,7 @@ public final class EventLoggerFactory {
      * @param item the item of the group.
      * @return the key.
      */
-    private String createKey(EventSource eventSource, String group,
+    private static String createKey(EventSource eventSource, String group,
             String item) {
         final StringBuilder keyBuilder = new StringBuilder(eventSource.name());
         if (group != null) {
@@ -175,7 +179,7 @@ public final class EventLoggerFactory {
      *
      * @param priority the default priority.
      */
-    public void setDefaultPriority(Priority priority) {
+    public static void setDefaultPriority(Priority priority) {
         for (EventSource source : EventSource.values()) {
             PRIORITIES.put(source.name(), priority);
         }
@@ -195,7 +199,7 @@ public final class EventLoggerFactory {
      * @param group the name of the group.
      * @param item the item of the group.
      */
-    public void setPriority(Priority priority, EventSource eventSource,
+    public static void setPriority(Priority priority, EventSource eventSource,
             String group, String item) {
         final String key = createKey(eventSource, group, item);
         PRIORITIES.put(key, priority);
