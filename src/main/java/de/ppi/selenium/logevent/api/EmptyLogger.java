@@ -28,14 +28,6 @@ public class EmptyLogger implements EventLogger {
      * {@inheritDoc}
      */
     @Override
-    public void log(String action, String message, Object... args) {
-        // DO NOTHING.
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean willLogged() {
         return false;
     }
@@ -46,6 +38,49 @@ public class EmptyLogger implements EventLogger {
     @Override
     public boolean willScreenshotLogged(Priority priority) {
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void log(String action, String message) {
+        // Do nothing
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void log(String action, String message, Object argument1) {
+        // Do nothing
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void log(String action, String message, Object argument1,
+            Object argument2) {
+        // Do nothing
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void log(String action, String message, Object argument1,
+            Object argument2, Object argument3) {
+        // Do nothing
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void log(String action, String message, Object argument1,
+            Object argument2, Object argument3, Object argument4) {
+        // Do nothing
     }
 
 }

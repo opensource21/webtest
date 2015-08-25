@@ -31,9 +31,52 @@ public interface EventLogger {
      *
      * @param action the action @see {@link EventActions}.
      * @param message the message.
-     * @param args argument for the message.
      */
-    void log(String action, String message, Object... args);
+    void log(String action, String message);
+
+    /**
+     * Logs the event.
+     *
+     * @param action the action @see {@link EventActions}.
+     * @param message the message.
+     * @param argument1 argument 1 for the message.
+     */
+    void log(String action, String message, Object argument1);
+
+    /**
+     * Logs the event.
+     *
+     * @param action the action @see {@link EventActions}.
+     * @param message the message.
+     * @param argument1 argument 1 for the message.
+     * @param argument2 argument 2 for the message.
+     */
+    void log(String action, String message, Object argument1, Object argument2);
+
+    /**
+     * Logs the event.
+     *
+     * @param action the action @see {@link EventActions}.
+     * @param message the message.
+     * @param argument1 argument 1 for the message.
+     * @param argument2 argument 2 for the message.
+     * @param argument3 argument 3 for the message.
+     */
+    void log(String action, String message, Object argument1, Object argument2,
+            Object argument3);
+
+    /**
+     * Logs the event.
+     *
+     * @param action the action @see {@link EventActions}.
+     * @param message the message.
+     * @param argument1 argument 1 for the message.
+     * @param argument2 argument 2 for the message.
+     * @param argument3 argument 3 for the message.
+     * @param argument4 argument 4 for the message.
+     */
+    void log(String action, String message, Object argument1, Object argument2,
+            Object argument3, Object argument4);
 
     /**
      * Return if a message will be logged.

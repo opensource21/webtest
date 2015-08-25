@@ -64,6 +64,9 @@ public class EventLoggerImpl implements EventLogger {
             Priority screenshotPriorityLevel, EventSource source, String group,
             String item) {
         super();
+        if (eventStorage == null) {
+            throw new IllegalAccessError("EventStorage can't be null.");
+        }
         this.eventStorage = eventStorage;
         eventData.setSource(source);
         eventData.setGroup(group);
@@ -108,12 +111,50 @@ public class EventLoggerImpl implements EventLogger {
      * {@inheritDoc}
      */
     @Override
-    public void log(String action, String message, Object... args) {
+    public void log(String action, String message) {
+        log(action, message, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void log(String action, String message, Object argument1) {
+        log(action, message, argument1, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void log(String action, String message, Object argument1,
+            Object argument2) {
+        log(action, message, argument1, argument2, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void log(String action, String message, Object argument1,
+            Object argument2, Object argument3) {
+        log(action, message, argument1, argument2, argument3, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void log(String action, String message, Object argument1,
+            Object argument2, Object argument3, Object argument4) {
         eventData.setTs(new Timestamp(System.currentTimeMillis()));
         eventData.setAction(action);
         eventData.setDescription(message);
+        eventData.setArgument1(argument1);
+        eventData.setArgument2(argument2);
+        eventData.setArgument3(argument3);
+        eventData.setArgument4(argument4);
         eventStorage.insert(eventData);
-
     }
 
     /**
@@ -124,8 +165,8 @@ public class EventLoggerImpl implements EventLogger {
         if (Priority.FAILURE.isMoreImportantThan(screenshotPriorityLevel)) {
             if (LOGGED_ASSERTION_ERRORS.add(assertionError)) {
                 this.withScreenshot(Priority.FAILURE,
-                        SessionManager.getSession()).log(EventActions.ASSERTION_FAILED,
-                                "assertion.failed",
+                        SessionManager.getSession())
+                        .log(EventActions.ASSERTION_FAILED, "assertion.failed",
                                 assertionError.getLocalizedMessage());
             }
         }

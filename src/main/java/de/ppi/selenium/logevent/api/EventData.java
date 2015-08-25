@@ -62,9 +62,25 @@ public class EventData {
     private String description;
 
     /**
-     * A list of possible arguments for the description.
+     * 1. possible argument for the description.
      */
-    private Object[] arguments;
+    private Object argument1;
+
+    /**
+     * 2. possible argument for the description.
+     *
+     */
+    private Object argument2;
+
+    /**
+     * 3. possible argument for the description.
+     */
+    private Object argument3;
+
+    /**
+     * 4. possible argument for the description.
+     */
+    private Object argument4;
 
     /**
      * Screenshottype png or html.
@@ -203,20 +219,6 @@ public class EventData {
     }
 
     /**
-     * @return the arguments
-     */
-    public Object[] getArguments() {
-        return arguments;
-    }
-
-    /**
-     * @param arguments the arguments to set
-     */
-    public void setArguments(Object[] arguments) {
-        this.arguments = arguments;
-    }
-
-    /**
      * @return the screenshot
      */
     public byte[] getScreenshot() {
@@ -256,6 +258,62 @@ public class EventData {
      */
     public void setScreenShotType(String type) {
         this.screenShotType = type;
+    }
+
+    /**
+     * @return the argument1
+     */
+    public Object getArgument1() {
+        return argument1;
+    }
+
+    /**
+     * @param argument1 the argument1 to set
+     */
+    public void setArgument1(Object argument1) {
+        this.argument1 = argument1;
+    }
+
+    /**
+     * @return the argument2
+     */
+    public Object getArgument2() {
+        return argument2;
+    }
+
+    /**
+     * @param argument2 the argument2 to set
+     */
+    public void setArgument2(Object argument2) {
+        this.argument2 = argument2;
+    }
+
+    /**
+     * @return the argument3
+     */
+    public Object getArgument3() {
+        return argument3;
+    }
+
+    /**
+     * @param argument3 the argument3 to set
+     */
+    public void setArgument3(Object argument3) {
+        this.argument3 = argument3;
+    }
+
+    /**
+     * @return the argument4
+     */
+    public Object getArgument4() {
+        return argument4;
+    }
+
+    /**
+     * @param argument4 the argument4 to set
+     */
+    public void setArgument4(Object argument4) {
+        this.argument4 = argument4;
     }
 
 }
