@@ -22,10 +22,8 @@ public interface EventStorage {
 
     /**
      * Start inserting data of a test.
-     *
-     * @param eventData the eventdata.
      */
-    void startBatch(EventData eventData);
+    void startBatch();
 
     /**
      * Insert the event-data.
@@ -50,12 +48,6 @@ public interface EventStorage {
      * @param testrunId the id of the testrun.
      * @return an Iterable of {@link EventData}.
      */
-    Iterable<EventData> getAllEvents(String testrunId);
+    ClosableIterable<EventData> getAllEvents(String testrunId);
 
-    /**
-     * Returns the browser-id of the last insert.
-     *
-     * @return the browser-id of the last insert.
-     */
-    String getLastBrowserId();
 }

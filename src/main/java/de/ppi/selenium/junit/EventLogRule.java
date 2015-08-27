@@ -11,6 +11,7 @@ import de.ppi.selenium.logevent.api.EventActions;
 import de.ppi.selenium.logevent.api.EventLogger;
 import de.ppi.selenium.logevent.api.EventLoggerFactory;
 import de.ppi.selenium.logevent.api.EventSource;
+import de.ppi.selenium.logevent.api.EventStorage;
 import de.ppi.selenium.logevent.api.Priority;
 
 /**
@@ -25,12 +26,25 @@ public class EventLogRule implements TestRule {
     private static final EventLoggerFactory EVENT_LOGGER_FACTORY =
             EventLoggerFactory.getInstance(EventSource.TEST);
 
+    /** The storage system. */
+    private final EventStorage eventStorage;
+
+    /**
+     * Initiates an object of type EventLogRule.
+     *
+     * @param storage a {@link EventStorage}.
+     */
+    public EventLogRule(EventStorage storage) {
+        EventLoggerFactory.setStorage(storage);
+        this.eventStorage = storage;
+        // TODO start mit Testrun und close ermöglichen.
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public Statement apply(final Statement base,
-            final Description description) {
+    public Statement apply(final Statement base, final Description description) {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
@@ -38,6 +52,7 @@ public class EventLogRule implements TestRule {
                 final String item = description.getMethodName();
                 final String displayName = description.getDisplayName();
 
+                eventStorage.startBatch();
                 EVENT_LOGGER_FACTORY.onDoku(group, item).log(
                         EventActions.TEST_START, "test.start", displayName);
 
@@ -67,7 +82,8 @@ public class EventLogRule implements TestRule {
                                 "test.failures", displayName,
                                 Integer.valueOf(nrOfAssertions));
                     } else {
-                        EVENT_LOGGER_FACTORY.onException(group, item)
+                        EVENT_LOGGER_FACTORY
+                                .onException(group, item)
                                 .withScreenshot(Priority.EXCEPTION,
                                         SessionManager.getSession())
                                 .log(EventActions.EXCEPTION_OCCURS,
@@ -79,6 +95,8 @@ public class EventLogRule implements TestRule {
                                 e.getLocalizedMessage());
 
                     }
+                } finally {
+                    eventStorage.write();
                 }
 
             }

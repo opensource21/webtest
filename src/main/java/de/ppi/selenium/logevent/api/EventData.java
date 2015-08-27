@@ -41,7 +41,7 @@ public class EventData {
      * </ul>
      * If no group exists insert the item.
      */
-    private String group;
+    private String groupId;
 
     /**
      * The item which sends the event.
@@ -151,15 +151,15 @@ public class EventData {
     /**
      * @return the group
      */
-    public String getGroup() {
-        return group;
+    public String getGroupId() {
+        return groupId;
     }
 
     /**
      * @param group the group to set
      */
-    public void setGroup(String group) {
-        this.group = group;
+    public void setGroupId(String group) {
+        this.groupId = group;
     }
 
     /**

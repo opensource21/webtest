@@ -32,7 +32,8 @@ public final class EventLoggerFactory {
     private final EventSource eventSource;
 
     static {
-        setDefaultPriority(Priority.FAILURE);
+        setDefaultPriority(Priority.DEBUG);
+        setDefaultScreenPriority(Priority.FAILURE);
     }
 
     /**
@@ -99,11 +100,10 @@ public final class EventLoggerFactory {
      * @return a {@link EventLogger}.
      */
     public EventLogger on(Priority priority, String group, String item) {
-        if (priority.isMoreImportantThan(
-                getPriority(PRIORITIES, eventSource, group, item))) {
-            return new EventLoggerImpl(
-                    storage, priority, getPriority(SCREENSHOT_PRIORITIES,
-                            eventSource, group, item),
+        if (priority.isMoreImportantThan(getPriority(PRIORITIES, eventSource,
+                group, item))) {
+            return new EventLoggerImpl(storage, priority, getPriority(
+                    SCREENSHOT_PRIORITIES, eventSource, group, item),
                     eventSource, group, item);
         } else {
             return new EmptyLogger();
@@ -213,7 +213,7 @@ public final class EventLoggerFactory {
      *
      * @param priority the default priority for screenshots.
      */
-    public void setDefaultScreenPriority(Priority priority) {
+    public static void setDefaultScreenPriority(Priority priority) {
         for (EventSource source : EventSource.values()) {
             SCREENSHOT_PRIORITIES.put(source.name(), priority);
         }
@@ -228,7 +228,7 @@ public final class EventLoggerFactory {
      * @param group the name of the group.
      * @param item the item of the group.
      */
-    public void setScreenshotPriority(Priority priority,
+    public static void setScreenshotPriority(Priority priority,
             EventSource eventSource, String group, String item) {
         final String key = createKey(eventSource, group, item);
         SCREENSHOT_PRIORITIES.put(key, priority);

@@ -25,8 +25,8 @@ public class EventLoggerImpl implements EventLogger {
     /**
      * The Logger.
      */
-    private static final Logger LOG =
-            LoggerFactory.getLogger(EventLoggerImpl.class);
+    private static final Logger LOG = LoggerFactory
+            .getLogger(EventLoggerImpl.class);
 
     /**
      * Set of Assertions which are logged.
@@ -65,11 +65,11 @@ public class EventLoggerImpl implements EventLogger {
             String item) {
         super();
         if (eventStorage == null) {
-            throw new IllegalAccessError("EventStorage can't be null.");
+            throw new IllegalStateException("EventStorage can't be null.");
         }
         this.eventStorage = eventStorage;
         eventData.setSource(source);
-        eventData.setGroup(group);
+        eventData.setGroupId(group);
         eventData.setItem(item);
         eventData.setPriority(priority);
         this.screenshotPriorityLevel = screenshotPriorityLevel;
@@ -94,8 +94,8 @@ public class EventLoggerImpl implements EventLogger {
                     eventData.setScreenShotType("png");
                 } else if (wrappedDriver instanceof HtmlUnitDriver) {
                     eventData.setScreenShotType("html");
-                    eventData.setScreenshot(
-                            wrappedDriver.getPageSource().getBytes("UTF-8"));
+                    eventData.setScreenshot(wrappedDriver.getPageSource()
+                            .getBytes("UTF-8"));
                 } else {
                     LOG.warn("The current driver doesn't make screenshots");
                 }
@@ -148,6 +148,9 @@ public class EventLoggerImpl implements EventLogger {
     public void log(String action, String message, Object argument1,
             Object argument2, Object argument3, Object argument4) {
         eventData.setTs(new Timestamp(System.currentTimeMillis()));
+        eventData.setThreadId(Thread.currentThread().getId());
+        // TODO LOG TestrunId setzen.
+        eventData.setTestrunId("TODO2");
         eventData.setAction(action);
         eventData.setDescription(message);
         eventData.setArgument1(argument1);
@@ -165,9 +168,9 @@ public class EventLoggerImpl implements EventLogger {
         if (Priority.FAILURE.isMoreImportantThan(screenshotPriorityLevel)) {
             if (LOGGED_ASSERTION_ERRORS.add(assertionError)) {
                 this.withScreenshot(Priority.FAILURE,
-                        SessionManager.getSession())
-                        .log(EventActions.ASSERTION_FAILED, "assertion.failed",
-                                assertionError.getLocalizedMessage());
+                        SessionManager.getSession()).log(
+                        EventActions.ASSERTION_FAILED, "assertion.failed",
+                        assertionError.getLocalizedMessage());
             }
         }
 
