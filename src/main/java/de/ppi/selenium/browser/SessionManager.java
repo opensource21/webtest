@@ -44,10 +44,10 @@ public class SessionManager {
      * The factory for {@link EventLogger}.
      */
     private static final EventLoggerFactory EVENT_LOGGER_FACTORY =
-            EventLoggerFactory.getInstance(EventSource.WEBDRIVER);
+            EventLoggerFactory.getInstance(EventSource.WEBDRIVER_AFTER);
 
-    private final static Logger LOG =
-            LoggerFactory.getLogger(SessionManager.class);
+    private final static Logger LOG = LoggerFactory
+            .getLogger(SessionManager.class);
 
     /**
      * Key for the options to define a base-url.
@@ -170,8 +170,7 @@ public class SessionManager {
             } catch (Exception e) {
                 throw new IllegalArgumentException(
                         "Problem to create instance: "
-                                + e.getLocalizedMessage(),
-                        e);
+                                + e.getLocalizedMessage(), e);
             }
         }
         return null;
@@ -432,8 +431,8 @@ public class SessionManager {
         sessions.put(sessionId, webBrowser);
 
         EVENT_LOGGER_FACTORY.onDebug("SessionManager", "getNewSessionDo").log(
-                EventActions.WEBDRIVER_CREATE_INSTANCE, "webdriver.create_instance",
-                sessionId);
+                EventActions.WEBDRIVER_CREATE_INSTANCE,
+                "webdriver.create_instance", sessionId);
         return webBrowser;
     }
 
