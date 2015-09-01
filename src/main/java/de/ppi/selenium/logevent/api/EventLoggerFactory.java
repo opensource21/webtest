@@ -1,5 +1,7 @@
 package de.ppi.selenium.logevent.api;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +29,10 @@ public final class EventLoggerFactory {
 
     /** The storage system. */
     private static EventStorage storage;
+
+    /** The testrunId. */
+    private static String testrunId = "Testrun_"
+            + new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss").format(new Date());
 
     /** The source of the event. */
     private final EventSource eventSource;
@@ -102,8 +108,11 @@ public final class EventLoggerFactory {
     public EventLogger on(Priority priority, String group, String item) {
         if (priority.isMoreImportantThan(getPriority(PRIORITIES, eventSource,
                 group, item))) {
-            return new EventLoggerImpl(storage, priority, getPriority(
-                    SCREENSHOT_PRIORITIES, eventSource, group, item),
+            return new EventLoggerImpl(
+                    storage,
+                    testrunId,
+                    priority,
+                    getPriority(SCREENSHOT_PRIORITIES, eventSource, group, item),
                     eventSource, group, item);
         } else {
             return new EmptyLogger();
@@ -232,6 +241,20 @@ public final class EventLoggerFactory {
             EventSource eventSource, String group, String item) {
         final String key = createKey(eventSource, group, item);
         SCREENSHOT_PRIORITIES.put(key, priority);
+    }
+
+    /**
+     * @return the testrunId
+     */
+    public static String getTestrunId() {
+        return testrunId;
+    }
+
+    /**
+     * @param testrunId the testrunId to set
+     */
+    public static void setTestrunId(String testrunId) {
+        EventLoggerFactory.testrunId = testrunId;
     }
 
 }

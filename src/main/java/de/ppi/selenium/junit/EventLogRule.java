@@ -37,7 +37,13 @@ public class EventLogRule implements TestRule {
     public EventLogRule(EventStorage storage) {
         EventLoggerFactory.setStorage(storage);
         this.eventStorage = storage;
-        // TODO start mit Testrun und close ermöglichen.
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                // TODO LOG Report erstellen
+                eventStorage.close();
+            }
+        });
     }
 
     /**

@@ -53,6 +53,7 @@ public class EventLoggerImpl implements EventLogger {
      * Initiates an object of type EventLoggerImpl.
      *
      * @param eventStorage the storage-system.
+     * @param testrunId Id of the test run.
      * @param priority priority which with it should be logged.
      * @param screenshotPriorityLevel priority at which level a screenshot
      *            should be made.
@@ -60,14 +61,15 @@ public class EventLoggerImpl implements EventLogger {
      * @param group the group
      * @param item the item.
      */
-    public EventLoggerImpl(EventStorage eventStorage, Priority priority,
-            Priority screenshotPriorityLevel, EventSource source, String group,
-            String item) {
+    public EventLoggerImpl(EventStorage eventStorage, String testrunId,
+            Priority priority, Priority screenshotPriorityLevel,
+            EventSource source, String group, String item) {
         super();
         if (eventStorage == null) {
             throw new IllegalStateException("EventStorage can't be null.");
         }
         this.eventStorage = eventStorage;
+        eventData.setTestrunId(testrunId);
         eventData.setSource(source);
         eventData.setGroupId(group);
         eventData.setItem(item);
@@ -149,8 +151,6 @@ public class EventLoggerImpl implements EventLogger {
             Object argument2, Object argument3, Object argument4) {
         eventData.setTs(new Timestamp(System.currentTimeMillis()));
         eventData.setThreadId(Thread.currentThread().getId());
-        // TODO LOG TestrunId setzen.
-        eventData.setTestrunId("TODO2");
         eventData.setAction(action);
         eventData.setDescription(message);
         eventData.setArgument1(argument1);
