@@ -55,7 +55,9 @@ public class EventLogRule implements TestRule {
             @Override
             public void evaluate() throws Throwable {
                 final String group = description.getClassName();
-                final String item = description.getMethodName();
+                final String item =
+                        description.getMethodName() == null ? "no-method"
+                                : description.getMethodName();
                 final String displayName = description.getDisplayName();
 
                 EVENT_LOGGER_FACTORY.onDoku(group, item).log(
