@@ -3,8 +3,7 @@ package de.ppi.selenium.logevent.api;
 /**
  * Storage for the events with the following workflow:
  * <ol>
- * <li>open - should be called at the beginning</li>
- * <li>startInsert - should be called at the beginning of a testmethod.</li>
+ * <li>open - could be called at the beginning, must be called after a close.</li>
  * <li>insert - should be called to insert some testdata.</li>
  * <li>write - persist the data, at end of testmethod.</li>
  * <li>close - should be called at the end of all tests.</li>
@@ -15,15 +14,8 @@ public interface EventStorage {
 
     /**
      * Open the storage system.
-     *
-     * @param testrunId the id of the testrun.
      */
-    void open(String testrunId);
-
-    /**
-     * Start inserting data of a test.
-     */
-    void startBatch();
+    void open();
 
     /**
      * Insert the event-data.

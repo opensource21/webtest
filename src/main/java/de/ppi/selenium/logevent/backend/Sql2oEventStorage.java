@@ -37,7 +37,7 @@ public abstract class Sql2oEventStorage implements EventStorage {
     private Query insertQuery = null;
 
     /** Current batch-size. */
-    private int batchSize = 0;
+    private volatile int batchSize = 0;
 
     /** Maximal size of batch-data. */
     private static final int MAX_BATCH_SIZE = 100;
@@ -53,6 +53,7 @@ public abstract class Sql2oEventStorage implements EventStorage {
         sql2o = new Sql2o(connectURL, user, password);
         connection = sql2o.beginTransaction();
         createTable(connection);
+        insertQuery = connection.createQuery(INSERT_SQL);
     }
 
     /**
@@ -62,11 +63,6 @@ public abstract class Sql2oEventStorage implements EventStorage {
      * @param connection a connection.
      */
     protected abstract void createTable(Connection connection);
-
-    @Override
-    public void startBatch() {
-        insertQuery = connection.createQuery(INSERT_SQL);
-    }
 
     @Override
     public void insert(EventData event) {
@@ -95,6 +91,7 @@ public abstract class Sql2oEventStorage implements EventStorage {
 
     @Override
     public void write() {
+        batchSize = 0;
         insertQuery.executeBatch();
         connection.commit(false);
     }
@@ -104,6 +101,7 @@ public abstract class Sql2oEventStorage implements EventStorage {
         connection.commit();
         if (insertQuery != null) {
             insertQuery.close();
+            insertQuery = null;
         }
         connection.close();
         connection = null;
@@ -113,9 +111,10 @@ public abstract class Sql2oEventStorage implements EventStorage {
      * {@inheritDoc}
      */
     @Override
-    public void open(String testrunId) {
+    public void open() {
         if (connection == null) {
             connection = sql2o.beginTransaction();
+            insertQuery = connection.createQuery(INSERT_SQL);
         }
 
     }

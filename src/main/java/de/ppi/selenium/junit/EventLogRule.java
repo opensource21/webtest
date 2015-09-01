@@ -52,7 +52,6 @@ public class EventLogRule implements TestRule {
                 final String item = description.getMethodName();
                 final String displayName = description.getDisplayName();
 
-                eventStorage.startBatch();
                 EVENT_LOGGER_FACTORY.onDoku(group, item).log(
                         EventActions.TEST_START, "test.start", displayName);
 
