@@ -13,6 +13,7 @@ import de.ppi.selenium.logevent.api.EventLoggerFactory;
 import de.ppi.selenium.logevent.api.EventSource;
 import de.ppi.selenium.logevent.api.EventStorage;
 import de.ppi.selenium.logevent.api.Priority;
+import de.ppi.selenium.logevent.report.LogReporter;
 
 /**
  * Junit-Rule with put information about the test to the eventlog.
@@ -33,15 +34,20 @@ public class EventLogRule implements TestRule {
      * Initiates an object of type EventLogRule.
      *
      * @param storage a {@link EventStorage}.
+     * @param reporter a list of {@link LogReporter}.
      */
-    public EventLogRule(EventStorage storage) {
+    public EventLogRule(final EventStorage storage,
+            final LogReporter... reporter) {
         EventLoggerFactory.setStorage(storage);
         this.eventStorage = storage;
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                // TODO LOG Report erstellen
                 eventStorage.close();
+                for (LogReporter logReporter : reporter) {
+                    logReporter.createReport(storage,
+                            EventLoggerFactory.getTestrunId());
+                }
             }
         });
     }
