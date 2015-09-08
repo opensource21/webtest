@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import de.ppi.selenium.logevent.api.EventLoggerFactory;
 import de.ppi.selenium.logevent.api.EventSource;
 import de.ppi.selenium.logevent.api.Priority;
-import de.ppi.selenium.util.Protocol;
 
 /**
  * Concrete web-browser
@@ -63,11 +62,6 @@ public class WebBrowserImpl implements WebBrowser {
         });
     }
 
-    private final boolean logBeforeGet = Boolean
-            .getBoolean("webtest.logBeforeGet");
-    private final boolean logAfterGet = Boolean
-            .getBoolean("webtest.logAfterGet");
-
     /**
      * Creates a new browser-session.
      *
@@ -110,17 +104,11 @@ public class WebBrowserImpl implements WebBrowser {
      */
     @Override
     public void get(String url) {
-        if (logBeforeGet) {
-            Protocol.log(getTitle(), "Goto " + url, webdriver);
-        }
         EventLoggerFactory.getInstance(EventSource.WEBDRIVER_BEFORE)
                 .onDebug(WebBrowserImpl.class.getSimpleName(), "get")
                 .withScreenshot(Priority.DEBUG, webdriver)
                 .log("webdriver.get", "webdriver.get", url);
         webdriver.get(url);
-        if (logAfterGet) {
-            Protocol.log(getTitle(), "Opened " + url, webdriver);
-        }
         EventLoggerFactory.getInstance(EventSource.WEBDRIVER_AFTER)
                 .onDebug(WebBrowserImpl.class.getSimpleName(), "get")
                 .withScreenshot(Priority.DEBUG, webdriver)

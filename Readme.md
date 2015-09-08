@@ -6,7 +6,7 @@ and [FluentLenium](https://github.com/FluentLenium/FluentLenium).
 It used selophane in a special version.
 
 ## Advantages you get with WebTest
-- Protocol
+- EventLog
 - Screenshots
 - AssertJ-Extensions, which makes a screenshot on assertion-failure.
 - JUnit-Rules
@@ -23,14 +23,17 @@ It used selophane in a special version.
 You can influence the behavior with the following system-properties, which
 must be set via `-D<propertyName>=value`.
 
-- `webtest.logBeforeGet` - if `true` a screenshot is created before a new page is requested via get.
-- `webtest.logAfterGet` - if `true` a screenshot is created after a new page is requested via get.
-- `webtest.protocoldir` - defines the default-dir for webtest-logs.
-
-- `webtest.baseurl` - defines the base-url.
 - `phantomjs.binary.path` - defines the path to phantomjs for example
    `C:\\RegFreeProgs\\phantomjs\\phantomjs.exe`
 -  `webtest.maxNrOfBrowserReuse` - defines the number of reuses of the browser, default is 100.
+
+
+### Old
+- `webtest.logBeforeGet` - if `true` a screenshot is created before a new page is requested via get.
+- `webtest.logAfterGet` - if `true` a screenshot is created after a new page is requested via get.
+- `webtest.protocoldir` - defines the default-dir for webtest-logs.
+- `webtest.baseurl` - defines the base-url.
+
 
 ### Browser
 The browser is configured by a file `client.properties`. The properties are explained at
@@ -65,21 +68,31 @@ to declare a constant-class, like:
 
     public interface WebTestConstants {
 
+        TestWebServer WEB_SERVER = new TestWebServer("/fuwesta");
+
+        /**
+         * The system to store the events.
+         */
+        H2EventStorage EVENT_STORAGE =
+                new H2EventStorage(
+                        "jdbc:h2:./dbs/testlog;MODE=PostgreSQL;"
+                                + "AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+                        "sa", "");
+
         /**
          * Standard_Rule for WebTests.
          */
         RuleChain WEBTEST_WITHOUT_AUTHENTICATION = RuleChain
-                .outerRule(
-                        new WebServerRule(new DelegatingWebServer(
-                                new JettyWebServer("/fuwesta"))))
-                .around(new WebDriverRule())
-                .around(new ProtocolRule("weblog"));
+                .outerRule(new WebServerRule(new DelegatingWebServer(WEB_SERVER)))
+                .around(new EventLogRule(EVENT_STORAGE, new MarkdownReporter(
+                        "weblog", false, Priority.DEBUG)))
+                .around(new WebDriverRule());
         /**
          * Standard_Rule for WebTests.
          */
-        RuleChain WEBTEST =
-                    RuleChain.outerRule(WEBTEST_WITHOUT_AUTHENTICATION)
+        RuleChain WEBTEST = RuleChain.outerRule(WEBTEST_WITHOUT_AUTHENTICATION)
                 .around(new AuthRule());
+
     }
 
 Then you can use it in your test-class with
@@ -93,3 +106,4 @@ You can see a simple example at [FuWeSta-Sample](https://github.com/opensource21
 ## TODOs
 - The code must be tested and specially the code in `de.ppi.selenium.browser`
   should be refactored.
+- Improve the new EventLog-System

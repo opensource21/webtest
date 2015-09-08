@@ -4,7 +4,6 @@ import static org.assertj.core.util.Arrays.array;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,11 +20,9 @@ import org.junit.runners.model.Statement;
 import org.openqa.selenium.Alert;
 import org.selophane.elements.base.Element;
 
-import de.ppi.selenium.browser.SessionManager;
 import de.ppi.selenium.browser.WebBrowser;
 import de.ppi.selenium.logevent.api.EventLoggerFactory;
 import de.ppi.selenium.logevent.api.EventSource;
-import de.ppi.selenium.util.Protocol;
 
 /**
  * Selenium specific assertions in the soft-variant.
@@ -123,9 +120,6 @@ public class SeleniumSoftAssertions extends AbstractSoftAssertions implements
                 errors.add(e);
                 EVENT_LOGGER.onFailure(obj.getClass().getName(),
                         method.getName()).logAssertionError(e);
-                Protocol.log(
-                        "Assertion " + method.getName() + Arrays.toString(args),
-                        e.getLocalizedMessage(), SessionManager.getSession());
             }
             return obj;
         }
