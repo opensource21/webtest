@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.ppi.oss</groupId>
     <artifactId>webtest</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <name>webtest</name>
     <description>Some additional helper for webtesting with selenium</description>
     <url>https://github.com/ppi-ag/thymeleaf-mailto</url>
@@ -281,7 +280,7 @@
         <url>https://github.com/opensource21/webtest</url>
         <connection>scm:git:https://github.com/opensource21/webtest.git</connection>
         <developerConnection>scm:git:git@github.com:opensource21/webtest.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>webtest-0.4</tag>
     </scm>
 </project>
 
