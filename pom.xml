@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.ppi.oss</groupId>
     <artifactId>webtest</artifactId>
-    <version>0.3</version>
+    <version>0.4-SNAPSHOT</version>
     <name>webtest</name>
     <description>Some additional helper for webtesting with selenium</description>
     <organization>
@@ -271,7 +271,7 @@
         <url>scm:git:git@github.com:opensource21/webtest.git</url>
         <connection>scm:git:git@github.com:opensource21/webtest.git</connection>
         <developerConnection>scm:git:git@github.com:opensource21/webtest.git</developerConnection>
-      <tag>webtest-0.3</tag>
+      <tag>HEAD</tag>
   </scm>
 </project>
 
