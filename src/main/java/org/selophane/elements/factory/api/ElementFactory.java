@@ -63,7 +63,7 @@ public final class ElementFactory {
      * As {@link ElementFactory#initElements(WebDriver, Class, String, String)}
      * but will only replace the fields of an already instantiated Page Object.
      *
-     * @param driver The driver that will be used to look up the elements
+     * @param webDriver The driver that will be used to look up the elements
      * @param page The object with WebElement and List&lt;WebElement&gt; fields
      *            that should be proxied.
      * @param pageName name of the page where the element is.
