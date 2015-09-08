@@ -39,6 +39,12 @@ public interface EventActions {
      */
     String TEST_START = "TEST_START";
 
+    /** Take a screenshot. */
+    String TEST_SCREENSHOT = "TEST_SCREENSHOT";
+
+    /** Documentation for the test. */
+    String TEST_DOCUMENTATION = "TEST_DOCUMENATION";
+
     /**
      * An assertion has failed.
      */

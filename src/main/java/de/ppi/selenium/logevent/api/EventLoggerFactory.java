@@ -39,7 +39,7 @@ public final class EventLoggerFactory {
 
     static {
         setDefaultPriority(Priority.DEBUG);
-        setDefaultScreenPriority(Priority.FAILURE);
+        setDefaultScreenPriority(Priority.DOCUMENTATION);
     }
 
     /**

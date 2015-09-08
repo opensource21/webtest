@@ -74,10 +74,13 @@ public class ElementDecorator implements FieldDecorator {
     @Override
     public Object decorate(ClassLoader loader, Field field) {
         // TODO LOG Evtl. besseren Feldnamen.
-        final String fieldDescription =
-                contextDescription + "." + field.getName();
-        if (!(WebElement.class.isAssignableFrom(field.getType())
-                || isDecoratableList(field))) {
+        final String fieldDescription;
+        if (contextDescription.isEmpty()) {
+            fieldDescription = field.getName();
+        } else {
+            fieldDescription = contextDescription + "." + field.getName();
+        }
+        if (!(WebElement.class.isAssignableFrom(field.getType()) || isDecoratableList(field))) {
             return null;
         }
 
@@ -157,11 +160,12 @@ public class ElementDecorator implements FieldDecorator {
             final Class<?> wrappingType = getWrapperClass(interfaceType);
             final Constructor<?> cons =
                     wrappingType.getConstructor(UniqueElementLocator.class);
-            return (T) cons.newInstance(new LocatorWrappingUniqueElementLocator(
-                    webDriver, locator, pageName, fieldDescription));
+            return (T) cons
+                    .newInstance(new LocatorWrappingUniqueElementLocator(
+                            webDriver, locator, pageName, fieldDescription));
         } catch (Exception e) {
-            throw new IllegalStateException(
-                    "Can't create instance of " + interfaceType.getName(), e);
+            throw new IllegalStateException("Can't create instance of "
+                    + interfaceType.getName(), e);
         }
     }
 
@@ -182,14 +186,16 @@ public class ElementDecorator implements FieldDecorator {
             String fieldDescription) {
         InvocationHandler handler;
         if (interfaceType.getAnnotation(ImplementedBy.class) != null) {
-            handler = new ElementListHandler(interfaceType, webDriver, locator,
-                    pageName, fieldDescription);
+            handler =
+                    new ElementListHandler(interfaceType, webDriver, locator,
+                            pageName, fieldDescription);
         } else {
             handler = new LocatingElementListHandler(locator);
         }
         List<T> proxy;
-        proxy = (List<T>) Proxy.newProxyInstance(loader,
-                new Class[] { List.class }, handler);
+        proxy =
+                (List<T>) Proxy.newProxyInstance(loader,
+                        new Class[] { List.class }, handler);
         return proxy;
     }
 }
