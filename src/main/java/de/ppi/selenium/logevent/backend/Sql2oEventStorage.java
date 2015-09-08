@@ -98,7 +98,7 @@ public abstract class Sql2oEventStorage implements EventStorage {
 
     @Override
     public void close() {
-        connection.commit();
+        connection.commit(false);
         if (insertQuery != null) {
             insertQuery.close();
             insertQuery = null;
@@ -127,7 +127,7 @@ public abstract class Sql2oEventStorage implements EventStorage {
         final ResultSetIterable<EventData> result =
                 sql2o.open()
                         .createQuery(
-                                "select * from event_data where testrunId = :testrunId")
+                                "select * from EVENTS where testrunId = :testrunId")
                         .addParameter("testrunId", testrunId)
                         .executeAndFetchLazy(EventData.class);
         result.setAutoCloseConnection(true);

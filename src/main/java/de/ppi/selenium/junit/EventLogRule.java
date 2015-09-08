@@ -5,6 +5,9 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.MultipleFailureException;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.sql2o.Sql2oException;
 
 import de.ppi.selenium.browser.SessionManager;
 import de.ppi.selenium.logevent.api.EventActions;
@@ -27,6 +30,10 @@ public class EventLogRule implements TestRule {
     private static final EventLoggerFactory EVENT_LOGGER_FACTORY =
             EventLoggerFactory.getInstance(EventSource.TEST);
 
+    /** Logger instance. */
+    private static final Logger LOG = LoggerFactory
+            .getLogger(EventLogRule.class);
+
     /** The storage system. */
     private final EventStorage eventStorage;
 
@@ -43,7 +50,11 @@ public class EventLogRule implements TestRule {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                eventStorage.close();
+                try {
+                    eventStorage.close();
+                } catch (Sql2oException sql2oException) {
+                    LOG.error("Error closing the eventstorage.", sql2oException);
+                }
                 for (LogReporter logReporter : reporter) {
                     logReporter.createReport(storage,
                             EventLoggerFactory.getTestrunId());
