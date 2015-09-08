@@ -23,6 +23,15 @@ public class ElementListHandler implements InvocationHandler {
     private final WebDriver webDriver;
     private final ElementLocator locator;
     private final Class<?> wrappingType;
+    /**
+     * Name of the page where the element is.
+     */
+    private final String pageName;
+
+    /**
+     * Description of the field.
+     */
+    private final String fieldDescription;
 
     private List<Object> wrappedList;
     private List<WebElement> webElementList;
@@ -36,16 +45,19 @@ public class ElementListHandler implements InvocationHandler {
      * @param webDriver the underlying {@link WebDriver}.
      * @param locator locator on the page for the elements.
      * @param <T> type of the interface.
+     * @param pageName name of the page where the element is.
+     * @param fieldDescription description of the field, including the context.
      */
     public <T> ElementListHandler(Class<T> interfaceType, WebDriver webDriver,
-            ElementLocator locator) {
+            ElementLocator locator, String pageName, String fieldDescription) {
         this.webDriver = webDriver;
         this.locator = locator;
         if (!Element.class.isAssignableFrom(interfaceType)) {
             throw new RuntimeException("interface not assignable to Element.");
         }
         this.wrappingType = getWrapperClass(interfaceType);
-
+        this.pageName = pageName;
+        this.fieldDescription = fieldDescription;
     }
 
     /**
@@ -80,7 +92,7 @@ public class ElementListHandler implements InvocationHandler {
             for (int index = 0; index < nrOfElements; index++) {
                 final UniqueElementLocator uniqueElementLocator =
                         new LocatorWrappingUniqueElementLocator(webDriver,
-                                locator, index);
+                                locator, index, pageName, fieldDescription);
                 Object thing = cons.newInstance(uniqueElementLocator);
                 wrappedList.add(wrappingType.cast(thing));
             }

@@ -26,14 +26,25 @@ import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.ppi.selenium.logevent.api.EventActions;
+import de.ppi.selenium.logevent.api.EventLogger;
+import de.ppi.selenium.logevent.api.EventLoggerFactory;
+import de.ppi.selenium.logevent.api.EventSource;
+
 /**
  * SessionManager for the testing framework. Uses a {@link ThreadLocal} so each
  * thread of test execution has its own manager instance. Based on
  * https://github.com/FINRAOS/JTAF-ExtWebDriver for the properties see
  * http://finraos.github.io/JTAF-ExtWebDriver/clientproperties.html.
  */
-// TODO Exceptionhandling!
+// TODO Improvement Exceptionhandling!
 public class SessionManager {
+
+    /**
+     * The factory for {@link EventLogger}.
+     */
+    private static final EventLoggerFactory EVENT_LOGGER_FACTORY =
+            EventLoggerFactory.getInstance(EventSource.WEBDRIVER_AFTER);
 
     private final static Logger LOG = LoggerFactory
             .getLogger(SessionManager.class);
@@ -408,7 +419,8 @@ public class SessionManager {
         WebDriver innerDriver =
                 webDriverFactory.get().createWebDriver(localOptions, dc);
 
-        String sessionId = getNextCustomSessionId();
+        final String sessionId =
+                innerDriver.toString() + getNextCustomSessionId();
         if (setAsCurrent) {
             currentSessionId = sessionId;
         }
@@ -418,6 +430,9 @@ public class SessionManager {
         // Store the session in sessions Map
         sessions.put(sessionId, webBrowser);
 
+        EVENT_LOGGER_FACTORY.onDebug("SessionManager", "getNewSessionDo").log(
+                EventActions.WEBDRIVER_CREATE_INSTANCE,
+                "webdriver.create_instance", sessionId);
         return webBrowser;
     }
 

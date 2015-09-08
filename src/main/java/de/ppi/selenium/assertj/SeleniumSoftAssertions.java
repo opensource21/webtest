@@ -4,7 +4,6 @@ import static org.assertj.core.util.Arrays.array;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,9 +20,9 @@ import org.junit.runners.model.Statement;
 import org.openqa.selenium.Alert;
 import org.selophane.elements.base.Element;
 
-import de.ppi.selenium.browser.SessionManager;
 import de.ppi.selenium.browser.WebBrowser;
-import de.ppi.selenium.util.Protocol;
+import de.ppi.selenium.logevent.api.EventLoggerFactory;
+import de.ppi.selenium.logevent.api.EventSource;
 
 /**
  * Selenium specific assertions in the soft-variant.
@@ -104,6 +103,11 @@ public class SeleniumSoftAssertions extends AbstractSoftAssertions implements
      *
      */
     static class ErrorCollectorWithScreenshots implements MethodInterceptor {
+
+        /** Eventlogger-Factory. */
+        private static final EventLoggerFactory EVENT_LOGGER =
+                EventLoggerFactory.getInstance(EventSource.ASSERTION);
+
         /** List of errors. */
         private final List<Throwable> errors = new ArrayList<Throwable>();
 
@@ -114,16 +118,15 @@ public class SeleniumSoftAssertions extends AbstractSoftAssertions implements
                 proxy.invokeSuper(obj, args);
             } catch (AssertionError e) {
                 errors.add(e);
-                Protocol.log(
-                        "Assertion " + method.getName() + Arrays.toString(args),
-                        e.getLocalizedMessage(), SessionManager.getSession());
+                EVENT_LOGGER.onFailure(obj.getClass().getName(),
+                        method.getName()).logAssertionError(e);
             }
             return obj;
         }
 
         /**
          * Returns the list of errors.
-         * 
+         *
          * @return the list of errors.
          */
         public List<Throwable> errors() {

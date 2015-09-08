@@ -2,6 +2,7 @@ package org.selophane.elements.base;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
@@ -9,13 +10,40 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
 
+import de.ppi.selenium.logevent.api.EventActions;
+import de.ppi.selenium.logevent.api.EventLogger;
+import de.ppi.selenium.logevent.api.EventLoggerFactory;
+import de.ppi.selenium.logevent.api.EventSource;
+import de.ppi.selenium.logevent.api.Priority;
+
 /**
  * An implementation of the Element interface. Delegates its work to an
  * underlying WebElement instance for custom functionality.
  */
+// TODO LOG alle Events loggen
 public class ElementImpl implements Element {
 
     private final UniqueElementLocator uniqueElementLocator;
+
+    /** Instance of the {@link EventLoggerFactory}. */
+    private static final EventLoggerFactory BEFORE_EVENT_LOGGER_FACTORY =
+            EventLoggerFactory.getInstance(EventSource.WEBELEMENT_BEFORE);
+
+    /** Instance of the {@link EventLoggerFactory}. */
+    private static final EventLoggerFactory AFTER_EVENT_LOGGER_FACTORY =
+            EventLoggerFactory.getInstance(EventSource.WEBELEMENT_AFTER);
+
+    /**
+     * {@link EventLogger} which is specific for the elememt and log before the
+     * action.
+     */
+    private final EventLogger eventLoggerBefore;
+
+    /**
+     * {@link EventLogger} which is specific for the elememt and log after the
+     * action.
+     */
+    private final EventLogger eventLoggerAfter;
 
     /**
      * Creates a Element for a given {@link UniqueElementLocator}.
@@ -24,6 +52,14 @@ public class ElementImpl implements Element {
      */
     public ElementImpl(final UniqueElementLocator elementLocator) {
         this.uniqueElementLocator = elementLocator;
+        eventLoggerBefore =
+                BEFORE_EVENT_LOGGER_FACTORY.onDebug(
+                        elementLocator.getPageName(),
+                        elementLocator.getFieldDescription());
+        eventLoggerAfter =
+                AFTER_EVENT_LOGGER_FACTORY.onDebug(
+                        elementLocator.getPageName(),
+                        elementLocator.getFieldDescription());
     }
 
     /**
@@ -35,12 +71,35 @@ public class ElementImpl implements Element {
 
     @Override
     public void click() {
+        eventLoggerBefore.withScreenshot(Priority.DEBUG,
+                uniqueElementLocator.getWebDriver()).log(
+                EventActions.ELEMENT_CLICK, "element.click",
+                uniqueElementLocator.getPageName(),
+                uniqueElementLocator.getFieldDescription());
         getElement().click();
+        eventLoggerAfter.withScreenshot(Priority.DEBUG,
+                uniqueElementLocator.getWebDriver()).log(
+                EventActions.ELEMENT_CLICK, "element.click",
+                uniqueElementLocator.getPageName(),
+                uniqueElementLocator.getFieldDescription());
+
     }
 
     @Override
     public void sendKeys(CharSequence... keysToSend) {
+        eventLoggerBefore.withScreenshot(Priority.DEBUG,
+                uniqueElementLocator.getWebDriver()).log(
+                EventActions.ELEMENT_SEND_KEYS, "element.sendKeys",
+                uniqueElementLocator.getPageName(),
+                uniqueElementLocator.getFieldDescription(),
+                StringUtils.join(keysToSend));
         getElement().sendKeys(keysToSend);
+        eventLoggerAfter.withScreenshot(Priority.DEBUG,
+                uniqueElementLocator.getWebDriver()).log(
+                EventActions.ELEMENT_SEND_KEYS, "element.sendKeys",
+                uniqueElementLocator.getPageName(),
+                uniqueElementLocator.getFieldDescription(),
+                StringUtils.join(keysToSend));
     }
 
     @Override
@@ -50,12 +109,28 @@ public class ElementImpl implements Element {
 
     @Override
     public void submit() {
+        eventLoggerBefore.withScreenshot(Priority.DEBUG,
+                uniqueElementLocator.getWebDriver()).log(
+                EventActions.ELEMENT_SUBMIT, "element.submit",
+                uniqueElementLocator.getPageName(),
+                uniqueElementLocator.getFieldDescription());
         getElement().submit();
+        eventLoggerAfter.withScreenshot(Priority.DEBUG,
+                uniqueElementLocator.getWebDriver()).log(
+                EventActions.ELEMENT_SUBMIT, "element.submit",
+                uniqueElementLocator.getPageName(),
+                uniqueElementLocator.getFieldDescription());
     }
 
     @Override
     public String getAttribute(String name) {
-        return getElement().getAttribute(name);
+        final String result = getElement().getAttribute(name);
+        eventLoggerAfter.withScreenshot(Priority.DEBUG,
+                uniqueElementLocator.getWebDriver()).log(
+                EventActions.ELEMENT_GET_ATTRIBUTE, "element.getAttribute",
+                uniqueElementLocator.getPageName(),
+                uniqueElementLocator.getFieldDescription(), name, result);
+        return result;
     }
 
     @Override
