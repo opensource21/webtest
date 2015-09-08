@@ -1,14 +1,24 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.ppi.oss</groupId>
     <artifactId>webtest</artifactId>
     <version>0.4-SNAPSHOT</version>
     <name>webtest</name>
     <description>Some additional helper for webtesting with selenium</description>
+    <url>https://github.com/ppi-ag/thymeleaf-mailto</url>
     <organization>
         <name>PPI AG</name>
         <url>http://www.ppi.de</url>
     </organization>
+    <developers>
+        <developer>
+            <name>niels</name>
+            <email>opensource21@gmail.com</email>
+            <organization>PPI AG</organization>
+            <organizationUrl>http://www.ppi.de</organizationUrl>
+        </developer>
+    </developers>
 
     <properties>
         <java.version>1.7</java.version>
@@ -268,10 +278,10 @@
         </license>
     </licenses>
     <scm>
-        <url>scm:git:git@github.com:opensource21/webtest.git</url>
-        <connection>scm:git:git@github.com:opensource21/webtest.git</connection>
+        <url>https://github.com/opensource21/webtest</url>
+        <connection>scm:git:https://github.com/opensource21/webtest.git</connection>
         <developerConnection>scm:git:git@github.com:opensource21/webtest.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 </project>
 
