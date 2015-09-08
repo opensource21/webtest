@@ -172,17 +172,88 @@
                     <excludes>NOTHING_AT_THE_MOMENT</excludes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
         </plugins>
     </build>
 
 
-    <distributionManagement>
-        <repository>
-            <id>github.repository</id>
-            <name>Github Maven Repository</name>
-            <url>file:///home/niels/seu/github/opensource21.github.com/releases/</url>
-        </repository>
-    </distributionManagement>
+    <profiles>
+        <profile>
+            <id>maven-central</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.3</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.3</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <repository>
+                    <id>nexus.releases</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+                </repository>
+                <snapshotRepository>
+                    <id>nexus.snapshots</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                    <!--<url>file:///home/niels/seu/github/opensource21.github.com/releases/</url> -->
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 
     <licenses>
         <license>
@@ -196,11 +267,5 @@
         <connection>scm:git:git@github.com:opensource21/webtest.git</connection>
         <developerConnection>scm:git:git@github.com:opensource21/webtest.git</developerConnection>
     </scm>
-    <repositories>
-        <repository>
-            <id>opensource21</id>
-            <url>http://opensource21.github.io/releases</url>
-        </repository>
-    </repositories>
 </project>
 
