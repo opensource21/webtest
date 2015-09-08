@@ -117,7 +117,8 @@ public class MarkdownReporter implements LogReporter {
                         || EventActions.TEST_FINISHED_WITH_EXCEPTION
                                 .equals(action)) {
                     markdown.close();
-                    if (logOnlyOnError) {
+                    if (logOnlyOnError
+                            && currentReportDir.listFiles().length == 1) {
                         markdownFile.delete();
                     }
                     markdownFile = null;
