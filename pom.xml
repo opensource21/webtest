@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.ppi.oss</groupId>
     <artifactId>webtest</artifactId>
-    <version>0.4</version>
+    <version>0.5-SNAPSHOT</version>
     <name>webtest</name>
     <description>Some additional helper for webtesting with selenium</description>
     <url>https://github.com/ppi-ag/thymeleaf-mailto</url>
@@ -280,7 +280,7 @@
         <url>https://github.com/opensource21/webtest</url>
         <connection>scm:git:https://github.com/opensource21/webtest.git</connection>
         <developerConnection>scm:git:git@github.com:opensource21/webtest.git</developerConnection>
-        <tag>webtest-0.4</tag>
+        <tag>HEAD</tag>
     </scm>
 </project>
 
