@@ -53,7 +53,7 @@ First add a maven-dependcy
      <dependency>
         <groupId>de.ppi.oss</groupId>
         <artifactId>webtest</artifactId>
-        <version>0.4</version>
+        <version>0.6</version>
        <scope>test</scope>
     </dependency>
 
