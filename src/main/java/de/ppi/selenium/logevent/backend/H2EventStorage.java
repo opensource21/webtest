@@ -34,9 +34,9 @@ public class H2EventStorage extends Sql2oEventStorage {
                                 + "threadid BIGINT NOT NULL, source VARCHAR(30) NOT NULL, "
                                 + "groupid VARCHAR(500) NOT NULL, item VARCHAR(500) NOT NULL, "
                                 + "action VARCHAR(500) NOT NULL, priority VARCHAR(20) NOT NULL, "
-                                + "description VARCHAR(500) NOT NULL, argument1 VARCHAR(500), "
-                                + "argument2 VARCHAR(500), argument3 VARCHAR(500), "
-                                + "argument4 VARCHAR(500), screenShotType VARCHAR(20), "
+                                + "description VARCHAR(5000) NOT NULL, argument1 VARCHAR(5000), "
+                                + "argument2 VARCHAR(5000), argument3 VARCHAR(5000), "
+                                + "argument4 VARCHAR(5000), screenShotType VARCHAR(20), "
                                 + "screenshot BINARY)").executeUpdate();
     }
 }
