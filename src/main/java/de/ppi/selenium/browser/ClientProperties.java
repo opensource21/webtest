@@ -68,7 +68,7 @@ public class ClientProperties {
     private final String acceptLanguages;
 
     private final String maxAllowedSessions;
-    private final String binaryPath;
+    private final String ffBinaryPath;
     private final String webDriverIEDriver;
     private final String webDriverChromeDriver;
     private final String webDriverPhantomJsDriver;
@@ -79,6 +79,8 @@ public class ClientProperties {
     private final String firefoxProfileFolder;
     private final String firefoxPropertiesFile;
     private final List<String> firefoxExtensions = new ArrayList<String>();
+
+    private final String chromeBinaryPath;
 
     private final String tempFolderNameContainsList;
     private int numberOfDaysToKeepTempFolders = 7;
@@ -185,11 +187,16 @@ public class ClientProperties {
                         "Maximum download wait timeout"));
         downloadFolder =
                 load("download.folder", null, "Default download folder");
-        binaryPath =
+        ffBinaryPath =
                 loadAndCheckFileExists(
-                        "binaryPath",
+                        "ffBinaryPath",
                         null,
                         "Path to Firefox executable (if you want to use specific version installed on your machine instead of default FF installation)");
+        chromeBinaryPath =
+                loadAndCheckFileExists(
+                        "chromeBinaryPath",
+                        null,
+                        "Path to Chrome executable (if you want to use specific version installed on your machine instead of default Chrome installation)");
         webDriverIEDriver =
                 loadAndCheckFileExists("webdriver.ie.driver", null,
                         "Path to IEDriverServer.exe");
@@ -582,8 +589,17 @@ public class ClientProperties {
      *
      * @return the path to the Firefox executable binary
      */
-    public String getBinaryPath() {
-        return binaryPath;
+    public String getFfBinaryPath() {
+        return ffBinaryPath;
+    }
+
+    /**
+     * Returns the path to the Chrome executable binary.
+     *
+     * @return the path to the Chrome executable binary
+     */
+    public String getChromeBinaryPath() {
+        return chromeBinaryPath;
     }
 
     /**
@@ -770,4 +786,5 @@ public class ClientProperties {
     public URL getClient() {
         return client;
     }
+
 }

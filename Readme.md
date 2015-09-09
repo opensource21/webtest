@@ -44,6 +44,8 @@ Additional you can define:
 - `webdriver.phantomjs.driver` - the path to phantom.js
 - `browser.accept_languages` - to set the accepted languages, doesn't work for IE.
    For HTMLUnit it sets the browser language.
+- `ffBinaryPath` - the path to FF-executable.
+- `chromeBinaryPath` - the path to FF-executable.
 
 ## Usage
 First add a maven-dependcy
@@ -51,17 +53,9 @@ First add a maven-dependcy
      <dependency>
         <groupId>de.ppi.oss</groupId>
         <artifactId>webtest</artifactId>
-        <version>0.1</version>
+        <version>0.4</version>
        <scope>test</scope>
     </dependency>
-and add the following repository
-
-    <repositories>
-        <repository>
-            <id>opensource21</id>
-            <url> http://opensource21.github.com/releases</url>
-        </repository>
-    </repositories>
 
 The Rules are more effectiv if you only instantiate them once. So the best way is
 to declare a constant-class, like:

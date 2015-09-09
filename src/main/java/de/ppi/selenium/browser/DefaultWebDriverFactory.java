@@ -452,7 +452,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 final String ffProfileFolder =
                         properties.getFirefoxProfileFolder();
                 final String ffProfileFile = properties.getFirefoxProfileFile();
-                final String path = properties.getBinaryPath();
+                final String path = properties.getFfBinaryPath();
                 final FirefoxProfile ffp;
                 if (ffProfileFolder != null) {
                     ffp = new FirefoxProfile(new File(ffProfileFolder));
@@ -482,7 +482,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 }
             } else if (browser.equalsIgnoreCase("chrome")) {
 
-                String webdriverChromeDriver =
+                final String webdriverChromeDriver =
                         properties.getWebDriverChromeDriver();
 
                 if (webdriverChromeDriver != null) {
@@ -490,16 +490,23 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                             webdriverChromeDriver);
                 }
 
+                final ChromeOptions chromeOptions = new ChromeOptions();
+                final String chromeBinaryPath =
+                        properties.getChromeBinaryPath();
+                if (chromeBinaryPath != null) {
+                    chromeOptions.setBinary(chromeBinaryPath);
+                }
+
                 if (properties.getAcceptedLanguages() != null) {
-                    final ChromeOptions chromeOptions = new ChromeOptions();
+
                     final Map<String, Object> prefs =
                             new HashMap<String, Object>();
                     prefs.put("intl.accept_languages",
                             properties.getAcceptedLanguages());
                     chromeOptions.setExperimentalOption("prefs", prefs);
-                    desiredCapabilities.setCapability(ChromeOptions.CAPABILITY,
-                            chromeOptions);
                 }
+                desiredCapabilities.setCapability(ChromeOptions.CAPABILITY,
+                        chromeOptions);
 
                 wd = new ChromeDriver(desiredCapabilities);
 
