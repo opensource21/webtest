@@ -73,15 +73,16 @@ public class ElementImpl implements Element {
 
     @Override
     public void click() {
+        final String method = "element.click";
         eventLoggerBefore.withScreenshot(Priority.DEBUG,
                 uniqueElementLocator.getWebDriver()).log(
-                EventActions.ELEMENT_CLICK, "element.click",
+                EventActions.ELEMENT_CLICK, method,
                 uniqueElementLocator.getPageName(),
                 uniqueElementLocator.getFieldDescription());
         getElement().click();
         eventLoggerAfter.withScreenshot(Priority.DEBUG,
                 uniqueElementLocator.getWebDriver()).log(
-                EventActions.ELEMENT_CLICK, "element.click",
+                EventActions.ELEMENT_CLICK, method,
                 uniqueElementLocator.getPageName(),
                 uniqueElementLocator.getFieldDescription());
 
@@ -89,16 +90,17 @@ public class ElementImpl implements Element {
 
     @Override
     public void sendKeys(CharSequence... keysToSend) {
+        final String method = "element.sendKeys";
         eventLoggerBefore.withScreenshot(Priority.DEBUG,
                 uniqueElementLocator.getWebDriver()).log(
-                EventActions.ELEMENT_SEND_KEYS, "element.sendKeys",
+                EventActions.ELEMENT_SEND_KEYS, method,
                 uniqueElementLocator.getPageName(),
                 uniqueElementLocator.getFieldDescription(),
                 StringUtils.join(keysToSend));
         getElement().sendKeys(keysToSend);
         eventLoggerAfter.withScreenshot(Priority.DEBUG,
                 uniqueElementLocator.getWebDriver()).log(
-                EventActions.ELEMENT_SEND_KEYS, "element.sendKeys",
+                EventActions.ELEMENT_SEND_KEYS, method,
                 uniqueElementLocator.getPageName(),
                 uniqueElementLocator.getFieldDescription(),
                 StringUtils.join(keysToSend));
@@ -106,7 +108,14 @@ public class ElementImpl implements Element {
 
     @Override
     public Point getLocation() {
-        return getElement().getLocation();
+        final String method = "element.getLocation";
+        final Point result = getElement().getLocation();
+        eventLoggerAfter.withScreenshot(Priority.DEBUG,
+                uniqueElementLocator.getWebDriver()).log(
+                EventActions.ELEMENT_SEND_KEYS, method,
+                uniqueElementLocator.getPageName(),
+                uniqueElementLocator.getFieldDescription(), result);
+        return result;
     }
 
     @Override
