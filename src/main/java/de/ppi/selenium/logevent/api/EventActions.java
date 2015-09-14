@@ -55,6 +55,25 @@ public interface EventActions {
      */
     String WEBDRIVER_CREATE_INSTANCE = "WEBDRIVER_CREATE_INSTANCE";
 
+    /**
+     * The get method is called on a Webdriver.
+     */
+    String WEBDRIVER_GET = "WEBDRIVER_GET";
+
+    /**
+     * The findElement method is called on a Webdriver.
+     */
+    String WEBDRIVER_FIND_ELEMENT = "WEBDRIVER_FINDELEMENT";
+    /**
+     * The findElements method is called on a Webdriver.
+     */
+    String WEBDRIVER_FIND_ELEMENTS = "WEBDRIVER_FINDELEMENTS";
+
+    /**
+     * An Excpetion happends during call on a Webdriver.
+     */
+    String WEBDRIVER_EXEPTION = "WEBDRIVER_EXCEPTION";
+
     /** A CLEAR on a webelement. */
     String ELEMENT_CLEAR = "ELEMENT_CLEAR ";
     /** A CLICK on a webelement. */

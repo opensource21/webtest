@@ -14,6 +14,7 @@ import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.ppi.selenium.logevent.api.EventActions;
 import de.ppi.selenium.logevent.api.EventLoggerFactory;
 import de.ppi.selenium.logevent.api.EventSource;
 import de.ppi.selenium.logevent.api.Priority;
@@ -29,6 +30,18 @@ public class WebBrowserImpl implements WebBrowser {
 
     public static final Logger LOG = LoggerFactory
             .getLogger(WebBrowserImpl.class);
+
+    /**
+     * EventLogger for after events.
+     */
+    private static final EventLoggerFactory AFTER_EVENTLOGGER =
+            EventLoggerFactory.getInstance(EventSource.WEBDRIVER_AFTER);
+
+    /**
+     * Eventlogger for before events.
+     */
+    private static final EventLoggerFactory BEFORE_EVENTLOGGER =
+            EventLoggerFactory.getInstance(EventSource.WEBDRIVER_BEFORE);
 
     private static final List<WebBrowser> ALL_INSTANCES = new ArrayList<>();
 
@@ -104,15 +117,22 @@ public class WebBrowserImpl implements WebBrowser {
      */
     @Override
     public void get(String url) {
-        EventLoggerFactory.getInstance(EventSource.WEBDRIVER_BEFORE)
-                .onDebug(WebBrowserImpl.class.getSimpleName(), "get")
+        BEFORE_EVENTLOGGER.onDebug(WebBrowserImpl.class.getSimpleName(), "get")
                 .withScreenshot(Priority.DEBUG, webdriver)
-                .log("webdriver.get", "webdriver.get", url);
-        webdriver.get(url);
-        EventLoggerFactory.getInstance(EventSource.WEBDRIVER_AFTER)
-                .onDebug(WebBrowserImpl.class.getSimpleName(), "get")
+                .log(EventActions.WEBDRIVER_GET, "webdriver.get", url);
+        try {
+            webdriver.get(url);
+        } catch (RuntimeException re) {
+            AFTER_EVENTLOGGER
+                    .onException(WebBrowserImpl.class.getSimpleName(), "get")
+                    .withScreenshot(Priority.EXCEPTION, webdriver)
+                    .log(EventActions.WEBDRIVER_EXEPTION,
+                            "webdriver.exception", re.getLocalizedMessage());
+            throw re;
+        }
+        AFTER_EVENTLOGGER.onDebug(WebBrowserImpl.class.getSimpleName(), "get")
                 .withScreenshot(Priority.DEBUG, webdriver)
-                .log("webdriver.get", "webdriver.get", url);
+                .log(EventActions.WEBDRIVER_GET, "webdriver.get", url);
     }
 
     /**
@@ -150,7 +170,22 @@ public class WebBrowserImpl implements WebBrowser {
      */
     @Override
     public List<WebElement> findElements(By by) {
-        return webdriver.findElements(by);
+        BEFORE_EVENTLOGGER
+                .onDebug(WebBrowserImpl.class.getSimpleName(), "findElements")
+                .withScreenshot(Priority.DEBUG, webdriver)
+                .log(EventActions.WEBDRIVER_FIND_ELEMENTS,
+                        "webdriver.findElements", by);
+        try {
+            return webdriver.findElements(by);
+        } catch (RuntimeException re) {
+            AFTER_EVENTLOGGER
+                    .onException(WebBrowserImpl.class.getSimpleName(),
+                            "findElements")
+                    .withScreenshot(Priority.EXCEPTION, webdriver)
+                    .log(EventActions.WEBDRIVER_EXEPTION,
+                            "webdriver.exception", re.getLocalizedMessage());
+            throw re;
+        }
     }
 
     /**
@@ -160,7 +195,22 @@ public class WebBrowserImpl implements WebBrowser {
      */
     @Override
     public WebElement findElement(By by) {
-        return webdriver.findElement(by);
+        BEFORE_EVENTLOGGER
+                .onDebug(WebBrowserImpl.class.getSimpleName(), "findElement")
+                .withScreenshot(Priority.DEBUG, webdriver)
+                .log(EventActions.WEBDRIVER_FIND_ELEMENT,
+                        "webdriver.findElement", by);
+        try {
+            return webdriver.findElement(by);
+        } catch (RuntimeException re) {
+            AFTER_EVENTLOGGER
+                    .onException(WebBrowserImpl.class.getSimpleName(),
+                            "findElement")
+                    .withScreenshot(Priority.EXCEPTION, webdriver)
+                    .log(EventActions.WEBDRIVER_EXEPTION,
+                            "webdriver.exception", re.getLocalizedMessage());
+            throw re;
+        }
     }
 
     /**
