@@ -133,8 +133,9 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
      */
     public ElementAssert hasText(String textToFind) {
         if (!actual.getText().contains(textToFind)) {
-            super.failWithMessage("The element does not contain the text: "
-                    + textToFind + " . Actual text found : " + actual.getText());
+            super.failWithMessage("The element does not contain the text: >"
+                    + textToFind + "<. Actual text found: >" + actual.getText()
+                    + "<");
 
         }
 
@@ -149,9 +150,9 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
      */
     public ElementAssert hasTextMatching(String regexToBeMatched) {
         if (!actual.getText().matches(regexToBeMatched)) {
-            super.failWithMessage("The element does not match the regex: "
-                    + regexToBeMatched + " . Actual text found : "
-                    + actual.getText());
+            super.failWithMessage("The element does not match the regex: >"
+                    + regexToBeMatched + "<. Actual text found: >"
+                    + actual.getText() + "<");
 
         }
 
