@@ -12,13 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sql2o.Sql2oException;
 
-import de.ppi.selenium.browser.SessionManager;
 import de.ppi.selenium.logevent.api.EventActions;
 import de.ppi.selenium.logevent.api.EventLogger;
 import de.ppi.selenium.logevent.api.EventLoggerFactory;
 import de.ppi.selenium.logevent.api.EventSource;
 import de.ppi.selenium.logevent.api.EventStorage;
-import de.ppi.selenium.logevent.api.Priority;
 import de.ppi.selenium.logevent.report.LogReporter;
 
 /**
@@ -98,11 +96,23 @@ public class EventLogRule implements TestRule {
                     errors.add(e);
                     try {
                         if (e instanceof AssertionError) {
-                            logFailure(group, item, displayName, e);
+                            EVENT_LOGGER_FACTORY.onDoku(group, item).log(
+                                    EventActions.TEST_FINISHED_WITH_FAILURES,
+                                    "test.failures", Integer.valueOf(1),
+                                    displayName);
                         } else if (e instanceof MultipleFailureException) {
-                            logMultiFailure(group, item, displayName, e);
+                            final int nrOfAssertions =
+                                    ((MultipleFailureException) e)
+                                            .getFailures().size();
+                            EVENT_LOGGER_FACTORY.onDoku(group, item).log(
+                                    EventActions.TEST_FINISHED_WITH_FAILURES,
+                                    "test.failures", displayName,
+                                    Integer.valueOf(nrOfAssertions));
                         } else {
-                            logException(group, item, displayName, e);
+                            EVENT_LOGGER_FACTORY.onDoku(group, item).log(
+                                    EventActions.TEST_FINISHED_WITH_EXCEPTION,
+                                    "test.exception", displayName,
+                                    e.getLocalizedMessage());
                         }
                     } catch (Exception iE) {
                         errors.add(iE);
@@ -113,62 +123,6 @@ public class EventLogRule implements TestRule {
                 MultipleFailureException.assertEmpty(errors);
             }
 
-            /**
-             * Log an exception.
-             *
-             * @param group the testclass.
-             * @param item the testmethod.
-             * @param displayName the displayname.
-             * @param e the exception.
-             */
-            private void logException(final String group, final String item,
-                    final String displayName, Throwable e) {
-                EVENT_LOGGER_FACTORY
-                        .onException(group, item)
-                        .withScreenshot(Priority.EXCEPTION,
-                                SessionManager.getSession())
-                        .log(EventActions.EXCEPTION_OCCURS,
-                                "test.exception_occurs", displayName,
-                                e.getLocalizedMessage());
-                EVENT_LOGGER_FACTORY.onDoku(group, item).log(
-                        EventActions.TEST_FINISHED_WITH_EXCEPTION,
-                        "test.exception", displayName, e.getLocalizedMessage());
-            }
-
-            /**
-             * Log multiple failures.
-             *
-             * @param group the testclass.
-             * @param item the testmethod.
-             * @param displayName the displayname.
-             * @param e the exception.
-             */
-            private void logMultiFailure(final String group, final String item,
-                    final String displayName, Throwable e) {
-                final int nrOfAssertions =
-                        ((MultipleFailureException) e).getFailures().size();
-                EVENT_LOGGER_FACTORY.onDoku(group, item).log(
-                        EventActions.TEST_FINISHED_WITH_FAILURES,
-                        "test.failures", displayName,
-                        Integer.valueOf(nrOfAssertions));
-            }
-
-            /**
-             * Log single failure.
-             *
-             * @param group the testclass.
-             * @param item the testmethod.
-             * @param displayName the displayname.
-             * @param e the exception.
-             */
-            private void logFailure(final String group, final String item,
-                    final String displayName, Throwable e) {
-                EVENT_LOGGER_FACTORY.onFailure(group, item).logAssertionError(
-                        (AssertionError) e);
-                EVENT_LOGGER_FACTORY.onDoku(group, item).log(
-                        EventActions.TEST_FINISHED_WITH_FAILURES,
-                        "test.failures", Integer.valueOf(1), displayName);
-            }
         };
     }
 }

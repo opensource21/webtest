@@ -1,5 +1,7 @@
 package org.selophane.elements;
 
+import org.junit.rules.RuleChain;
+
 import de.ppi.selenium.junit.EventLogRule;
 import de.ppi.selenium.logevent.backend.H2EventStorage;
 
@@ -10,6 +12,9 @@ import de.ppi.selenium.logevent.backend.H2EventStorage;
 // CSOFFALL:
 public interface WebTestConstants {
     /** The on instance of {@link EventLogRule}. */
-    EventLogRule EVENT_LOG_RULE = new EventLogRule(new H2EventStorage(
-            "jdbc:h2:mem:test;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE", "", ""));
+    RuleChain EVENT_LOG_RULE = RuleChain.outerRule(
+            new EventLogRule(new H2EventStorage(
+                    "jdbc:h2:mem:test;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE",
+                    "", ""))).around(
+            new de.ppi.selenium.junit.ScreenshotAtErrorRule());
 }

@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.openqa.selenium.By;
@@ -18,8 +19,6 @@ import org.selophane.elements.base.Element;
 import org.selophane.elements.helpers.FormTestObject;
 import org.selophane.elements.widget.Label;
 
-import de.ppi.selenium.junit.EventLogRule;
-
 /**
  * Test the form element types.
  */
@@ -29,7 +28,7 @@ public class FormTest {
     static FormTestObject testObject;
 
     @Rule
-    public final EventLogRule eventStorage = WebTestConstants.EVENT_LOG_RULE;
+    public final RuleChain eventStorage = WebTestConstants.EVENT_LOG_RULE;
 
     @BeforeClass
     public static void beforeClass() {

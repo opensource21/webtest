@@ -53,7 +53,7 @@ First add a maven-dependcy
      <dependency>
         <groupId>de.ppi.oss</groupId>
         <artifactId>webtest</artifactId>
-        <version>0.6</version>
+        <version>0.7</version>
        <scope>test</scope>
     </dependency>
 
@@ -77,10 +77,10 @@ to declare a constant-class, like:
          * Standard_Rule for WebTests.
          */
         RuleChain WEBTEST_WITHOUT_AUTHENTICATION = RuleChain
-                .outerRule(new WebServerRule(new DelegatingWebServer(WEB_SERVER)))
-                .around(new EventLogRule(EVENT_STORAGE, new MarkdownReporter(
-                        "weblog", false, Priority.DEBUG)))
-                .around(new WebDriverRule());
+            .outerRule(new WebServerRule(new DelegatingWebServer(WEB_SERVER)))
+            .around(new EventLogRule(EVENT_STORAGE, new MarkdownReporter(
+                    "weblog", true, Priority.DEBUG)))
+            .around(new WebDriverRule()).around(new ScreenshotAtErrorRule());
         /**
          * Standard_Rule for WebTests.
          */
