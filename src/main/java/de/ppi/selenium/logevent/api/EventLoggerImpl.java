@@ -31,8 +31,8 @@ public class EventLoggerImpl implements EventLogger {
     /**
      * Set of Assertions which are logged.
      */
-    private static final Set<AssertionError> LOGGED_ASSERTION_ERRORS =
-            Collections.synchronizedSet(new HashSet<AssertionError>());
+    private static final Set<Throwable> LOGGED_ERRORS = Collections
+            .synchronizedSet(new HashSet<Throwable>());
 
     /**
      * System to store the events.
@@ -82,7 +82,6 @@ public class EventLoggerImpl implements EventLogger {
      */
     @Override
     public EventLogger withScreenshot(Priority prio, WebDriver webDriver) {
-        // TODO assertion nicht doppelt loggen. Eigene Funktion bauen.
         if (prio.isMoreImportantThan(screenshotPriorityLevel)) {
             try {
                 WebDriver wrappedDriver = webDriver;
@@ -166,11 +165,26 @@ public class EventLoggerImpl implements EventLogger {
     @Override
     public void logAssertionError(AssertionError assertionError) {
         if (Priority.FAILURE.isMoreImportantThan(screenshotPriorityLevel)) {
-            if (LOGGED_ASSERTION_ERRORS.add(assertionError)) {
+            if (LOGGED_ERRORS.add(assertionError)) {
                 this.withScreenshot(Priority.FAILURE,
                         SessionManager.getSession()).log(
                         EventActions.ASSERTION_FAILED, "assertion.failed",
                         assertionError.getLocalizedMessage());
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void logThrowable(Throwable exception) {
+        if (Priority.EXCEPTION.isMoreImportantThan(screenshotPriorityLevel)) {
+            if (LOGGED_ERRORS.add(exception)) {
+                this.withScreenshot(Priority.EXCEPTION,
+                        SessionManager.getSession()).log(
+                        EventActions.EXCEPTION_OCCURS, "exception.occurs",
+                        exception.getLocalizedMessage());
             }
         }
 
@@ -191,4 +205,5 @@ public class EventLoggerImpl implements EventLogger {
     public boolean willScreenshotLogged(Priority priority) {
         return priority.isMoreImportantThan(screenshotPriorityLevel);
     }
+
 }

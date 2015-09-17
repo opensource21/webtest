@@ -17,6 +17,14 @@ public interface EventLogger {
     void logAssertionError(AssertionError assertionError);
 
     /**
+     * Log an exception, with a screenshot. Priority is always
+     * {@link Priority#EXCEPTION}.
+     *
+     * @param exception the exception.
+     */
+    void logThrowable(Throwable exception);
+
+    /**
      * Define that the log should be done with screenshot if priority higher
      * then the threshold.
      *

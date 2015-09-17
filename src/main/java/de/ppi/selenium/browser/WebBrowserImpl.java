@@ -123,11 +123,8 @@ public class WebBrowserImpl implements WebBrowser {
         try {
             webdriver.get(url);
         } catch (RuntimeException re) {
-            AFTER_EVENTLOGGER
-                    .onException(WebBrowserImpl.class.getSimpleName(), "get")
-                    .withScreenshot(Priority.EXCEPTION, webdriver)
-                    .log(EventActions.WEBDRIVER_EXEPTION,
-                            "webdriver.exception", re.getLocalizedMessage());
+            AFTER_EVENTLOGGER.onException(WebBrowserImpl.class.getSimpleName(),
+                    "get").logThrowable(re);
             throw re;
         }
         AFTER_EVENTLOGGER.onDebug(WebBrowserImpl.class.getSimpleName(), "get")
@@ -178,12 +175,8 @@ public class WebBrowserImpl implements WebBrowser {
         try {
             return webdriver.findElements(by);
         } catch (RuntimeException re) {
-            AFTER_EVENTLOGGER
-                    .onException(WebBrowserImpl.class.getSimpleName(),
-                            "findElements")
-                    .withScreenshot(Priority.EXCEPTION, webdriver)
-                    .log(EventActions.WEBDRIVER_EXEPTION,
-                            "webdriver.exception", re.getLocalizedMessage());
+            AFTER_EVENTLOGGER.onException(WebBrowserImpl.class.getSimpleName(),
+                    "findElements").logThrowable(re);
             throw re;
         }
     }
@@ -203,12 +196,8 @@ public class WebBrowserImpl implements WebBrowser {
         try {
             return webdriver.findElement(by);
         } catch (RuntimeException re) {
-            AFTER_EVENTLOGGER
-                    .onException(WebBrowserImpl.class.getSimpleName(),
-                            "findElement")
-                    .withScreenshot(Priority.EXCEPTION, webdriver)
-                    .log(EventActions.WEBDRIVER_EXEPTION,
-                            "webdriver.exception", re.getLocalizedMessage());
+            AFTER_EVENTLOGGER.onException(WebBrowserImpl.class.getSimpleName(),
+                    "findElement").logThrowable(re);
             throw re;
         }
     }

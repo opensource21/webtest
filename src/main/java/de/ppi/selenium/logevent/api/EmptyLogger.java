@@ -20,6 +20,14 @@ public class EmptyLogger implements EventLogger {
      * {@inheritDoc}
      */
     @Override
+    public void logThrowable(Throwable exception) {
+        // DO NOTHING
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public EventLogger withScreenshot(Priority prio, WebDriver webDriver) {
         return this;
     }

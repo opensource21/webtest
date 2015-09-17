@@ -4,12 +4,9 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runners.model.MultipleFailureException;
 
-import de.ppi.selenium.browser.SessionManager;
-import de.ppi.selenium.logevent.api.EventActions;
 import de.ppi.selenium.logevent.api.EventLogger;
 import de.ppi.selenium.logevent.api.EventLoggerFactory;
 import de.ppi.selenium.logevent.api.EventSource;
-import de.ppi.selenium.logevent.api.Priority;
 
 /**
  * Junit-Rule which creates a screenshot at errors.
@@ -36,14 +33,7 @@ public class ScreenshotAtErrorRule extends TestWatcher {
             EVENT_LOGGER_FACTORY.onFailure(group, item).logAssertionError(
                     (AssertionError) e);
         } else {
-            EVENT_LOGGER_FACTORY
-                    .onException(group, item)
-                    .withScreenshot(Priority.EXCEPTION,
-                            SessionManager.getSession())
-                    .log(EventActions.EXCEPTION_OCCURS,
-                            "test.exception_occurs",
-                            description.getDisplayName(),
-                            e.getLocalizedMessage());
+            EVENT_LOGGER_FACTORY.onException(group, item).logThrowable(e);
         }
     }
 }
