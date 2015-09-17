@@ -15,6 +15,8 @@
 package de.ppi.selenium.assertj;
 
 import org.assertj.core.api.AbstractAssert;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.selophane.elements.base.Element;
 
 import de.ppi.selenium.util.CSSHelper;
@@ -213,4 +215,45 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
         return this;
     }
 
+    /**
+     * check if the element exist in the dom.
+     *
+     * @return this
+     */
+    public ElementAssert existInDom() {
+        if (getWrappedElementSilent() == null) {
+            super.failWithMessage("The element  isn't in the dom");
+        }
+        return this;
+    }
+
+    /**
+     * check if the element exist not in the dom.
+     *
+     * @return this
+     */
+    public ElementAssert notExistInDom() {
+        WebElement webElement = getWrappedElementSilent();
+        if (webElement != null) {
+            super.failWithMessage("The element  is in the dom");
+        }
+        return this;
+    }
+
+    /**
+     * Get the wrapped element or null if a {@link NoSuchElementException}
+     * happens.
+     *
+     * @return the wrapped element or null if a {@link NoSuchElementException}
+     *         happens.
+     */
+    private WebElement getWrappedElementSilent() {
+        WebElement webElement;
+        try {
+            webElement = actual.getWrappedElement();
+        } catch (NoSuchElementException e) {
+            webElement = null;
+        }
+        return webElement;
+    }
 }
