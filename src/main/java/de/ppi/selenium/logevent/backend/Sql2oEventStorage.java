@@ -77,15 +77,29 @@ public abstract class Sql2oEventStorage implements EventStorage {
                 .addParameter("action", event.getAction())
                 .addParameter("priority", event.getPriority())
                 .addParameter("description", event.getDescription())
-                .addParameter("argument1", event.getArgument1())
-                .addParameter("argument2", event.getArgument2())
-                .addParameter("argument3", event.getArgument3())
-                .addParameter("argument4", event.getArgument4())
+                .addParameter("argument1", object2String(event.getArgument1()))
+                .addParameter("argument2", object2String(event.getArgument2()))
+                .addParameter("argument3", object2String(event.getArgument3()))
+                .addParameter("argument4", object2String(event.getArgument4()))
                 .addParameter("screenShotType", event.getScreenShotType())
                 .addParameter("screenshot", event.getScreenshot()).addToBatch();
         if (batchSize > MAX_BATCH_SIZE) {
             batchSize = 0;
             insertQuery.executeBatch();
+        }
+    }
+
+    /**
+     * Convert an Object to String.
+     *
+     * @param object the object.
+     * @return <code>null</code> if object is <code>null</code>.
+     */
+    private String object2String(Object object) {
+        if (object == null) {
+            return null;
+        } else {
+            return object.toString();
         }
     }
 
