@@ -167,18 +167,7 @@ public class WebBrowserImpl implements WebBrowser {
      */
     @Override
     public List<WebElement> findElements(By by) {
-        BEFORE_EVENTLOGGER
-                .onDebug(WebBrowserImpl.class.getSimpleName(), "findElements")
-                .withScreenshot(Priority.DEBUG, webdriver)
-                .log(EventActions.WEBDRIVER_FIND_ELEMENTS,
-                        "webdriver.findElements", by);
-        try {
-            return webdriver.findElements(by);
-        } catch (RuntimeException re) {
-            AFTER_EVENTLOGGER.onException(WebBrowserImpl.class.getSimpleName(),
-                    "findElements").logThrowable(re);
-            throw re;
-        }
+        return webdriver.findElements(by);
     }
 
     /**
@@ -188,18 +177,7 @@ public class WebBrowserImpl implements WebBrowser {
      */
     @Override
     public WebElement findElement(By by) {
-        BEFORE_EVENTLOGGER
-                .onDebug(WebBrowserImpl.class.getSimpleName(), "findElement")
-                .withScreenshot(Priority.DEBUG, webdriver)
-                .log(EventActions.WEBDRIVER_FIND_ELEMENT,
-                        "webdriver.findElement", by);
-        try {
-            return webdriver.findElement(by);
-        } catch (RuntimeException re) {
-            AFTER_EVENTLOGGER.onException(WebBrowserImpl.class.getSimpleName(),
-                    "findElement").logThrowable(re);
-            throw re;
-        }
+        return webdriver.findElement(by);
     }
 
     /**
