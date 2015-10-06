@@ -94,14 +94,6 @@ public class MarkdownReporter implements LogReporter {
                                     getCleanFilename(eventData.getArgument1()
                                             .toString()) + ".md");
                     markdown = new PrintWriter(markdownFile);
-                } else if (EventActions.ASSERTION_FAILED.equals(action)) {
-                    FileUtils.writeByteArrayToFile(new File(currentReportDir,
-                            eventData.getId()
-                                    + ".Assertion "
-                                    + getCleanFilename(testMethod + "_"
-                                            + eventData.getArgument1()) + "."
-                                    + eventData.getScreenShotType()), eventData
-                            .getScreenshot());
                 } else {
                     if (priority == null
                             || eventData.getPriority().isMoreImportantThan(
@@ -167,7 +159,8 @@ public class MarkdownReporter implements LogReporter {
                             + eventData.getPriority()
                             + "."
                             + getCleanFilename(testMethod + "_"
-                                    + eventData.getDescription()) + "."
+                                    + eventData.getDescription() + "_"
+                                    + eventData.getArgument1()) + "."
                             + eventData.getScreenShotType();
             final File screenshotFile =
                     new File(currentReportDir, screenshotName);

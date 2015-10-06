@@ -26,7 +26,7 @@ public interface Button extends Element {
 
     /**
      * Click the button and wait till this button is removed from current DOM.
-     * {@inheritDoc}
+     *
      */
     @Override
     void click();
