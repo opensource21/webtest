@@ -159,4 +159,33 @@ public abstract class Sql2oEventStorage implements EventStorage {
 
         };
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ClosableIterable<EventData> getAllStartAndFinishEvents() {
+        final ResultSetIterable<EventData> result =
+                sql2o.open()
+                        .createQuery(
+                                "select * from EVENTS where action "
+                                        + "('TEST_START', 'TEST_FINISHED', 'TEST_SKIPPED', "
+                                        + "'TEST_FINISHED_WITH_EXCEPTION', "
+                                        + "'TEST_FINISHED_WITH_FAILURES' )")
+                        .executeAndFetchLazy(EventData.class);
+        result.setAutoCloseConnection(true);
+        return new ClosableIterable<EventData>() {
+
+            @Override
+            public Iterator<EventData> iterator() {
+                return result.iterator();
+            }
+
+            @Override
+            public void close() throws Exception {
+                result.close();
+            }
+
+        };
+    }
 }

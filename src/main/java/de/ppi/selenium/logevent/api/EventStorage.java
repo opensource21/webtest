@@ -42,4 +42,12 @@ public interface EventStorage {
      */
     ClosableIterable<EventData> getAllEvents(String testrunId);
 
+    /**
+     * Delivers all Events which are a start or the end of a test as an
+     * Iterable.
+     *
+     * @return an Iterable of {@link EventData}.
+     */
+    ClosableIterable<EventData> getAllStartAndFinishEvents();
+
 }
