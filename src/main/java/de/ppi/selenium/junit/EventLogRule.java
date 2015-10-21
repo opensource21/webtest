@@ -98,8 +98,8 @@ public class EventLogRule implements TestRule {
                         if (e instanceof AssertionError) {
                             EVENT_LOGGER_FACTORY.onDoku(group, item).log(
                                     EventActions.TEST_FINISHED_WITH_FAILURES,
-                                    "test.failures", Integer.valueOf(1),
-                                    displayName);
+                                    "test.failures", displayName,
+                                    Integer.valueOf(1));
                         } else if (e instanceof MultipleFailureException) {
                             final int nrOfAssertions =
                                     ((MultipleFailureException) e)

@@ -168,7 +168,7 @@ public abstract class Sql2oEventStorage implements EventStorage {
         final ResultSetIterable<EventData> result =
                 sql2o.open()
                         .createQuery(
-                                "select * from EVENTS where action "
+                                "select * from EVENTS where action in "
                                         + "('TEST_START', 'TEST_FINISHED', 'TEST_SKIPPED', "
                                         + "'TEST_FINISHED_WITH_EXCEPTION', "
                                         + "'TEST_FINISHED_WITH_FAILURES' )")
