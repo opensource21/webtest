@@ -11,8 +11,8 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
-import org.assertj.core.api.AbstractSoftAssertions;
 import org.assertj.core.api.JUnitSoftAssertions;
+import org.assertj.core.api.Java6AbstractStandardSoftAssertions;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.MultipleFailureException;
@@ -30,8 +30,8 @@ import de.ppi.selenium.logevent.api.EventSource;
  * @see JUnitSoftAssertions
  *
  */
-public class SeleniumSoftAssertions extends AbstractSoftAssertions implements
-        TestRule {
+public class SeleniumSoftAssertions extends Java6AbstractStandardSoftAssertions
+        implements TestRule {
     /**
      * Collector for errors.
      */
@@ -89,8 +89,7 @@ public class SeleniumSoftAssertions extends AbstractSoftAssertions implements
 
     @Override
     @SuppressWarnings("unchecked")
-    protected <T, V> V proxy(Class<V> assertClass, Class<T> actualClass,
-            T actual) {
+    public <T, V> V proxy(Class<V> assertClass, Class<T> actualClass, T actual) {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(assertClass);
         enhancer.setCallback(collector);
