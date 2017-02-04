@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.internal.Coordinates;
@@ -216,6 +217,14 @@ public class ElementImpl implements Element {
     public <X> X getScreenshotAs(OutputType<X> target)
             throws WebDriverException {
         return getElement().getScreenshotAs(target);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Rectangle getRect() {
+        return getElement().getRect();
     }
 
 }

@@ -513,7 +513,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
             } else if (browser.equalsIgnoreCase("safari")) {
                 wd = new SafariDriver(desiredCapabilities);
             } else if (browser.equalsIgnoreCase("htmlunit")) {
-                final BrowserVersion browserVersion = BrowserVersion.FIREFOX_38;
+                final BrowserVersion browserVersion = BrowserVersion.FIREFOX_45;
                 if (properties.getAcceptedLanguages() != null) {
                     browserVersion.setBrowserLanguage(properties
                             .getAcceptedLanguages().split(",")[0]);

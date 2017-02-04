@@ -46,8 +46,8 @@ import org.slf4j.LoggerFactory;
 public final class ScreenshotUtils {
 
     /** The LOG-Instance. */
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ScreenshotUtils.class);
+    private static final Logger LOG = LoggerFactory
+            .getLogger(ScreenshotUtils.class);
 
     /**
      * Maximal number of retries to get a screenshot.
@@ -82,13 +82,14 @@ public final class ScreenshotUtils {
                         ((WrapsDriver) wrappedDriver).getWrappedDriver();
             }
             if (wrappedDriver instanceof TakesScreenshot) {
-                final byte[] screenshot = ((TakesScreenshot) wrappedDriver)
-                        .getScreenshotAs(OutputType.BYTES);
-                FileUtils.writeByteArrayToFile(
-                        new File(screenshotFileName + ".png"), screenshot);
+                final byte[] screenshot =
+                        ((TakesScreenshot) wrappedDriver)
+                                .getScreenshotAs(OutputType.BYTES);
+                FileUtils.writeByteArrayToFile(new File(screenshotFileName
+                        + ".png"), screenshot);
             } else if (wrappedDriver instanceof HtmlUnitDriver) {
                 FileUtils.write(new File(screenshotFileName + ".html"),
-                        wrappedDriver.getPageSource());
+                        wrappedDriver.getPageSource(), "UTF-8");
             } else {
                 LOG.warn("The current driver doesn't make screenshots");
             }
@@ -126,8 +127,9 @@ public final class ScreenshotUtils {
                         ((TakesScreenshot) wd).getScreenshotAs(OutputType.FILE);
             } else {
                 Augmenter augmenter = new Augmenter();
-                screenshot = ((TakesScreenshot) augmenter.augment(wd))
-                        .getScreenshotAs(OutputType.FILE);
+                screenshot =
+                        ((TakesScreenshot) augmenter.augment(wd))
+                                .getScreenshotAs(OutputType.FILE);
                 isRemote = true;
             }
             BufferedImage fullImage = ImageIO.read(screenshot);
@@ -212,7 +214,7 @@ public final class ScreenshotUtils {
      */
     public static boolean isSimilarToScreenshot(WebDriver wd,
             WebElement element, File controlPicture, File toSaveAs)
-                    throws IOException {
+            throws IOException {
         return isSimilarToScreenshot(wd, element, controlPicture, toSaveAs,
                 DEFAULT_THRESHOLD);
     }
@@ -278,8 +280,7 @@ public final class ScreenshotUtils {
                 new double[cont.getWidth() * cont.getHeight() * scale];
 
         if (varArr.length != contArr.length) {
-            throw new IllegalStateException(
-                    "The pictures are different sizes!");
+            throw new IllegalStateException("The pictures are different sizes!");
         }
 
         // unroll pixels
